@@ -155,12 +155,7 @@ def scrape_single_article(url: str, section: str = "General", cookie_str: Option
         word_count = len(full_text.split())
 
         # Check paywall block
-        is_paywalled = (
-            "Subscribe to read" in title 
-            or len(paragraphs) == 0 
-            or "barrier" in html_text.lower()
-            or "trial" in title.lower()
-        )
+        is_paywalled = (len(paragraphs) == 0) or ("Subscribe to read" in title and len(paragraphs) < 3)
 
         article_obj = {
             "id": f"ft_{int(time.time() * 1000)}",

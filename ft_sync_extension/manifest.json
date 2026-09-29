@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "FT Cookie Sync to Content Factory",
+  "version": "1.0",
+  "description": "Auto-syncs genuine FT session cookies to local Content Factory",
+  "permissions": ["cookies"],
+  "host_permissions": ["*://*.ft.com/*", "http://127.0.0.1:8000/*"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

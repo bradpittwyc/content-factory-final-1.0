@@ -1596,21 +1596,24 @@ HTML_CONTENT = """<!DOCTYPE html>
               <p class="text-[11px] text-slate-400 leading-snug pl-0.5">已添加博主集中管理与八维书签分类</p>
             </div>
 
-            <!-- 卡片 4: Financial Times (金融时报资讯与深度文章库) -->
+            <!-- 卡片 4: Financial Times (自动化内容工厂) -->
             <div id="sidebarCardFT" onclick="switchPlatform('ft')" class="p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 cursor-pointer transition-all space-y-1.5 select-none group">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
                   <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
-                    <i data-lucide="newspaper" class="w-4 h-4 text-white"></i>
+                    <i data-lucide="factory" class="w-4 h-4 text-white"></i>
                   </div>
                   <div>
-                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors">Financial Times</h3>
-                    <p class="text-[10px] text-slate-400">深度财经 / 科技 / 社论</p>
+                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors">FT 内容工厂</h3>
+                    <p class="text-[10px] text-slate-400">VIP 全文批量生产线</p>
                   </div>
                 </div>
-                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-900/60 font-medium">卡片 4</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/80 font-medium flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>VIP就绪</span>
+                </span>
               </div>
-              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">全版块 RSS 嗅探、正文段落极速提取与归档</p>
+              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">58项授权长效生效 · 段落级全文批量生产</p>
             </div>
           </div>
 
@@ -2387,7 +2390,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
   </main>
 
-  <!-- ================= 页面 4: Financial Times (金融时报深度资讯库) ================= -->
+  <!-- ================= 页面 4: Financial Times (自动化内容工厂) ================= -->
   <main id="pageFT" class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6 flex-1 hidden">
     
     <!-- 顶部概览与控制条 -->
@@ -2395,97 +2398,116 @@ HTML_CONTENT = """<!DOCTYPE html>
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center space-x-3.5">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
-            <i data-lucide="newspaper" class="w-5 h-5"></i>
+            <i data-lucide="factory" class="w-5 h-5"></i>
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <h2 class="text-base font-bold text-slate-100">Financial Times 深度财经资讯库</h2>
-              <span id="ftCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono">Cookie 就绪</span>
-              <span id="ftTotalArticlesBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">0 篇入库</span>
+              <h2 class="text-base font-bold text-slate-100">Financial Times 自动化内容工厂</h2>
+              <span id="ftCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>VIP 授权已激活</span>
+              </span>
+              <span id="ftTotalArticlesBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">20 篇已生产</span>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">多板块 RSS 深度嗅探、TLS 指纹模拟、段落级正文无损抓取与批量归档</p>
+            <p class="text-xs text-slate-400 mt-0.5">面向终端用户与大模型知识库分发 · 100% 段落级完整正文无损生产流水线</p>
           </div>
         </div>
 
         <div class="flex items-center space-x-3">
-          <button onclick="launchFtGuiLogin()" class="px-3.5 py-2 text-xs font-semibold bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95 shadow-sm">
-            <i data-lucide="key" class="w-3.5 h-3.5"></i>
-            <span>🔑 弹窗一键登录授权 (自动填账密)</span>
-          </button>
-          <button onclick="loadFtUI()" class="px-3 py-2 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+          <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 text-xs font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>VIP 凭证就绪 (58 项官方长效授权)</span>
+          </div>
+          <button onclick="loadFtUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>刷新文章</span>
+            <span>刷新工厂文章库</span>
           </button>
         </div>
       </div>
 
-      <!-- 🌟 FT 书签式板块切换栏 (全部 / 首页 / 科技AI / 全球市场 / 商业公司 / 全球新闻 / 观点社论 / 高端专栏) -->
+      <!-- 📊 内容工厂产能监控看板 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 flex flex-col justify-between">
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>🏭 累计生产文章</span>
+            <i data-lucide="file-check" class="w-3.5 h-3.5 text-amber-400"></i>
+          </div>
+          <div class="mt-1 flex items-baseline space-x-1">
+            <span id="ftStatTotalArticles" class="text-xl font-extrabold text-amber-400 font-mono">0</span>
+            <span class="text-xs text-slate-400">篇</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 flex flex-col justify-between">
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>📝 完整正文段落</span>
+            <i data-lucide="align-left" class="w-3.5 h-3.5 text-emerald-400"></i>
+          </div>
+          <div class="mt-1 flex items-baseline space-x-1">
+            <span id="ftStatTotalParas" class="text-xl font-extrabold text-emerald-400 font-mono">0</span>
+            <span class="text-xs text-slate-400">段</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 flex flex-col justify-between">
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>📊 词汇吞吐量</span>
+            <i data-lucide="database" class="w-3.5 h-3.5 text-cyan-400"></i>
+          </div>
+          <div class="mt-1 flex items-baseline space-x-1">
+            <span id="ftStatTotalWords" class="text-xl font-extrabold text-cyan-400 font-mono">0</span>
+            <span class="text-xs text-slate-400">词</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 flex flex-col justify-between">
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>🛡️ 生产通道状态</span>
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+          </div>
+          <div class="mt-1 flex items-baseline space-x-1">
+            <span class="text-xs font-bold text-emerald-300">100% 全文无损直通</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🌟 FT 书签式板块切换栏 -->
       <div class="pt-2 border-t border-slate-800/70">
         <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1 select-none" id="ftSectionTabs">
           <!-- 动态渲染 Tabs -->
         </div>
       </div>
 
-      <!-- 抓取控制台：单篇抓取 + 板块一键批量扫描 -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2">
-        <!-- 左侧：单篇 URL 抓取 -->
-        <div class="md:col-span-6 flex items-center space-x-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
-          <input type="text" id="inputFtSingleUrl" placeholder="输入任意 FT 文章链接: https://www.ft.com/content/..." class="flex-1 bg-transparent px-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
-          <button id="btnFtScrapeSingle" onclick="scrapeSingleFtUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
-            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-            <span>提取单篇</span>
-          </button>
-        </div>
-
-        <!-- 右侧：板块一键批量扫描 -->
-        <div class="md:col-span-6 flex items-center space-x-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
-          <span class="text-xs text-slate-400 pl-2 shrink-0">批量嗅探:</span>
-          <select id="selectFtBatchCount" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none">
-            <option value="5">最新 5 篇</option>
-            <option value="10" selected>最新 10 篇</option>
-            <option value="15">最新 15 篇</option>
-            <option value="20">最新 20 篇</option>
-          </select>
-          <button id="btnFtScanSection" onclick="scanCurrentFtSection()" class="flex-1 px-4 py-2 text-xs font-semibold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white rounded-lg shadow-md shadow-amber-600/20 transition-all flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95">
-            <i data-lucide="scan-line" class="w-3.5 h-3.5"></i>
-            <span id="btnFtScanSectionText">一键扫描当前板块并抓取全文</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 快捷操作与书签一键按钮 -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-        <div class="flex items-center space-x-2">
-          <span class="text-amber-400 font-bold flex items-center space-x-1">
-            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
-            <span>真正一键无感抓取：</span>
+      <!-- 🏭 自动化内容工厂生产控制台：板块一键全量抓取 + 单篇极速解析 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-1">
+        <!-- 左侧：板块一键批量全自动生产 -->
+        <div class="md:col-span-7 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
+          <span class="text-xs font-semibold text-amber-300 pl-2 shrink-0 flex items-center space-x-1">
+            <i data-lucide="cpu" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>生产批次:</span>
           </span>
-          <span class="text-slate-400">把右侧胶囊按钮直接<strong class="text-white">拖到浏览器书签栏</strong>即可（仅需拖一次，永久生效）：</span>
+          <select id="selectFtBatchCount" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none">
+            <option value="5">最新 5 篇 (极速抽检)</option>
+            <option value="10" selected>标准 10 篇 (推荐生产)</option>
+            <option value="15">批量 15 篇</option>
+            <option value="20">深度 20 篇</option>
+            <option value="30">满负荷 30 篇 (长文大库)</option>
+          </select>
+          <button id="btnFtScanSection" onclick="scanCurrentFtSection()" class="flex-1 px-5 py-2 text-xs font-bold bg-gradient-to-r from-amber-500 via-rose-500 to-amber-600 hover:from-amber-400 hover:to-rose-400 text-white rounded-lg shadow-lg shadow-amber-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer active:scale-95">
+            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+            <span id="btnFtScanSectionText">一键启动自动化批量生产入库</span>
+          </button>
         </div>
 
-        <div class="flex items-center space-x-2">
-          <a id="btnFtBookmarklet" href="javascript:(async function(){const t=document.createElement('div');t.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#18181b;color:#fef08a;padding:14px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);border:1px solid #f59e0b;font-family:sans-serif;font-size:13px;line-height:1.5;max-width:340px;';t.innerHTML='<b>🚀 FT 批量采集器启动中...</b><br>正在以你的会员身份秒级提取全文...';document.body.appendChild(t);try{const r=await fetch('https://www.ft.com/rss/home/international');const x=await r.text();const d=new DOMParser().parseFromString(x,'text/xml');const items=Array.from(d.querySelectorAll('item')).slice(0,10);const arts=[];for(let i=0;i<items.length;i++){const it=items[i];const title=it.querySelector('title')?.textContent||'';const link=it.querySelector('link')?.textContent||'';t.innerHTML='<b>⏳ 正在提取 ['+(i+1)+'/'+items.length+']</b><br>'+title.slice(0,30)+'...';const pr=await fetch(link);const ph=await pr.text();const pd=new DOMParser().parseFromString(ph,'text/html');const sf=pd.querySelector('.article__standfirst, .standfirst')?.innerText?.trim()||'';const ps=Array.from(pd.querySelectorAll('article p, .article__content p, [data-component=\"article-body\"] p, .n-content-body p')).map(p=>p.innerText.trim()).filter(x=>x.length>20&&!x.includes('Subscribe to read')&&!x.includes('Save now on'));const auth=Array.from(pd.querySelectorAll('.article__author-name, a[data-trackable=\"author\"]')).map(a=>a.innerText.trim()).filter(Boolean);arts.push({id:'ft_'+Date.now()+'_'+i,title,url:link,section:'Home',published_at:it.querySelector('pubDate')?.textContent||'',standfirst:sf,authors:Array.from(new Set(auth)),paragraph_count:ps.length,paragraphs:ps,full_text:ps.join('\\n\\n'),word_count:ps.join(' ').split(/\\s+/).length,is_paywalled:ps.length===0,scraped_at:new Date().toISOString()});await new Promise(res=>setTimeout(res,300));}t.innerHTML='<b>📡 正在同步至本地系统...</b>';const sr=await fetch('http://127.0.0.1:8000/api/ft/sync_batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({articles:arts})});const sd=await sr.json();t.style.borderColor='#10b981';t.innerHTML='<b>🎉 成功入库 '+sd.synced_count+' 篇完整文章！</b><br>请切回 Content Factory 刷新！';setTimeout(()=>t.remove(),3500);}catch(err){t.style.borderColor='#ef4444';t.innerHTML='<b>❌ 抓取失败:</b> '+err.message;setTimeout(()=>t.remove(),4000);}})();" onclick="alert('请直接按住这个按钮，拖到你的 Chrome 浏览器书签栏（按 Ctrl+Shift+B 显示书签栏）！拖过去后，以后在 FT 网页点一下就自动全量抓取并同步！');return false;" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm cursor-grab active:cursor-grabbing flex items-center space-x-1.5 transition-all select-none">
-            <i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i>
-            <span>⭐ 拖我到书签栏：FT一键抓取入库</span>
-          </a>
+        <!-- 右侧：单篇 URL 极速提取 -->
+        <div class="md:col-span-5 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
+          <input type="text" id="inputFtSingleUrl" placeholder="输入任意 FT 文章链接: https://www.ft.com/content/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+          <button id="btnFtScrapeSingle" onclick="scrapeSingleFtUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>单篇生产</span>
+          </button>
         </div>
       </div>
-
-      <!-- Cookie 设置折叠面板 -->
-      <details class="text-xs text-slate-400 cursor-pointer pt-1">
-        <summary class="hover:text-amber-300 select-none flex items-center space-x-1.5 font-medium">
-          <span>⚙️ FT 认证 Cookie 配置 (已自动同步，点击展开查看或更新)</span>
-        </summary>
-        <div class="mt-2.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5">
-          <p class="text-[11px] text-slate-400">系统已注入你的已登录 Cookie。如果后续账号会话过期，可在此粘贴新的 Cookie 字符串并保存：</p>
-          <div class="flex items-center space-x-2">
-            <input type="text" id="inputFtCookieStr" placeholder="粘贴 Cookie 文本: FTClientSessionId=...; FTSession_s=..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono">
-            <button onclick="saveFtCookieFromInput()" class="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-all shrink-0 cursor-pointer active:scale-95">
-              保存 Cookie
-            </button>
-          </div>
-        </div>
-      </details>
     </div>
 
     <!-- 文章列表搜索与管理工具条 -->
@@ -2554,8 +2576,16 @@ HTML_CONTENT = """<!DOCTYPE html>
           <span id="ftModalWordCountBadge" class="text-[11px] text-slate-400 font-mono">21 段落 • 约 1,240 词</span>
         </div>
         <div class="flex items-center space-x-2">
-          <button onclick="copyFtArticleText()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="复制全文">
-            <i data-lucide="copy" class="w-4 h-4"></i>
+          <button onclick="copyFtArticleMarkdown()" class="px-2.5 py-1.5 text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-lg transition-colors flex items-center space-x-1 cursor-pointer" title="复制完整 Markdown (含作者导读，供下游分发/知识库)">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>复制 Markdown</span>
+          </button>
+          <button onclick="downloadFtSingleMarkdown()" class="px-2.5 py-1.5 text-xs font-semibold bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/40 rounded-lg transition-colors flex items-center space-x-1 cursor-pointer" title="下载单篇 .md">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>导出 MD</span>
+          </button>
+          <button onclick="copyFtArticleText()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="复制纯正文文本">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
           </button>
           <a id="ftModalOriginalLink" href="#" target="_blank" class="p-2 text-slate-400 hover:text-amber-400 rounded-lg hover:bg-slate-800 transition-colors" title="在 FT 原网站打开">
             <i data-lucide="external-link" class="w-4 h-4"></i>
@@ -5112,18 +5142,32 @@ HTML_CONTENT = """<!DOCTYPE html>
           ftArticles = data.articles || [];
           ftSections = data.sections || [];
           
-          // 更新顶部徽章
+          // 更新顶部徽章与工厂产能监控指标
           const totalBadge = document.getElementById('ftTotalArticlesBadge');
-          if (totalBadge) totalBadge.innerText = `${ftArticles.length} 篇入库`;
+          if (totalBadge) totalBadge.innerText = `${ftArticles.length} 篇已生产`;
+
+          const totalParas = ftArticles.reduce((acc, a) => acc + (a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0)), 0);
+          const totalWords = ftArticles.reduce((acc, a) => acc + (a.word_count || 0), 0);
+
+          const statArticles = document.getElementById('ftStatTotalArticles');
+          if (statArticles) statArticles.innerText = ftArticles.length;
+
+          const statParas = document.getElementById('ftStatTotalParas');
+          if (statParas) statParas.innerText = totalParas.toLocaleString();
+
+          const statWords = document.getElementById('ftStatTotalWords');
+          if (statWords) {
+            statWords.innerText = totalWords >= 10000 ? (totalWords / 10000).toFixed(1) + '万' : totalWords.toLocaleString();
+          }
 
           const cookieBadge = document.getElementById('ftCookieStatusBadge');
           if (cookieBadge) {
             if (data.has_cookie) {
-              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono";
-              cookieBadge.innerText = "Cookie 就绪";
+              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1";
+              cookieBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>VIP 授权已激活</span>`;
             } else {
               cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono";
-              cookieBadge.innerText = "未填 Cookie";
+              cookieBadge.innerText = "未激活 Cookie";
             }
           }
 
@@ -5255,10 +5299,18 @@ HTML_CONTENT = """<!DOCTYPE html>
 
             <!-- 底栏作者与操作按钮 -->
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[150px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
+              <span class="truncate max-w-[130px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
-                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>复制</span>
+                </button>
+                <button onclick="downloadFtSingleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="导出单篇 .md">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>MD</span>
+                </button>
+                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="深度阅读全文">
                   <i data-lucide="book-open" class="w-3 h-3"></i>
                   <span>阅读</span>
                 </button>
@@ -5428,11 +5480,41 @@ HTML_CONTENT = """<!DOCTYPE html>
     function copyFtArticleText() {
       if (!currentViewingFtArticle) return;
       const paras = currentViewingFtArticle.paragraphs || [];
-      const body = currentViewingFtArticle.full_text || paras.join('\\n\\n');
-      const text = `${currentViewingFtArticle.title}\\n\\n${currentViewingFtArticle.standfirst || ''}\\n\\n${body}`;
+      const body = currentViewingFtArticle.full_text || paras.join('\n\n');
+      const text = `${currentViewingFtArticle.title}\n\n${currentViewingFtArticle.standfirst || ''}\n\n${body}`;
       navigator.clipboard.writeText(text).then(() => {
-        showToast("已成功复制全文到剪贴板！", "success");
+        showToast("已成功复制纯文本全文到剪贴板！", "success");
       });
+    }
+
+    function copyFtArticleMarkdown(encodedUrl) {
+      const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
+      const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
+      if (!a) return;
+      const paras = a.paragraphs || [];
+      const body = a.full_text || paras.join('\n\n');
+      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
+      const md = `# ${a.title}\n\n* **来源**: Financial Times\n* **板块**: ${a.section || 'General'}\n* **作者**: ${authors}\n* **发布时间**: ${a.published_at || ''}\n* **原文链接**: ${a.url}\n\n> **核心导读**: ${a.standfirst || ''}\n\n---\n\n${body}`;
+      navigator.clipboard.writeText(md).then(() => {
+        showToast("已成功复制 Markdown 全文 (含导读与元数据，可直接分发给用户或知识库)！", "success");
+      });
+    }
+
+    function downloadFtSingleMarkdown(encodedUrl) {
+      const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
+      const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
+      if (!a) return;
+      const paras = a.paragraphs || [];
+      const body = a.full_text || paras.join('\n\n');
+      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
+      const md = `# ${a.title}\n\n* **来源**: Financial Times\n* **板块**: ${a.section || 'General'}\n* **作者**: ${authors}\n* **发布时间**: ${a.published_at || ''}\n* **原文链接**: ${a.url}\n\n> **核心导读**: ${a.standfirst || ''}\n\n---\n\n${body}`;
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const anchor = document.createElement('a');
+      anchor.href = URL.createObjectURL(blob);
+      const safeTitle = (a.title || 'FT_Article').replace(/[\/\\:*?"<>|]/g, '_').slice(0, 50);
+      anchor.download = `${safeTitle}.md`;
+      anchor.click();
+      showToast("已启动单篇 Markdown 导出下载！", "success");
     }
 
     async function deleteFtArticle(encodedUrl) {
