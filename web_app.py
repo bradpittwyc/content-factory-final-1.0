@@ -297,7 +297,24 @@ def add_channel_endpoint(req: AddChannelRequest):
     data = channels_store.load_all_channels()
     return {"success": True, "item": item, "tiktok": data.get("tiktok", []), "youtube": data.get("youtube", [])}
 
-# ==================== Financial Times (FT) APIs ====================
+# ==================== Foreign Publications (外刊内容工厂) APIs ====================
+@app.get("/api/bloomberg/articles")
+def get_bloomberg_articles_endpoint():
+    path = os.path.join(os.path.dirname(__file__), "data", "bloomberg_articles.json")
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                articles = json.load(f)
+        except Exception:
+            articles = []
+    else:
+        articles = []
+    return {
+        "success": True,
+        "articles": articles,
+        "total": len(articles)
+    }
+
 @app.get("/api/ft/sections")
 def get_ft_sections_endpoint():
     return {
@@ -1596,24 +1613,24 @@ HTML_CONTENT = """<!DOCTYPE html>
               <p class="text-[11px] text-slate-400 leading-snug pl-0.5">已添加博主集中管理与八维书签分类</p>
             </div>
 
-            <!-- 卡片 4: Financial Times (自动化内容工厂) -->
+            <!-- 卡片 4: 外刊内容工厂 (全球顶级外刊精选矩阵) -->
             <div id="sidebarCardFT" onclick="switchPlatform('ft')" class="p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 cursor-pointer transition-all space-y-1.5 select-none group">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
-                  <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
-                    <i data-lucide="factory" class="w-4 h-4 text-white"></i>
+                  <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+                    <i data-lucide="book-marked" class="w-4 h-4 text-white"></i>
                   </div>
                   <div>
-                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors">FT 内容工厂</h3>
-                    <p class="text-[10px] text-slate-400">VIP 全文批量生产线</p>
+                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-blue-400 transition-colors">外刊 内容工厂</h3>
+                    <p class="text-[10px] text-slate-400">全球精选外刊矩阵</p>
                   </div>
                 </div>
-                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/80 font-medium flex items-center space-x-1">
+                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800/80 font-medium flex items-center space-x-1">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span>VIP就绪</span>
+                  <span>5大刊源</span>
                 </span>
               </div>
-              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">58项授权长效生效 · 段落级全文批量生产</p>
+              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">FT金融时报 · 彭博社 · 华尔街日报 · 经济学人</p>
             </div>
           </div>
 
@@ -2390,28 +2407,226 @@ HTML_CONTENT = """<!DOCTYPE html>
 
   </main>
 
-  <!-- ================= 页面 4: Financial Times (自动化内容工厂) ================= -->
+  <!-- ================= 页面 4: 外刊内容工厂 (全球顶级外刊精选矩阵) ================= -->
   <main id="pageFT" class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6 flex-1 hidden">
     
-    <!-- 顶部概览与控制条 -->
-    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
-            <i data-lucide="factory" class="w-5 h-5"></i>
+    <!-- 视图 1: 全球精选刊源 (5) - 对标5大外刊矩阵卡片 -->
+    <div id="pubMatrixView" class="space-y-6">
+      
+      <!-- 刊源顶栏 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+            <i data-lucide="library" class="w-5 h-5"></i>
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <h2 class="text-base font-bold text-slate-100">Financial Times 自动化内容工厂</h2>
-              <span id="ftCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>VIP 授权已激活</span>
-              </span>
-              <span id="ftTotalArticlesBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">20 篇已生产</span>
+              <h2 class="text-base font-bold text-slate-100">全球精选刊源</h2>
+              <span class="text-xs font-bold text-blue-400 font-mono bg-blue-950/80 px-2 py-0.5 rounded-full border border-blue-800/60">(5)</span>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">面向终端用户与大模型知识库分发 · 100% 段落级完整正文无损生产流水线</p>
+            <p class="text-xs text-slate-400 mt-0.5">全球权威商业、科技与政经深度精选分析，高阶英语思维与地道表达文库</p>
           </div>
         </div>
+
+        <div class="flex items-center space-x-2 text-xs font-mono text-slate-400 bg-slate-900/80 px-3.5 py-2 rounded-xl border border-slate-800 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>已收录 FT <span id="pubStatFtCount" class="text-amber-400 font-bold">20</span> 篇 + Bloomberg <span id="pubStatBbCount" class="text-cyan-400 font-bold">10</span> 篇真实文章</span>
+        </div>
+      </div>
+
+      <!-- 5 刊源卡片网格 (对标用户截图布局与设计) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- 卡片 1: 英国金融时报 (Financial Times) - 已接入高亮卡片 -->
+        <div onclick="openPubWorkstation('ft')" class="bg-slate-900/90 hover:bg-slate-900 border-2 border-blue-500/80 hover:border-blue-400 rounded-2xl p-5 shadow-xl shadow-blue-500/5 transition-all cursor-pointer flex flex-col justify-between space-y-4 group relative overflow-hidden">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="w-11 h-11 rounded-xl bg-[#fff1e5] border border-[#f5dfce] flex items-center justify-center text-[#2b2523] font-serif font-black text-xl shadow-sm group-hover:scale-105 transition-transform">
+                FT
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 flex items-center space-x-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>已接入 · <span id="cardBadgeFtCount">20</span> 篇</span>
+              </span>
+            </div>
+
+            <div class="space-y-0.5">
+              <h3 class="text-base font-bold text-slate-100 group-hover:text-blue-400 transition-colors">英国金融时报</h3>
+              <p class="text-xs text-slate-400 font-serif">Financial Times</p>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
+              全球权威商业与地缘政治深度分析，地道英美高级政经词汇与句式。
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-400 group-hover:text-slate-300 transition-colors">点击进入刊物精读</span>
+            <span class="font-bold text-blue-400 group-hover:translate-x-1 transition-transform flex items-center space-x-1">
+              <span>浏览</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- 卡片 2: 彭博社商业周刊 (Bloomberg) - 已接入 -->
+        <div onclick="openPubWorkstation('bloomberg')" class="bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-blue-500/60 rounded-2xl p-5 shadow-xl transition-all cursor-pointer flex flex-col justify-between space-y-4 group relative overflow-hidden">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="w-11 h-11 rounded-xl bg-black border border-slate-700 flex items-center justify-center text-white font-sans font-black text-2xl shadow-sm group-hover:scale-105 transition-transform">
+                B
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 flex items-center space-x-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>已接入 · 10 篇</span>
+              </span>
+            </div>
+
+            <div class="space-y-0.5">
+              <h3 class="text-base font-bold text-slate-100 group-hover:text-blue-400 transition-colors">彭博社商业周刊</h3>
+              <p class="text-xs text-slate-400">Bloomberg</p>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
+              全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪。
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-400 group-hover:text-slate-300 transition-colors">点击进入刊物精读</span>
+            <span class="font-bold text-blue-400 group-hover:translate-x-1 transition-transform flex items-center space-x-1">
+              <span>浏览</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- 卡片 3: 华尔街日报 (The Wall Street Journal) - 接入中 -->
+        <div onclick="showIncomingPubToast('华尔街日报 (The Wall Street Journal)')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="w-11 h-11 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-slate-950 font-serif font-black text-sm tracking-tight shadow-sm">
+                WSJ
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+                接入中
+              </span>
+            </div>
+
+            <div class="space-y-0.5">
+              <h3 class="text-base font-bold text-slate-200">华尔街日报</h3>
+              <p class="text-xs text-slate-400 font-serif">The Wall Street Journal</p>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
+              华尔街重磅财经报道与商业领袖专栏，标准商务英语精读材料。
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-500">
+            <span>抓取管线排期中</span>
+          </div>
+        </div>
+
+        <!-- 卡片 4: 经济学人 (The Economist) - 接入中 -->
+        <div onclick="showIncomingPubToast('经济学人 (The Economist)')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="w-11 h-11 rounded-xl bg-[#e3120b] flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm">
+                E
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+                接入中
+              </span>
+            </div>
+
+            <div class="space-y-0.5">
+              <h3 class="text-base font-bold text-slate-200">经济学人</h3>
+              <p class="text-xs text-slate-400 font-serif">The Economist</p>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
+              典雅英式议论文笔，逻辑严密、修辞精妙，高阶英语思维培养利器。
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-500">
+            <span>抓取管线排期中</span>
+          </div>
+        </div>
+
+        <!-- 卡片 5: 文娱与流行外刊 (Entertainment & Culture) - 接入中 (占单列) -->
+        <div onclick="showIncomingPubToast('文娱与流行外刊 (Entertainment & Culture)')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-purple-950/80 text-purple-300 border border-purple-800/60 font-semibold text-xs">
+                Entertainment & Culture
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+                接入中
+              </span>
+            </div>
+
+            <div class="space-y-0.5">
+              <h3 class="text-base font-bold text-slate-200">文娱与流行外刊</h3>
+              <p class="text-xs text-slate-400">Entertainment & Culture</p>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
+              精选 Variety、Vanity Fair、The New Yorker 等文娱评论与流行文化特稿。
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-500">
+            <span>抓取管线排期中</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 视图 2: FT 金融时报内容工厂 (原完整车间) -->
+    <div id="ftFactoryWorkstation" class="space-y-6 hidden">
+      <!-- 顶栏导航与面包屑 -->
+      <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-3.5 shadow-lg">
+        <div class="flex items-center space-x-3">
+          <button onclick="returnToPubMatrix()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-blue-400"></i>
+            <span>返回全球精选刊源 (5)</span>
+          </button>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="text-slate-400">全球刊源</span>
+            <span class="text-slate-600">/</span>
+            <span class="font-bold text-amber-400">英国金融时报 (Financial Times)</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <span class="px-3 py-1 font-bold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">FT 金融时报</span>
+          <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+        </div>
+      </div>
+
+      <!-- 顶部概览与控制条 -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+              <i data-lucide="factory" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-base font-bold text-slate-100">Financial Times 自动化内容工厂</h2>
+                <span id="ftCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>VIP 授权已激活</span>
+                </span>
+                <span id="ftTotalArticlesBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">20 篇已生产</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">面向终端用户与大模型知识库分发 · 100% 段落级完整正文无损生产流水线</p>
+            </div>
+          </div>
 
         <div class="flex items-center space-x-3">
           <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 text-xs font-medium">
@@ -2560,6 +2775,59 @@ HTML_CONTENT = """<!DOCTYPE html>
           <i data-lucide="trash-2" class="w-4 h-4 text-rose-400"></i>
           <span>批量删除</span>
         </button>
+      </div>
+    </div>
+
+    </div> <!-- /#ftFactoryWorkstation -->
+
+    <!-- 视图 3: 彭博社商业周刊内容工厂 (Bloomberg) -->
+    <div id="bbFactoryWorkstation" class="space-y-6 hidden">
+      <!-- 顶栏导航与面包屑 -->
+      <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-3.5 shadow-lg">
+        <div class="flex items-center space-x-3">
+          <button onclick="returnToPubMatrix()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-blue-400"></i>
+            <span>返回全球精选刊源 (5)</span>
+          </button>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="text-slate-400">全球刊源</span>
+            <span class="text-slate-600">/</span>
+            <span class="font-bold text-cyan-400">彭博社商业周刊 (Bloomberg)</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
+          <span class="px-3 py-1 font-bold rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">彭博社周刊</span>
+        </div>
+      </div>
+
+      <!-- 彭博社周刊监控看板 -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-black border border-slate-700 flex items-center justify-center text-white font-sans font-black text-2xl shadow-lg">
+              B
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-base font-bold text-slate-100">彭博社商业周刊 Bloomberg Studio</h2>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono">10 篇已收录</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪 · 深度长文精读</p>
+            </div>
+          </div>
+          <button onclick="loadBloombergUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>刷新彭博周刊库</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 彭博文章列表 -->
+      <div id="bbArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
+        <!-- 动态渲染彭博文章卡片 -->
       </div>
     </div>
 
@@ -4136,14 +4404,14 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         if (headerTitle) {
           headerTitle.className = "text-lg font-bold ft-gradient-text leading-tight";
-          headerTitle.innerText = "Financial Times Content Studio";
+          headerTitle.innerText = "外刊内容工厂 · Global Publications Studio";
         }
-        if (headerSubtitle) headerSubtitle.innerText = "金融时报深度财经、科技AI与商业社论批量解析抓取引擎";
-        if (headerIcon) headerIcon.className = "w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center shadow-lg shadow-amber-500/25";
-        if (headerIconLucide) headerIconLucide.setAttribute('data-lucide', 'newspaper');
+        if (headerSubtitle) headerSubtitle.innerText = "全球顶级财经与社论外刊精选矩阵 · 深度长文批量生产分发管线";
+        if (headerIcon) headerIcon.className = "w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-500 flex items-center justify-center shadow-lg shadow-blue-500/25";
+        if (headerIconLucide) headerIconLucide.setAttribute('data-lucide', 'library');
         if (btnDemo) btnDemo.classList.add('hidden');
 
-        loadFtUI();
+        returnToPubMatrix();
       }
       lucide.createIcons();
     }
@@ -5125,14 +5393,163 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     // =========================================================================
-    // Financial Times (FT) 前端业务状态机与交互逻辑 (第四卡片)
+    // 外刊内容工厂 (Global Publications Studio) - 刊源矩阵与子车间
     // =========================================================================
     let ftArticles = [];
     let ftSections = [];
+    let bloombergArticles = [];
+    let currentPubWorkstation = 'matrix';
     let currentFtSectionTab = 'all';
     let ftSelectedUrls = new Set();
     let ftSearchKeyword = '';
     let currentViewingFtArticle = null;
+
+    function returnToPubMatrix() {
+      currentPubWorkstation = 'matrix';
+      const matrixView = document.getElementById('pubMatrixView');
+      const ftView = document.getElementById('ftFactoryWorkstation');
+      const bbView = document.getElementById('bbFactoryWorkstation');
+      if (matrixView) matrixView.classList.remove('hidden');
+      if (ftView) ftView.classList.add('hidden');
+      if (bbView) bbView.classList.add('hidden');
+
+      const headerTitle = document.getElementById('headerAppTitle');
+      const headerSubtitle = document.getElementById('headerAppSubtitle');
+      if (headerTitle) headerTitle.innerText = "外刊内容工厂 · Global Publications Studio";
+      if (headerSubtitle) headerSubtitle.innerText = "全球顶级财经与社论外刊精选矩阵 · 深度长文批量生产分发管线";
+
+      updatePubMatrixStats();
+      lucide.createIcons();
+    }
+
+    async function openPubWorkstation(pub) {
+      currentPubWorkstation = pub;
+      const matrixView = document.getElementById('pubMatrixView');
+      const ftView = document.getElementById('ftFactoryWorkstation');
+      const bbView = document.getElementById('bbFactoryWorkstation');
+
+      if (pub === 'ft') {
+        if (matrixView) matrixView.classList.add('hidden');
+        if (ftView) ftView.classList.remove('hidden');
+        if (bbView) bbView.classList.add('hidden');
+
+        const headerTitle = document.getElementById('headerAppTitle');
+        const headerSubtitle = document.getElementById('headerAppSubtitle');
+        if (headerTitle) headerTitle.innerText = "英国金融时报 · Financial Times Studio";
+        if (headerSubtitle) headerSubtitle.innerText = "全球权威商业与地缘政治深度分析 · 100%段落级全文批量生产与分发";
+
+        loadFtUI();
+      } else if (pub === 'bloomberg') {
+        if (matrixView) matrixView.classList.add('hidden');
+        if (ftView) ftView.classList.add('hidden');
+        if (bbView) bbView.classList.remove('hidden');
+
+        const headerTitle = document.getElementById('headerAppTitle');
+        const headerSubtitle = document.getElementById('headerAppSubtitle');
+        if (headerTitle) headerTitle.innerText = "彭博社商业周刊 · Bloomberg Studio";
+        if (headerSubtitle) headerSubtitle.innerText = "全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪 · 深度长文精读";
+
+        loadBloombergUI();
+      }
+      lucide.createIcons();
+    }
+
+    function showIncomingPubToast(name) {
+      showToast(name + " 抓取管线正在排期接入中，敬请期待！", "info");
+    }
+
+    async function updatePubMatrixStats() {
+      try {
+        const ftRes = await fetch('/api/ft/articles');
+        const ftData = await ftRes.json();
+        if (ftData.success) {
+          const ftCount = (ftData.articles || []).length;
+          const pubStatFt = document.getElementById('pubStatFtCount');
+          if (pubStatFt) pubStatFt.innerText = ftCount;
+          const badgeFt = document.getElementById('cardBadgeFtCount');
+          if (badgeFt) badgeFt.innerText = ftCount;
+        }
+
+        const bbRes = await fetch('/api/bloomberg/articles');
+        const bbData = await bbRes.json();
+        if (bbData.success) {
+          bloombergArticles = bbData.articles || [];
+          const bbCount = bloombergArticles.length;
+          const pubStatBb = document.getElementById('pubStatBbCount');
+          if (pubStatBb) pubStatBb.innerText = bbCount;
+        }
+      } catch (e) {
+        console.error("更新刊源矩阵数据失败:", e);
+      }
+    }
+
+    async function loadBloombergUI() {
+      try {
+        const res = await fetch('/api/bloomberg/articles');
+        const data = await res.json();
+        if (data.success) {
+          bloombergArticles = data.articles || [];
+          renderBloombergArticlesGrid();
+        }
+      } catch (e) {
+        console.error("加载彭博周刊文章失败:", e);
+      }
+    }
+
+    function renderBloombergArticlesGrid() {
+      const container = document.getElementById('bbArticlesGrid');
+      if (!container) return;
+
+      container.innerHTML = bloombergArticles.map(a => {
+        const authorsStr = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'Bloomberg Staff';
+        const pubDateStr = a.published_at ? a.published_at.slice(0, 10) : '近期';
+        const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
+
+        return `
+          <div class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 shadow-lg transition-all flex flex-col justify-between space-y-3 group select-none">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-medium">${a.section || 'Bloomberg'}</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">精选全文</span>
+                </div>
+                <span class="text-[11px] text-slate-500 font-mono">${parasCount} 段 • ${a.word_count || 0} 词</span>
+              </div>
+
+              <h3 onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="text-sm font-bold text-slate-100 group-hover:text-cyan-300 transition-colors line-clamp-2 cursor-pointer font-serif leading-snug">
+                ${a.title || '无标题文章'}
+              </h3>
+
+              ${a.standfirst ? `<p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">${a.standfirst}</p>` : ''}
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
+              <span class="truncate max-w-[130px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
+              
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>复制</span>
+                </button>
+                <button onclick="downloadFtSingleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="导出单篇 .md">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>MD</span>
+                </button>
+                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="深度阅读全文">
+                  <i data-lucide="book-open" class="w-3 h-3"></i>
+                  <span>阅读</span>
+                </button>
+                <a href="${a.url}" target="_blank" class="p-1 hover:text-cyan-400 rounded hover:bg-slate-800 transition-colors" title="在 Bloomberg 原网查看">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
 
     async function loadFtUI() {
       try {
@@ -5431,7 +5848,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function openFtArticleModal(encodedUrl) {
       const url = decodeURIComponent(encodedUrl);
-      const article = ftArticles.find(a => a.url === url);
+      const article = ftArticles.find(a => a.url === url) || (bloombergArticles || []).find(a => a.url === url);
       if (!article) return;
 
       currentViewingFtArticle = article;
