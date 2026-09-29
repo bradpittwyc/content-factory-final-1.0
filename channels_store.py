@@ -1,0 +1,357 @@
+# -*- coding: utf-8 -*-
+"""
+channels_store.py - 频道与博主持久化存储模块
+支持 TikTok 博主与 YouTube 频道的独立分类、下载量累加与历史档案管理
+"""
+import os
+import json
+import time
+from typing import List, Dict, Any, Optional
+
+STORE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+STORE_FILE = os.path.join(STORE_DIR, "channels_store.json")
+
+# 预设 YouTube 频道（完全对标参考系统与用户截图）
+INITIAL_YOUTUBE_CHANNELS = [
+    {
+        "id": "openai",
+        "url": "https://www.youtube.com/@OpenAI",
+        "handle": "@OpenAI",
+        "title": "OpenAI",
+        "avatar": "https://api.dicebear.com/7.x/identicon/svg?seed=OpenAI&backgroundColor=000000",
+        "cat": "tech",
+        "cat_name": "科技 & AI",
+        "downloads": 11,
+        "video_count": 128,
+        "last_at": "2026-09-28 20:15"
+    },
+    {
+        "id": "melrobbins",
+        "url": "https://www.youtube.com/@melrobbins",
+        "handle": "@melrobbins",
+        "title": "Mel Robbins",
+        "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80",
+        "cat": "growth",
+        "cat_name": "个人成长",
+        "downloads": 11,
+        "video_count": 310,
+        "last_at": "2026-09-28 19:40"
+    },
+    {
+        "id": "chriswilliamson",
+        "url": "https://www.youtube.com/@ChrisWillx",
+        "handle": "@ChrisWillx",
+        "title": "Chris Williamson",
+        "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&auto=format&fit=crop&q=80",
+        "cat": "growth",
+        "cat_name": "个人成长",
+        "downloads": 1,
+        "video_count": 680,
+        "last_at": "2026-09-27 15:22"
+    },
+    {
+        "id": "hubermanlab",
+        "url": "https://www.youtube.com/@hubermanlab",
+        "handle": "@hubermanlab",
+        "title": "Andrew Huberman",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80",
+        "cat": "health",
+        "cat_name": "健康 & 科学",
+        "downloads": 1,
+        "video_count": 215,
+        "last_at": "2026-09-27 14:10"
+    },
+    {
+        "id": "jordanpeterson",
+        "url": "https://www.youtube.com/@JordanBPeterson",
+        "handle": "@JordanBPeterson",
+        "title": "Jordan B Peterson",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80",
+        "cat": "knowledge",
+        "cat_name": "人文 & 历史",
+        "downloads": 1,
+        "video_count": 890,
+        "last_at": "2026-09-26 11:30"
+    },
+    {
+        "id": "lexfridman",
+        "url": "https://www.youtube.com/@lexfridman",
+        "handle": "@lexfridman",
+        "title": "Lex Fridman",
+        "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&auto=format&fit=crop&q=80",
+        "cat": "knowledge",
+        "cat_name": "人文 & 历史",
+        "downloads": 0,
+        "video_count": 450,
+        "last_at": "2026-09-25 09:10"
+    },
+    {
+        "id": "mrbeast",
+        "url": "https://www.youtube.com/@MrBeast",
+        "handle": "@MrBeast",
+        "title": "MrBeast",
+        "avatar": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&auto=format&fit=crop&q=80",
+        "cat": "life",
+        "cat_name": "娱乐 & 生活",
+        "downloads": 0,
+        "video_count": 810,
+        "last_at": "2026-09-24 16:50"
+    },
+    {
+        "id": "veritasium",
+        "url": "https://www.youtube.com/@veritasium",
+        "handle": "@veritasium",
+        "title": "Veritasium",
+        "avatar": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=120&auto=format&fit=crop&q=80",
+        "cat": "health",
+        "cat_name": "健康 & 科学",
+        "downloads": 0,
+        "video_count": 390,
+        "last_at": "2026-09-23 18:20"
+    },
+    {
+        "id": "marvel",
+        "url": "https://www.youtube.com/@marvel",
+        "handle": "@marvel",
+        "title": "Marvel Entertainment",
+        "avatar": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=120&auto=format&fit=crop&q=80",
+        "cat": "life",
+        "cat_name": "娱乐 & 生活",
+        "downloads": 0,
+        "video_count": 1200,
+        "last_at": "2026-09-22 13:00"
+    },
+    {
+        "id": "cs50",
+        "url": "https://www.youtube.com/@cs50",
+        "handle": "@cs50",
+        "title": "CS50",
+        "avatar": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=120&auto=format&fit=crop&q=80",
+        "cat": "health",
+        "cat_name": "健康 & 科学",
+        "downloads": 0,
+        "video_count": 280,
+        "last_at": "2026-09-21 10:15"
+    }
+]
+
+# 预设 TikTok 创作者
+INITIAL_TIKTOK_CREATORS = [
+    {
+        "id": "tech_reviewer",
+        "username": "tech_reviewer",
+        "nickname": "Tech Reviewer Pro",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80",
+        "downloads": 24,
+        "video_count": 56,
+        "category": "数码评测 · 短视频",
+        "url": "https://www.tiktok.com/@tech_reviewer",
+        "last_at": "2026-09-28 21:10"
+    },
+    {
+        "id": "charlidamelio",
+        "username": "charlidamelio",
+        "nickname": "Charli D'Amelio",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80",
+        "downloads": 15,
+        "video_count": 88,
+        "category": "流行生活 · 舞蹈娱乐",
+        "url": "https://www.tiktok.com/@charlidamelio",
+        "last_at": "2026-09-27 16:40"
+    },
+    {
+        "id": "khaby.lame",
+        "username": "khaby.lame",
+        "nickname": "Khabane Lame",
+        "avatar": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop&q=80",
+        "downloads": 9,
+        "video_count": 32,
+        "category": "幽默搞笑 · 无声吐槽",
+        "url": "https://www.tiktok.com/@khaby.lame",
+        "last_at": "2026-09-26 14:20"
+    },
+    {
+        "id": "mrbeast",
+        "username": "mrbeast",
+        "nickname": "MrBeast TikTok",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
+        "downloads": 5,
+        "video_count": 21,
+        "category": "趣味挑战 · 创意互动",
+        "url": "https://www.tiktok.com/@mrbeast",
+        "last_at": "2026-09-25 11:05"
+    },
+    {
+        "id": "zachking",
+        "username": "zachking",
+        "nickname": "Zach King",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80",
+        "downloads": 2,
+        "video_count": 18,
+        "category": "视觉魔术 · 特效剪辑",
+        "url": "https://www.tiktok.com/@zachking",
+        "last_at": "2026-09-24 09:15"
+    }
+]
+
+# YouTube 书签式多维分类定义
+YT_CATEGORIES = [
+    {"id": "all", "name": "全部", "short": "全部", "icon": "📑"},
+    {"id": "tech", "name": "科技 & AI", "short": "科技", "icon": "🤖"},
+    {"id": "growth", "name": "个人成长", "short": "成长", "icon": "🌱"},
+    {"id": "health", "name": "健康 & 科学", "short": "健康", "icon": "🧬"},
+    {"id": "business", "name": "商业 & 财经", "short": "商业", "icon": "📈"},
+    {"id": "knowledge", "name": "人文 & 历史", "short": "人文", "icon": "🎨"},
+    {"id": "life", "name": "娱乐 & 生活", "short": "娱乐", "icon": "🍿"},
+    {"id": "other", "name": "其他", "short": "其他", "icon": "📁"},
+]
+
+def _ensure_store_file():
+    if not os.path.exists(STORE_DIR):
+        try:
+            os.makedirs(STORE_DIR, exist_ok=True)
+        except Exception:
+            pass
+    if not os.path.exists(STORE_FILE):
+        initial_data = {
+            "tiktok": INITIAL_TIKTOK_CREATORS,
+            "youtube": INITIAL_YOUTUBE_CHANNELS
+        }
+        try:
+            with open(STORE_FILE, "w", encoding="utf-8") as f:
+                json.dump(initial_data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"Error initializing channels_store.json: {e}")
+
+def load_all_channels() -> Dict[str, List[Dict[str, Any]]]:
+    _ensure_store_file()
+    try:
+        with open(STORE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return {
+                "tiktok": data.get("tiktok", []),
+                "youtube": data.get("youtube", [])
+            }
+    except Exception as e:
+        print(f"Error loading channels_store.json: {e}")
+        return {
+            "tiktok": INITIAL_TIKTOK_CREATORS,
+            "youtube": INITIAL_YOUTUBE_CHANNELS
+        }
+
+def save_all_channels(data: Dict[str, List[Dict[str, Any]]]):
+    _ensure_store_file()
+    try:
+        with open(STORE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error saving channels_store.json: {e}")
+
+def bump_tiktok_creator(username: str, nickname: str = "", avatar: str = "", downloads_inc: int = 0, video_count: Optional[int] = None, category: str = ""):
+    if not username:
+        return
+    data = load_all_channels()
+    clean_user = username.strip().lstrip("@")
+    found = None
+    for item in data["tiktok"]:
+        if item.get("username", "").lower() == clean_user.lower():
+            found = item
+            break
+    
+    now_str = time.strftime("%Y-%m-%d %H:%M")
+    if not found:
+        found = {
+            "id": clean_user.lower(),
+            "username": clean_user,
+            "nickname": nickname or clean_user,
+            "avatar": avatar or f"https://api.dicebear.com/7.x/bottts/svg?seed={clean_user}",
+            "downloads": max(0, downloads_inc),
+            "video_count": video_count or 0,
+            "category": category or "TikTok 创作者",
+            "url": f"https://www.tiktok.com/@{clean_user}",
+            "last_at": now_str
+        }
+        data["tiktok"].insert(0, found)
+    else:
+        if nickname:
+            found["nickname"] = nickname
+        if avatar:
+            found["avatar"] = avatar
+        if video_count is not None and video_count > 0:
+            found["video_count"] = video_count
+        if category:
+            found["category"] = category
+        if downloads_inc > 0:
+            found["downloads"] = (found.get("downloads") or 0) + downloads_inc
+        found["last_at"] = now_str
+        # 移到最前
+        data["tiktok"].remove(found)
+        data["tiktok"].insert(0, found)
+
+    save_all_channels(data)
+    return found
+
+def bump_youtube_channel(channel_input: str, title: str = "", avatar: str = "", downloads_inc: int = 0, cat: str = "", cat_name: str = "", video_count: Optional[int] = None):
+    if not channel_input:
+        return
+    data = load_all_channels()
+    clean_handle = channel_input.strip()
+    if clean_handle.startswith("http"):
+        handle_str = clean_handle.split("/")[-1]
+    else:
+        handle_str = "@" + clean_handle.lstrip("@")
+    
+    clean_id = handle_str.lstrip("@").lower()
+    
+    found = None
+    for item in data["youtube"]:
+        if item.get("id", "").lower() == clean_id or item.get("handle", "").lower() == handle_str.lower():
+            found = item
+            break
+
+    now_str = time.strftime("%Y-%m-%d %H:%M")
+    if not found:
+        found = {
+            "id": clean_id,
+            "url": clean_handle if clean_handle.startswith("http") else f"https://www.youtube.com/{handle_str}",
+            "handle": handle_str,
+            "title": title or handle_str,
+            "avatar": avatar or f"https://api.dicebear.com/7.x/identicon/svg?seed={clean_id}",
+            "cat": cat or "other",
+            "cat_name": cat_name or "其他",
+            "downloads": max(0, downloads_inc),
+            "video_count": video_count or 0,
+            "last_at": now_str
+        }
+        data["youtube"].insert(0, found)
+    else:
+        if title:
+            found["title"] = title
+        if avatar:
+            found["avatar"] = avatar
+        if cat:
+            found["cat"] = cat
+        if cat_name:
+            found["cat_name"] = cat_name
+        if video_count is not None and video_count > 0:
+            found["video_count"] = video_count
+        if downloads_inc > 0:
+            found["downloads"] = (found.get("downloads") or 0) + downloads_inc
+        found["last_at"] = now_str
+        # 移到最前
+        data["youtube"].remove(found)
+        data["youtube"].insert(0, found)
+
+    save_all_channels(data)
+    return found
+
+def delete_channel(platform: str, channel_id: str) -> bool:
+    data = load_all_channels()
+    key = "tiktok" if platform == "tiktok" else "youtube"
+    target_list = data.get(key, [])
+    before_len = len(target_list)
+    data[key] = [c for c in target_list if str(c.get("id", "")).lower() != channel_id.lower() and str(c.get("username", "")).lower() != channel_id.lower()]
+    if len(data[key]) != before_len:
+        save_all_channels(data)
+        return True
+    return False
