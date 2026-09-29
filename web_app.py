@@ -98,6 +98,7 @@ from youtube_study_helper import (
 )
 import channels_store
 import ft_store
+import bloomberg_store
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 
@@ -267,6 +268,9 @@ class FtDeleteArticleRequest(BaseModel):
 class FtSaveCookieRequest(BaseModel):
     cookie: str
 
+class BloombergScanRequest(BaseModel):
+    limit: Optional[int] = 4
+
 @app.get("/api/channels")
 def get_channels_endpoint():
     data = channels_store.load_all_channels()
@@ -300,20 +304,26 @@ def add_channel_endpoint(req: AddChannelRequest):
 # ==================== Foreign Publications (外刊内容工厂) APIs ====================
 @app.get("/api/bloomberg/articles")
 def get_bloomberg_articles_endpoint():
-    path = os.path.join(os.path.dirname(__file__), "data", "bloomberg_articles.json")
-    if os.path.exists(path):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                articles = json.load(f)
-        except Exception:
-            articles = []
-    else:
-        articles = []
+    articles = bloomberg_store.load_bloomberg_articles()
     return {
         "success": True,
         "articles": articles,
         "total": len(articles)
     }
+
+@app.post("/api/bloomberg/scan")
+def scan_bloomberg_endpoint(req: BloombergScanRequest = BloombergScanRequest()):
+    try:
+        new_arts = bloomberg_store.scan_bloomberg_syndication(limit_per_section=req.limit or 4)
+        all_articles = bloomberg_store.load_bloomberg_articles()
+        return {
+            "success": True,
+            "new_count": len(new_arts),
+            "articles": all_articles,
+            "total": len(all_articles)
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 @app.get("/api/ft/sections")
 def get_ft_sections_endpoint():
@@ -2813,15 +2823,21 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div>
               <div class="flex items-center space-x-2">
                 <h2 class="text-base font-bold text-slate-100">彭博社商业周刊 Bloomberg Studio</h2>
-                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono">10 篇已收录</span>
+                <span id="bbArticlesCountBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono">已收录</span>
               </div>
               <p class="text-xs text-slate-400 mt-0.5">全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪 · 深度长文精读</p>
             </div>
           </div>
-          <button onclick="loadBloombergUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span>刷新彭博周刊库</span>
-          </button>
+          <div class="flex items-center space-x-2">
+            <button id="btnScanBloombergLive" onclick="scanBloombergLive()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-cyan-600/20 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
+              <span id="btnScanBloombergText">⚡ 实时从联合分发源抓取最新长文</span>
+            </button>
+            <button onclick="loadBloombergUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <span>刷新彭博周刊库</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -5496,7 +5512,41 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    async function scanBloombergLive() {
+      const btn = document.getElementById('btnScanBloombergLive');
+      const textSpan = document.getElementById('btnScanBloombergText');
+      if (btn) btn.disabled = true;
+      if (textSpan) textSpan.innerText = '正在从联合分发源极速抓取...';
+      showToast('正在从联合分发源抓取彭博社最新深度长文...', 'info');
+
+      try {
+        const res = await fetch('/api/bloomberg/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ limit: 4 })
+        });
+        const data = await res.json();
+        if (data.success) {
+          bloombergArticles = data.articles || [];
+          renderBloombergArticlesGrid();
+          updatePubMatrixStats();
+          showToast(`抓取完成！新入库 ${data.new_count || 0} 篇彭博社深度长文 (全文无损入库)`, 'success');
+        } else {
+          showToast('抓取失败: ' + (data.error || '未知错误'), 'error');
+        }
+      } catch (e) {
+        showToast('请求异常: ' + e.message, 'error');
+      } finally {
+        if (btn) btn.disabled = false;
+        if (textSpan) textSpan.innerText = '⚡ 实时从联合分发源抓取最新长文';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
     function renderBloombergArticlesGrid() {
+      const badge = document.getElementById('bbArticlesCountBadge');
+      if (badge) badge.innerText = `${bloombergArticles.length} 篇已收录`;
+
       const container = document.getElementById('bbArticlesGrid');
       if (!container) return;
 
