@@ -15,6 +15,7 @@ import queue
 import threading
 import subprocess
 import webbrowser
+import asyncio
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 
@@ -86,6 +87,7 @@ from youtube_study_helper import (
     generate_study_document
 )
 import channels_store
+import ft_store
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 
@@ -239,6 +241,22 @@ class AddChannelRequest(BaseModel):
     nickname: Optional[str] = ""
     cat: Optional[str] = "other"
 
+class FtScanRequest(BaseModel):
+    section: str = "home"
+    limit: int = 10
+    cookie: Optional[str] = None
+
+class FtScrapeUrlRequest(BaseModel):
+    url: str
+    section: Optional[str] = "General"
+    cookie: Optional[str] = None
+
+class FtDeleteArticleRequest(BaseModel):
+    url: str
+
+class FtSaveCookieRequest(BaseModel):
+    cookie: str
+
 @app.get("/api/channels")
 def get_channels_endpoint():
     data = channels_store.load_all_channels()
@@ -268,6 +286,91 @@ def add_channel_endpoint(req: AddChannelRequest):
         item = channels_store.bump_youtube_channel(req.username_or_url, title=req.nickname or req.username_or_url, cat=req.cat or "other", cat_name=cat_name)
     data = channels_store.load_all_channels()
     return {"success": True, "item": item, "tiktok": data.get("tiktok", []), "youtube": data.get("youtube", [])}
+
+# ==================== Financial Times (FT) APIs ====================
+@app.get("/api/ft/sections")
+def get_ft_sections_endpoint():
+    return {
+        "success": True,
+        "sections": ft_store.FT_SECTIONS
+    }
+
+@app.get("/api/ft/articles")
+def get_ft_articles_endpoint():
+    articles = ft_store.load_all_articles()
+    return {
+        "success": True,
+        "articles": articles,
+        "total": len(articles),
+        "sections": ft_store.FT_SECTIONS,
+        "has_cookie": bool(ft_store.get_saved_cookie())
+    }
+
+@app.get("/api/ft/cookie")
+def get_ft_cookie_endpoint():
+    cookie = ft_store.get_saved_cookie()
+    return {
+        "success": True,
+        "cookie": cookie,
+        "has_cookie": bool(cookie)
+    }
+
+@app.post("/api/ft/cookie")
+def save_ft_cookie_endpoint(req: FtSaveCookieRequest):
+    ft_store.save_cookie(req.cookie)
+    return {
+        "success": True,
+        "message": "Cookie 保存成功"
+    }
+
+@app.post("/api/ft/scrape_url")
+def scrape_ft_url_endpoint(req: FtScrapeUrlRequest):
+    url = req.url.strip()
+    if not url:
+        return {"success": False, "message": "URL 不能为空"}
+    try:
+        article = ft_store.scrape_single_article(url, section=req.section or "General", cookie_str=req.cookie)
+        if article.get("paragraph_count", 0) > 0 or article.get("title"):
+            ft_store.upsert_article(article)
+            return {"success": True, "article": article}
+        else:
+            return {"success": False, "message": "未能提取到正文，请检查链接或更新 Cookie", "article": article}
+    except Exception as e:
+        return {"success": False, "message": f"抓取异常: {str(e)}"}
+
+@app.post("/api/ft/scan")
+async def scan_ft_section_endpoint(req: FtScanRequest):
+    try:
+        # 1. Fetch RSS items for section
+        items = await ft_store.fetch_section_rss_items(req.section, limit=req.limit)
+        if not items:
+            return {"success": False, "message": f"未能拉取到板块 [{req.section}] 的 RSS 提要"}
+
+        scraped_articles = []
+        for it in items:
+            # 2. Scrape each article
+            art = ft_store.scrape_single_article(it["url"], section=it.get("section", req.section), cookie_str=req.cookie)
+            if art.get("title") and art.get("title") != "Failed to scrape":
+                ft_store.upsert_article(art)
+                scraped_articles.append(art)
+            # Small courteous sleep
+            await asyncio.sleep(0.5)
+
+        all_articles = ft_store.load_all_articles()
+        return {
+            "success": True,
+            "scanned_count": len(items),
+            "scraped_count": len(scraped_articles),
+            "articles": all_articles
+        }
+    except Exception as e:
+        return {"success": False, "message": f"批量扫描失败: {str(e)}"}
+
+@app.post("/api/ft/delete")
+def delete_ft_article_endpoint(req: FtDeleteArticleRequest):
+    success = ft_store.delete_article(req.url)
+    articles = ft_store.load_all_articles()
+    return {"success": success, "articles": articles}
 
 @app.post("/api/resolve_folder")
 def resolve_folder_api(req: ResolveFolderRequest):
@@ -1320,6 +1423,11 @@ HTML_CONTENT = """<!DOCTYPE html>
       border-color: rgba(147, 51, 234, 0.6) !important;
       box-shadow: 0 0 15px rgba(147, 51, 234, 0.2) !important;
     }
+    .platform-card-active-ft {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(244, 63, 94, 0.18) 100%) !important;
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.22) !important;
+    }
     .youtube-gradient-text {
       background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);
       -webkit-background-clip: text;
@@ -1330,10 +1438,21 @@ HTML_CONTENT = """<!DOCTYPE html>
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .ft-gradient-text {
+      background: linear-gradient(135deg, #fcd34d 0%, #fda4af 50%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     .yt-tab-active {
       background-color: #171d31 !important;
       border-top: 2px solid #ef4444 !important;
       color: #ffffff !important;
+      font-weight: 600;
+    }
+    .ft-tab-active {
+      background-color: #1f191a !important;
+      border-top: 2px solid #f59e0b !important;
+      color: #fef08a !important;
       font-weight: 600;
     }
   </style>
@@ -1446,6 +1565,23 @@ HTML_CONTENT = """<!DOCTYPE html>
                 <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-900/60 font-medium">卡片 3</span>
               </div>
               <p class="text-[11px] text-slate-400 leading-snug pl-0.5">已添加博主集中管理与八维书签分类</p>
+            </div>
+
+            <!-- 卡片 4: Financial Times (金融时报资讯与深度文章库) -->
+            <div id="sidebarCardFT" onclick="switchPlatform('ft')" class="p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 cursor-pointer transition-all space-y-1.5 select-none group">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
+                    <i data-lucide="newspaper" class="w-4 h-4 text-white"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors">Financial Times</h3>
+                    <p class="text-[10px] text-slate-400">深度财经 / 科技 / 社论</p>
+                  </div>
+                </div>
+                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-900/60 font-medium">卡片 4</span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">全版块 RSS 嗅探、正文段落极速提取与归档</p>
             </div>
           </div>
 
@@ -2221,6 +2357,194 @@ HTML_CONTENT = """<!DOCTYPE html>
     </div>
 
   </main>
+
+  <!-- ================= 页面 4: Financial Times (金融时报深度资讯库) ================= -->
+  <main id="pageFT" class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6 flex-1 hidden">
+    
+    <!-- 顶部概览与控制条 -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+            <i data-lucide="newspaper" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h2 class="text-base font-bold text-slate-100">Financial Times 深度财经资讯库</h2>
+              <span id="ftCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono">Cookie 就绪</span>
+              <span id="ftTotalArticlesBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">0 篇入库</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">多板块 RSS 深度嗅探、TLS 指纹模拟、段落级正文无损抓取与批量归档</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button onclick="loadFtUI()" class="px-3 py-2 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>刷新文章</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 🌟 FT 书签式板块切换栏 (全部 / 首页 / 科技AI / 全球市场 / 商业公司 / 全球新闻 / 观点社论 / 高端专栏) -->
+      <div class="pt-2 border-t border-slate-800/70">
+        <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1 select-none" id="ftSectionTabs">
+          <!-- 动态渲染 Tabs -->
+        </div>
+      </div>
+
+      <!-- 抓取控制台：单篇抓取 + 板块一键批量扫描 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2">
+        <!-- 左侧：单篇 URL 抓取 -->
+        <div class="md:col-span-6 flex items-center space-x-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
+          <input type="text" id="inputFtSingleUrl" placeholder="输入任意 FT 文章链接: https://www.ft.com/content/..." class="flex-1 bg-transparent px-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+          <button id="btnFtScrapeSingle" onclick="scrapeSingleFtUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>提取单篇</span>
+          </button>
+        </div>
+
+        <!-- 右侧：板块一键批量扫描 -->
+        <div class="md:col-span-6 flex items-center space-x-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 pl-2 shrink-0">批量嗅探:</span>
+          <select id="selectFtBatchCount" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none">
+            <option value="5">最新 5 篇</option>
+            <option value="10" selected>最新 10 篇</option>
+            <option value="15">最新 15 篇</option>
+            <option value="20">最新 20 篇</option>
+          </select>
+          <button id="btnFtScanSection" onclick="scanCurrentFtSection()" class="flex-1 px-4 py-2 text-xs font-semibold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white rounded-lg shadow-md shadow-amber-600/20 transition-all flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95">
+            <i data-lucide="scan-line" class="w-3.5 h-3.5"></i>
+            <span id="btnFtScanSectionText">一键扫描当前板块并抓取全文</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cookie 设置折叠面板 -->
+      <details class="text-xs text-slate-400 cursor-pointer pt-1">
+        <summary class="hover:text-amber-300 select-none flex items-center space-x-1.5 font-medium">
+          <span>⚙️ FT 认证 Cookie 配置 (已自动同步，点击展开查看或更新)</span>
+        </summary>
+        <div class="mt-2.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5">
+          <p class="text-[11px] text-slate-400">系统已注入你的已登录 Cookie。如果后续账号会话过期，可在此粘贴新的 Cookie 字符串并保存：</p>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="inputFtCookieStr" placeholder="粘贴 Cookie 文本: FTClientSessionId=...; FTSession_s=..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono">
+            <button onclick="saveFtCookieFromInput()" class="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-all shrink-0 cursor-pointer active:scale-95">
+              保存 Cookie
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- 文章列表搜索与管理工具条 -->
+    <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+      <div class="flex items-center space-x-3">
+        <div class="relative">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="inputFtSearch" oninput="filterFtArticles()" placeholder="搜索已抓取文章标题、作者或正文..." class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 w-64 md:w-80">
+        </div>
+        <button onclick="toggleSelectAllFtArticles()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-800 transition-colors cursor-pointer">
+          <span id="btnSelectAllFtText">全选</span>
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs text-slate-400">
+        <span>当前展示: <strong id="ftFilteredCountText" class="text-amber-400">0</strong> 篇</span>
+      </div>
+    </div>
+
+    <!-- 文章卡片网格 -->
+    <div id="ftArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
+      <!-- 动态渲染文章卡片 -->
+    </div>
+
+    <!-- 底部固定批量操作栏 -->
+    <div id="ftActionBar" class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 border-t border-slate-800/90 backdrop-blur-lg px-6 py-3.5 shadow-2xl transition-all flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></div>
+          <span class="text-xs font-bold text-slate-200">
+            已选中 <span id="ftSelectedCountBadge" class="text-amber-400 font-mono text-sm">0</span> 篇文章
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2.5">
+        <button onclick="exportFtSelected('json')" class="px-3.5 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="file-json" class="w-4 h-4 text-amber-400"></i>
+          <span>导出 JSON</span>
+        </button>
+        <button onclick="exportFtSelected('markdown')" class="px-3.5 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="file-code" class="w-4 h-4 text-cyan-400"></i>
+          <span>导出 Markdown</span>
+        </button>
+        <button onclick="exportFtSelected('txt')" class="px-3.5 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+          <span>导出 TXT</span>
+        </button>
+        <button onclick="deleteFtSelectedArticles()" class="px-3.5 py-2 text-xs font-semibold bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800/60 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="trash-2" class="w-4 h-4 text-rose-400"></i>
+          <span>批量删除</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 文章阅读弹窗模态框 (优雅全文阅读器) -->
+  <div id="ftArticleReaderModal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl space-y-0 overflow-hidden transform transition-all">
+      
+      <!-- 弹窗顶栏 -->
+      <div class="p-5 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span id="ftModalSectionBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-medium">科技与AI</span>
+          <span id="ftModalWordCountBadge" class="text-[11px] text-slate-400 font-mono">21 段落 • 约 1,240 词</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="copyFtArticleText()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="复制全文">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+          </button>
+          <a id="ftModalOriginalLink" href="#" target="_blank" class="p-2 text-slate-400 hover:text-amber-400 rounded-lg hover:bg-slate-800 transition-colors" title="在 FT 原网站打开">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+          <button onclick="closeFtArticleModal()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="关闭 (Esc)">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 弹窗正文滚动区 -->
+      <div class="p-6 overflow-y-auto custom-scroll flex-1 space-y-4 bg-slate-950/30">
+        <h1 id="ftModalTitle" class="text-xl md:text-2xl font-bold text-slate-100 leading-snug tracking-tight font-serif"></h1>
+        
+        <p id="ftModalStandfirst" class="text-sm font-medium text-amber-200/90 leading-relaxed border-l-2 border-amber-500 pl-3 py-0.5"></p>
+        
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 border-b border-slate-800/80 pb-3">
+          <span id="ftModalAuthors" class="font-medium text-slate-300"></span>
+          <span>•</span>
+          <span id="ftModalPublishedAt"></span>
+          <span>•</span>
+          <span id="ftModalScrapedAt" class="text-slate-500"></span>
+        </div>
+
+        <!-- 正文段落渲染区 -->
+        <div id="ftModalParagraphs" class="space-y-4 text-slate-200 text-sm md:text-base leading-relaxed font-sans pt-2">
+          <!-- 动态渲染段落 -->
+        </div>
+      </div>
+
+      <!-- 弹窗底栏 -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between">
+        <span class="text-xs text-slate-500">Financial Times Content Factory Engine</span>
+        <button onclick="closeFtArticleModal()" class="px-4 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition-colors cursor-pointer">
+          关闭阅读
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- 脚部 -->
   <footer class="border-t border-slate-800/80 py-4 mt-8 bg-slate-950/60">
@@ -3619,9 +3943,11 @@ HTML_CONTENT = """<!DOCTYPE html>
       const pageTikTok = document.getElementById('pageTikTok');
       const pageYouTube = document.getElementById('pageYouTube');
       const pageChannels = document.getElementById('pageChannels');
+      const pageFT = document.getElementById('pageFT');
       const cardTikTok = document.getElementById('sidebarCardTikTok');
       const cardYouTube = document.getElementById('sidebarCardYouTube');
       const cardChannels = document.getElementById('sidebarCardChannels');
+      const cardFT = document.getElementById('sidebarCardFT');
       const headerTitle = document.getElementById('headerAppTitle');
       const headerSubtitle = document.getElementById('headerAppSubtitle');
       const headerIcon = document.getElementById('headerAppIcon');
@@ -3632,11 +3958,13 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (pageTikTok) pageTikTok.classList.add('hidden');
       if (pageYouTube) pageYouTube.classList.add('hidden');
       if (pageChannels) pageChannels.classList.add('hidden');
+      if (pageFT) pageFT.classList.add('hidden');
 
       const inactiveCardClass = "bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 p-3 rounded-2xl transition-all cursor-pointer space-y-1.5 select-none group hover:border-slate-700";
       if (cardTikTok) cardTikTok.className = inactiveCardClass;
       if (cardYouTube) cardYouTube.className = inactiveCardClass;
       if (cardChannels) cardChannels.className = inactiveCardClass;
+      if (cardFT) cardFT.className = inactiveCardClass;
 
       if (btnDemo) btnDemo.classList.remove('hidden');
 
@@ -3682,6 +4010,20 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (btnDemo) btnDemo.classList.add('hidden');
 
         loadChannelsUI();
+      } else if (platform === 'ft') {
+        if (pageFT) pageFT.classList.remove('hidden');
+        if (cardFT) cardFT.className = "platform-card-active-ft p-3 rounded-2xl border cursor-pointer transition-all space-y-1.5 select-none group";
+
+        if (headerTitle) {
+          headerTitle.className = "text-lg font-bold ft-gradient-text leading-tight";
+          headerTitle.innerText = "Financial Times Content Studio";
+        }
+        if (headerSubtitle) headerSubtitle.innerText = "金融时报深度财经、科技AI与商业社论批量解析抓取引擎";
+        if (headerIcon) headerIcon.className = "w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center shadow-lg shadow-amber-500/25";
+        if (headerIconLucide) headerIconLucide.setAttribute('data-lucide', 'newspaper');
+        if (btnDemo) btnDemo.classList.add('hidden');
+
+        loadFtUI();
       }
       lucide.createIcons();
     }
@@ -4660,6 +5002,468 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
       updateYtSelectedCount();
       renderYtCurrentPage();
+    }
+
+    // =========================================================================
+    // Financial Times (FT) 前端业务状态机与交互逻辑 (第四卡片)
+    // =========================================================================
+    let ftArticles = [];
+    let ftSections = [];
+    let currentFtSectionTab = 'all';
+    let ftSelectedUrls = new Set();
+    let ftSearchKeyword = '';
+    let currentViewingFtArticle = null;
+
+    async function loadFtUI() {
+      try {
+        const res = await fetch('/api/ft/articles');
+        const data = await res.json();
+        if (data.success) {
+          ftArticles = data.articles || [];
+          ftSections = data.sections || [];
+          
+          // 更新顶部徽章
+          const totalBadge = document.getElementById('ftTotalArticlesBadge');
+          if (totalBadge) totalBadge.innerText = `${ftArticles.length} 篇入库`;
+
+          const cookieBadge = document.getElementById('ftCookieStatusBadge');
+          if (cookieBadge) {
+            if (data.has_cookie) {
+              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono";
+              cookieBadge.innerText = "Cookie 就绪";
+            } else {
+              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono";
+              cookieBadge.innerText = "未填 Cookie";
+            }
+          }
+
+          // 同步 Cookie 输入框
+          fetch('/api/ft/cookie').then(r => r.json()).then(ckData => {
+            const input = document.getElementById('inputFtCookieStr');
+            if (input && ckData.cookie) input.value = ckData.cookie;
+          });
+
+          renderFtTabs();
+          renderFtArticlesGrid();
+        }
+      } catch (e) {
+        console.error("加载 FT 数据失败:", e);
+      }
+    }
+
+    function renderFtTabs() {
+      const container = document.getElementById('ftSectionTabs');
+      if (!container) return;
+
+      const tabs = [
+        { id: 'all', name: '全部文章' },
+        ...ftSections
+      ];
+
+      container.innerHTML = tabs.map(t => {
+        const isActive = (currentFtSectionTab === t.id);
+        const count = t.id === 'all' 
+          ? ftArticles.length 
+          : ftArticles.filter(a => a.section && (a.section.toLowerCase().includes(t.id) || a.section.includes(t.name.split(' ')[0]))).length;
+
+        const activeCls = isActive 
+          ? "ft-tab-active bg-amber-950/40 text-amber-300 border-b-2 border-amber-500 font-bold" 
+          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900 border-b-2 border-transparent font-medium";
+
+        return `
+          <button onclick="switchFtSectionTab('${t.id}')" class="px-3 py-2 text-xs rounded-t-lg transition-all whitespace-nowrap flex items-center space-x-1.5 cursor-pointer ${activeCls}">
+            <span>${t.name}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-amber-900 text-amber-200' : 'bg-slate-800 text-slate-500'} font-mono">${count}</span>
+          </button>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function switchFtSectionTab(tabId) {
+      currentFtSectionTab = tabId;
+      renderFtTabs();
+      renderFtArticlesGrid();
+    }
+
+    function filterFtArticles() {
+      const input = document.getElementById('inputFtSearch');
+      ftSearchKeyword = input ? input.value.trim().toLowerCase() : '';
+      renderFtArticlesGrid();
+    }
+
+    function getFilteredFtArticles() {
+      let list = ftArticles;
+      // 1. 板块过滤
+      if (currentFtSectionTab !== 'all') {
+        const secObj = ftSections.find(s => s.id === currentFtSectionTab);
+        const secName = secObj ? secObj.name.split(' ')[0] : '';
+        list = list.filter(a => a.section && (a.section.toLowerCase().includes(currentFtSectionTab) || (secName && a.section.includes(secName))));
+      }
+      // 2. 搜索关键词
+      if (ftSearchKeyword) {
+        list = list.filter(a => {
+          const t = (a.title || '').toLowerCase();
+          const s = (a.standfirst || '').toLowerCase();
+          const f = (a.full_text || '').toLowerCase();
+          const auth = (a.authors || []).join(' ').toLowerCase();
+          return t.includes(ftSearchKeyword) || s.includes(ftSearchKeyword) || f.includes(ftSearchKeyword) || auth.includes(ftSearchKeyword);
+        });
+      }
+      return list;
+    }
+
+    function renderFtArticlesGrid() {
+      const container = document.getElementById('ftArticlesGrid');
+      const filteredCountText = document.getElementById('ftFilteredCountText');
+      if (!container) return;
+
+      const list = getFilteredFtArticles();
+      if (filteredCountText) filteredCountText.innerText = list.length;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-slate-900/40 border border-slate-800/80 rounded-2xl">
+            <i data-lucide="newspaper" class="w-10 h-10 text-slate-600 mx-auto"></i>
+            <p class="text-sm text-slate-400 font-medium">暂无抓取文章</p>
+            <p class="text-xs text-slate-500">点击上方“一键扫描当前板块”或输入文章链接开始批量提取</p>
+          </div>
+        `;
+        lucide.createIcons();
+        updateFtSelectedCount();
+        return;
+      }
+
+      container.innerHTML = list.map(a => {
+        const isSelected = ftSelectedUrls.has(a.url);
+        const authorsStr = (a.authors && a.authors.length > 0) ? a.authors.slice(0, 2).join(', ') : 'FT 记者';
+        const pubDateStr = a.published_at ? a.published_at.slice(0, 10) : (a.scraped_at ? a.scraped_at.slice(0, 10) : '近期');
+        const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
+
+        return `
+          <div class="bg-slate-900/80 hover:bg-slate-900 border ${isSelected ? 'border-amber-500/80 ring-1 ring-amber-500/50' : 'border-slate-800'} hover:border-slate-700 rounded-2xl p-4 shadow-lg transition-all flex flex-col justify-between space-y-3 group select-none">
+            
+            <div class="space-y-2.5">
+              <!-- 顶部标签与勾选框 -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectFtArticle('${encodeURIComponent(a.url)}', this.checked)" class="w-4 h-4 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0 cursor-pointer">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800/60 font-medium">${a.section || 'FT 深度'}</span>
+                  ${a.is_paywalled ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800">需登录</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">全文无损</span>'}
+                </div>
+                <span class="text-[11px] text-slate-500 font-mono">${parasCount} 段 • ${a.word_count || 0} 词</span>
+              </div>
+
+              <!-- 标题 -->
+              <h3 onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="text-sm font-bold text-slate-100 group-hover:text-amber-300 transition-colors line-clamp-2 cursor-pointer font-serif leading-snug">
+                ${a.title || '无标题文章'}
+              </h3>
+
+              <!-- 副标摘要 / Standfirst -->
+              ${a.standfirst ? `<p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">${a.standfirst}</p>` : ''}
+            </div>
+
+            <!-- 底栏作者与操作按钮 -->
+            <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
+              <span class="truncate max-w-[150px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
+              
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer">
+                  <i data-lucide="book-open" class="w-3 h-3"></i>
+                  <span>阅读</span>
+                </button>
+                <a href="${a.url}" target="_blank" class="p-1 hover:text-amber-400 rounded hover:bg-slate-800 transition-colors" title="在 FT 原网查看">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+                <button onclick="deleteFtArticle('${encodeURIComponent(a.url)}')" class="p-1 hover:text-rose-400 rounded hover:bg-slate-800 transition-colors" title="删除">
+                  <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+      updateFtSelectedCount();
+    }
+
+    function toggleSelectFtArticle(encodedUrl, isChecked) {
+      const url = decodeURIComponent(encodedUrl);
+      if (isChecked) {
+        ftSelectedUrls.add(url);
+      } else {
+        ftSelectedUrls.delete(url);
+      }
+      updateFtSelectedCount();
+      renderFtArticlesGrid();
+    }
+
+    function toggleSelectAllFtArticles() {
+      const list = getFilteredFtArticles();
+      const allSelected = list.every(a => ftSelectedUrls.has(a.url));
+      if (allSelected) {
+        list.forEach(a => ftSelectedUrls.delete(a.url));
+      } else {
+        list.forEach(a => ftSelectedUrls.add(a.url));
+      }
+      const btnText = document.getElementById('btnSelectAllFtText');
+      if (btnText) btnText.innerText = allSelected ? "全选" : "取消全选";
+      updateFtSelectedCount();
+      renderFtArticlesGrid();
+    }
+
+    function updateFtSelectedCount() {
+      const badge = document.getElementById('ftSelectedCountBadge');
+      if (badge) badge.innerText = ftSelectedUrls.size;
+    }
+
+    async function scrapeSingleFtUrl() {
+      const input = document.getElementById('inputFtSingleUrl');
+      const btn = document.getElementById('btnFtScrapeSingle');
+      const url = input ? input.value.trim() : '';
+      if (!url) {
+        showToast("请输入有效的 FT 文章链接", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>抓取中...</span>`;
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/ft/scrape_url', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url: url, section: currentFtSectionTab === 'all' ? 'General' : currentFtSectionTab })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`抓取成功！已获取 ${data.article.paragraph_count} 个段落`, "success");
+          input.value = '';
+          loadFtUI();
+        } else {
+          showToast(data.message || "抓取失败，请检查链接或 Cookie", "error");
+        }
+      } catch (e) {
+        showToast("抓取请求异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>提取单篇</span>`;
+        lucide.createIcons();
+      }
+    }
+
+    async function scanCurrentFtSection() {
+      const btn = document.getElementById('btnFtScanSection');
+      const btnText = document.getElementById('btnFtScanSectionText');
+      const selectCount = document.getElementById('selectFtBatchCount');
+      const limit = selectCount ? parseInt(selectCount.value) : 10;
+      const targetSec = currentFtSectionTab === 'all' ? 'home' : currentFtSectionTab;
+
+      btn.disabled = true;
+      btnText.innerText = `正在嗅探并批量解析最新 ${limit} 篇...`;
+      showToast(`正在批量扫描 FT [${targetSec}] 板块，请稍候...`, "info");
+
+      try {
+        const res = await fetch('/api/ft/scan', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ section: targetSec, limit: limit })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 批量抓取完成！共扫描 ${data.scanned_count} 篇，成功入库 ${data.scraped_count} 篇！`, "success");
+          loadFtUI();
+        } else {
+          showToast(data.message || "批量扫描失败", "error");
+        }
+      } catch (e) {
+        showToast("批量扫描网络异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btnText.innerText = "一键扫描当前板块并抓取全文";
+      }
+    }
+
+    function openFtArticleModal(encodedUrl) {
+      const url = decodeURIComponent(encodedUrl);
+      const article = ftArticles.find(a => a.url === url);
+      if (!article) return;
+
+      currentViewingFtArticle = article;
+      const modal = document.getElementById('ftArticleReaderModal');
+      
+      document.getElementById('ftModalSectionBadge').innerText = article.section || 'FT 深度报道';
+      document.getElementById('ftModalWordCountBadge').innerText = `${article.paragraph_count || article.paragraphs.length} 个段落 • 约 ${article.word_count || 0} 词`;
+      document.getElementById('ftModalTitle').innerText = article.title || '';
+      
+      const standfirstEl = document.getElementById('ftModalStandfirst');
+      if (article.standfirst) {
+        standfirstEl.style.display = 'block';
+        standfirstEl.innerText = article.standfirst;
+      } else {
+        standfirstEl.style.display = 'none';
+      }
+
+      document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : 'Financial Times';
+      document.getElementById('ftModalPublishedAt').innerText = article.published_at || '近期发布';
+      document.getElementById('ftModalScrapedAt').innerText = `入库: ${article.scraped_at || ''}`;
+      document.getElementById('ftModalOriginalLink').href = article.url;
+
+      // 渲染段落
+      const parasContainer = document.getElementById('ftModalParagraphs');
+      if (article.paragraphs && article.paragraphs.length > 0) {
+        parasContainer.innerHTML = article.paragraphs.map((p, idx) => `
+          <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
+        `).join('');
+      } else if (article.full_text) {
+        parasContainer.innerHTML = article.full_text.split('\n\n').map((p, idx) => `
+          <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
+        `).join('');
+      } else {
+        parasContainer.innerHTML = `<p class="text-slate-500 italic">暂无正文段落</p>`;
+      }
+
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeFtArticleModal() {
+      const modal = document.getElementById('ftArticleReaderModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyFtArticleText() {
+      if (!currentViewingFtArticle) return;
+      const text = `${currentViewingFtArticle.title}\n\n${currentViewingFtArticle.standfirst || ''}\n\n${currentViewingFtArticle.full_text || currentViewingFtArticle.paragraphs.join('\n\n')}`;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("已成功复制全文到剪贴板！", "success");
+      });
+    }
+
+    async function deleteFtArticle(encodedUrl) {
+      const url = decodeURIComponent(encodedUrl);
+      if (!confirm("确定要删除这篇已抓取的文章吗？")) return;
+      try {
+        const res = await fetch('/api/ft/delete', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        if (data.success) {
+          ftArticles = data.articles;
+          ftSelectedUrls.delete(url);
+          renderFtArticlesGrid();
+          showToast("文章已删除", "success");
+        }
+      } catch (e) {
+        showToast("删除失败: " + e, "error");
+      }
+    }
+
+    async function deleteFtSelectedArticles() {
+      if (ftSelectedUrls.size === 0) {
+        showToast("请先勾选需要删除的文章", "info");
+        return;
+      }
+      if (!confirm(`确定要批量删除选中的 ${ftSelectedUrls.size} 篇文章吗？`)) return;
+
+      for (const url of Array.from(ftSelectedUrls)) {
+        await fetch('/api/ft/delete', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url })
+        });
+      }
+      ftSelectedUrls.clear();
+      loadFtUI();
+      showToast("已批量删除选定文章", "success");
+    }
+
+    function exportFtSelected(format) {
+      const list = ftArticles.filter(a => ftSelectedUrls.has(a.url));
+      const targetList = list.length > 0 ? list : getFilteredFtArticles();
+      if (targetList.length === 0) {
+        showToast("当前无可用文章可导出", "error");
+        return;
+      }
+
+      let content = "";
+      let filename = `FT_Articles_${new Date().toISOString().slice(0,10)}`;
+      let mimeType = "text/plain";
+
+      if (format === 'json') {
+        content = JSON.stringify(targetList, null, 2);
+        filename += ".json";
+        mimeType = "application/json";
+      } else if (format === 'markdown') {
+        content = targetList.map(a => `
+# ${a.title}
+* **板块**: ${a.section || 'General'}
+* **作者**: ${(a.authors || []).join(', ')}
+* **发布时间**: ${a.published_at || ''}
+* **原文链接**: ${a.url}
+
+> ${a.standfirst || ''}
+
+---
+
+${a.full_text || (a.paragraphs || []).join('\n\n')}
+
+\n\n======================================================\n\n
+        `).join('\n');
+        filename += ".md";
+        mimeType = "text/markdown";
+      } else if (format === 'txt') {
+        content = targetList.map(a => `
+======================================================
+【标题】: ${a.title}
+【板块】: ${a.section || 'General'}
+【作者】: ${(a.authors || []).join(', ')}
+【时间】: ${a.published_at || ''}
+【链接】: ${a.url}
+
+【摘要】:
+${a.standfirst || ''}
+
+【正文】:
+${a.full_text || (a.paragraphs || []).join('\n\n')}
+        `).join('\n\n');
+        filename += ".txt";
+      }
+
+      const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      showToast(`已成功导出 ${targetList.length} 篇文章 (${format.toUpperCase()})！`, "success");
+    }
+
+    async function saveFtCookieFromInput() {
+      const input = document.getElementById('inputFtCookieStr');
+      const val = input ? input.value.trim() : '';
+      if (!val) {
+        showToast("请输入有效的 Cookie 字符串", "error");
+        return;
+      }
+      try {
+        const res = await fetch('/api/ft/cookie', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ cookie: val })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast("FT Cookie 已成功保存并生效！", "success");
+          loadFtUI();
+        }
+      } catch (e) {
+        showToast("保存 Cookie 出错: " + e, "error");
+      }
     }
 
     // 页面初始化
