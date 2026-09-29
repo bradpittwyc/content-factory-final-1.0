@@ -5319,7 +5319,7 @@ HTML_CONTENT = """<!DOCTYPE html>
           <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
         `).join('');
       } else if (article.full_text) {
-        parasContainer.innerHTML = article.full_text.split('\n\n').map((p, idx) => `
+        parasContainer.innerHTML = article.full_text.split(/\\r?\\n\\r?\\n/).map((p, idx) => `
           <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
         `).join('');
       } else {
@@ -5337,7 +5337,9 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function copyFtArticleText() {
       if (!currentViewingFtArticle) return;
-      const text = `${currentViewingFtArticle.title}\n\n${currentViewingFtArticle.standfirst || ''}\n\n${currentViewingFtArticle.full_text || currentViewingFtArticle.paragraphs.join('\n\n')}`;
+      const paras = currentViewingFtArticle.paragraphs || [];
+      const body = currentViewingFtArticle.full_text || paras.join('\\n\\n');
+      const text = `${currentViewingFtArticle.title}\\n\\n${currentViewingFtArticle.standfirst || ''}\\n\\n${body}`;
       navigator.clipboard.writeText(text).then(() => {
         showToast("已成功复制全文到剪贴板！", "success");
       });
@@ -5400,38 +5402,17 @@ HTML_CONTENT = """<!DOCTYPE html>
         filename += ".json";
         mimeType = "application/json";
       } else if (format === 'markdown') {
-        content = targetList.map(a => `
-# ${a.title}
-* **板块**: ${a.section || 'General'}
-* **作者**: ${(a.authors || []).join(', ')}
-* **发布时间**: ${a.published_at || ''}
-* **原文链接**: ${a.url}
-
-> ${a.standfirst || ''}
-
----
-
-${a.full_text || (a.paragraphs || []).join('\n\n')}
-
-\n\n======================================================\n\n
-        `).join('\n');
+        content = targetList.map(a => {
+          const body = a.full_text || (a.paragraphs || []).join('\\n\\n');
+          return `# ${a.title}\\n* 板块: ${a.section || 'General'}\\n* 作者: ${(a.authors || []).join(', ')}\\n* 时间: ${a.published_at || ''}\\n* 链接: ${a.url}\\n\\n> ${a.standfirst || ''}\\n\\n---\\n\\n${body}\\n\\n======================================================\\n`;
+        }).join('\\n');
         filename += ".md";
         mimeType = "text/markdown";
       } else if (format === 'txt') {
-        content = targetList.map(a => `
-======================================================
-【标题】: ${a.title}
-【板块】: ${a.section || 'General'}
-【作者】: ${(a.authors || []).join(', ')}
-【时间】: ${a.published_at || ''}
-【链接】: ${a.url}
-
-【摘要】:
-${a.standfirst || ''}
-
-【正文】:
-${a.full_text || (a.paragraphs || []).join('\n\n')}
-        `).join('\n\n');
+        content = targetList.map(a => {
+          const body = a.full_text || (a.paragraphs || []).join('\\n\\n');
+          return `======================================================\\n【标题】: ${a.title}\\n【板块】: ${a.section || 'General'}\\n【作者】: ${(a.authors || []).join(', ')}\\n【时间】: ${a.published_at || ''}\\n【链接】: ${a.url}\\n\\n【摘要】:\\n${a.standfirst || ''}\\n\\n【正文】:\\n${body}\\n`;
+        }).join('\\n');
         filename += ".txt";
       }
 
