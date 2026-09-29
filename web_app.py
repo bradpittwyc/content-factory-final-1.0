@@ -395,6 +395,12 @@ def sync_ft_batch_endpoint(req: FtSyncBatchRequest):
     articles = ft_store.load_all_articles()
     return {"success": True, "synced_count": count, "total": len(articles)}
 
+@app.post("/api/ft/launch_login")
+def launch_ft_login_endpoint(background_tasks: BackgroundTasks):
+    import gui_login_helper
+    background_tasks.add_task(asyncio.run, gui_login_helper.run_gui_login())
+    return {"success": True, "message": "已在系统桌面弹窗调起登录页面，完成验证后系统将自动保存凭证"}
+
 @app.post("/api/resolve_folder")
 def resolve_folder_api(req: ResolveFolderRequest):
     name = req.name.strip()
@@ -2402,6 +2408,10 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
 
         <div class="flex items-center space-x-3">
+          <button onclick="launchFtGuiLogin()" class="px-3.5 py-2 text-xs font-semibold bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95 shadow-sm">
+            <i data-lucide="key" class="w-3.5 h-3.5"></i>
+            <span>🔑 弹窗一键登录授权 (自动填账密)</span>
+          </button>
           <button onclick="loadFtUI()" class="px-3 py-2 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
             <span>刷新文章</span>
@@ -5604,6 +5614,34 @@ HTML_CONTENT = """<!DOCTYPE html>
         showToast("已成功复制采集脚本！请在已登录的 FT 网页控制台粘贴回车！", "success");
         closeFtBrowserSyncModal();
       });
+    }
+
+    async function launchFtGuiLogin() {
+      showToast("正在桌面唤起浏览器登录窗口，已自动预填账号密码...", "info");
+      try {
+        const res = await fetch("/api/ft/launch_login", { method: "POST" });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, "success");
+          let checkTimes = 0;
+          const timer = setInterval(async () => {
+            checkTimes++;
+            if (checkTimes > 40) {
+              clearInterval(timer);
+              return;
+            }
+            const checkRes = await fetch("/api/ft/articles");
+            const checkData = await checkRes.json();
+            if (checkData.has_cookie) {
+              clearInterval(timer);
+              showToast("🎉 登录成功！会话凭证已自动永久保存至系统！", "success");
+              loadFtUI();
+            }
+          }, 3000);
+        }
+      } catch (e) {
+        showToast("调起登录窗口失败: " + e, "error");
+      }
     }
 
     // 页面初始化
