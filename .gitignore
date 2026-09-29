@@ -5,3 +5,7 @@ downloads/
 .env
 .idea/
 .vscode/
+*.png
+*.html
+ft_session.json
+ft_articles/
