@@ -5479,9 +5479,10 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function copyFtArticleText() {
       if (!currentViewingFtArticle) return;
+      const doubleNl = String.fromCharCode(10, 10);
       const paras = currentViewingFtArticle.paragraphs || [];
-      const body = currentViewingFtArticle.full_text || paras.join('\n\n');
-      const text = `${currentViewingFtArticle.title}\n\n${currentViewingFtArticle.standfirst || ''}\n\n${body}`;
+      const body = currentViewingFtArticle.full_text || paras.join(doubleNl);
+      const text = [currentViewingFtArticle.title, currentViewingFtArticle.standfirst || '', body].filter(Boolean).join(doubleNl);
       navigator.clipboard.writeText(text).then(() => {
         showToast("已成功复制纯文本全文到剪贴板！", "success");
       });
@@ -5491,10 +5492,12 @@ HTML_CONTENT = """<!DOCTYPE html>
       const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
       const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
       if (!a) return;
+      const doubleNl = String.fromCharCode(10, 10);
+      const singleNl = String.fromCharCode(10);
       const paras = a.paragraphs || [];
-      const body = a.full_text || paras.join('\n\n');
+      const body = a.full_text || paras.join(doubleNl);
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
-      const md = `# ${a.title}\n\n* **来源**: Financial Times\n* **板块**: ${a.section || 'General'}\n* **作者**: ${authors}\n* **发布时间**: ${a.published_at || ''}\n* **原文链接**: ${a.url}\n\n> **核心导读**: ${a.standfirst || ''}\n\n---\n\n${body}`;
+      const md = ['# ' + a.title, '', '* **来源**: Financial Times', '* **板块**: ' + (a.section || 'General'), '* **作者**: ' + authors, '* **发布时间**: ' + (a.published_at || ''), '* **原文链接**: ' + a.url, '', '> **核心导读**: ' + (a.standfirst || ''), '', '---', '', body].join(singleNl);
       navigator.clipboard.writeText(md).then(() => {
         showToast("已成功复制 Markdown 全文 (含导读与元数据，可直接分发给用户或知识库)！", "success");
       });
@@ -5504,15 +5507,17 @@ HTML_CONTENT = """<!DOCTYPE html>
       const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
       const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
       if (!a) return;
+      const doubleNl = String.fromCharCode(10, 10);
+      const singleNl = String.fromCharCode(10);
       const paras = a.paragraphs || [];
-      const body = a.full_text || paras.join('\n\n');
+      const body = a.full_text || paras.join(doubleNl);
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
-      const md = `# ${a.title}\n\n* **来源**: Financial Times\n* **板块**: ${a.section || 'General'}\n* **作者**: ${authors}\n* **发布时间**: ${a.published_at || ''}\n* **原文链接**: ${a.url}\n\n> **核心导读**: ${a.standfirst || ''}\n\n---\n\n${body}`;
+      const md = ['# ' + a.title, '', '* **来源**: Financial Times', '* **板块**: ' + (a.section || 'General'), '* **作者**: ' + authors, '* **发布时间**: ' + (a.published_at || ''), '* **原文链接**: ' + a.url, '', '> **核心导读**: ' + (a.standfirst || ''), '', '---', '', body].join(singleNl);
       const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
       const anchor = document.createElement('a');
       anchor.href = URL.createObjectURL(blob);
       const safeTitle = (a.title || 'FT_Article').replace(/[\/\\:*?"<>|]/g, '_').slice(0, 50);
-      anchor.download = `${safeTitle}.md`;
+      anchor.download = safeTitle + '.md';
       anchor.click();
       showToast("已启动单篇 Markdown 导出下载！", "success");
     }
