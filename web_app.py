@@ -2443,12 +2443,22 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- 快捷操作与说明 -->
-      <div class="flex items-center justify-between pt-1 text-xs">
-        <button onclick="openFtBrowserSyncModal()" class="text-amber-400 hover:text-amber-300 transition-colors flex items-center space-x-1.5 font-medium cursor-pointer">
-          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>独家付费文章无损秒传 (点击查看浏览器一键极速抓取助手)</span>
-        </button>
+      <!-- 快捷操作与书签一键按钮 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+        <div class="flex items-center space-x-2">
+          <span class="text-amber-400 font-bold flex items-center space-x-1">
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+            <span>真正一键无感抓取：</span>
+          </span>
+          <span class="text-slate-400">把右侧胶囊按钮直接<strong class="text-white">拖到浏览器书签栏</strong>即可（仅需拖一次，永久生效）：</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <a id="btnFtBookmarklet" href="javascript:(async function(){const t=document.createElement('div');t.style.cssText='position:fixed;top:20px;right:20px;z-index:999999;background:#18181b;color:#fef08a;padding:14px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);border:1px solid #f59e0b;font-family:sans-serif;font-size:13px;line-height:1.5;max-width:340px;';t.innerHTML='<b>🚀 FT 批量采集器启动中...</b><br>正在以你的会员身份秒级提取全文...';document.body.appendChild(t);try{const r=await fetch('https://www.ft.com/rss/home/international');const x=await r.text();const d=new DOMParser().parseFromString(x,'text/xml');const items=Array.from(d.querySelectorAll('item')).slice(0,10);const arts=[];for(let i=0;i<items.length;i++){const it=items[i];const title=it.querySelector('title')?.textContent||'';const link=it.querySelector('link')?.textContent||'';t.innerHTML='<b>⏳ 正在提取 ['+(i+1)+'/'+items.length+']</b><br>'+title.slice(0,30)+'...';const pr=await fetch(link);const ph=await pr.text();const pd=new DOMParser().parseFromString(ph,'text/html');const sf=pd.querySelector('.article__standfirst, .standfirst')?.innerText?.trim()||'';const ps=Array.from(pd.querySelectorAll('article p, .article__content p, [data-component=\"article-body\"] p, .n-content-body p')).map(p=>p.innerText.trim()).filter(x=>x.length>20&&!x.includes('Subscribe to read')&&!x.includes('Save now on'));const auth=Array.from(pd.querySelectorAll('.article__author-name, a[data-trackable=\"author\"]')).map(a=>a.innerText.trim()).filter(Boolean);arts.push({id:'ft_'+Date.now()+'_'+i,title,url:link,section:'Home',published_at:it.querySelector('pubDate')?.textContent||'',standfirst:sf,authors:Array.from(new Set(auth)),paragraph_count:ps.length,paragraphs:ps,full_text:ps.join('\\n\\n'),word_count:ps.join(' ').split(/\\s+/).length,is_paywalled:ps.length===0,scraped_at:new Date().toISOString()});await new Promise(res=>setTimeout(res,300));}t.innerHTML='<b>📡 正在同步至本地系统...</b>';const sr=await fetch('http://127.0.0.1:8000/api/ft/sync_batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({articles:arts})});const sd=await sr.json();t.style.borderColor='#10b981';t.innerHTML='<b>🎉 成功入库 '+sd.synced_count+' 篇完整文章！</b><br>请切回 Content Factory 刷新！';setTimeout(()=>t.remove(),3500);}catch(err){t.style.borderColor='#ef4444';t.innerHTML='<b>❌ 抓取失败:</b> '+err.message;setTimeout(()=>t.remove(),4000);}})();" onclick="alert('请直接按住这个按钮，拖到你的 Chrome 浏览器书签栏（按 Ctrl+Shift+B 显示书签栏）！拖过去后，以后在 FT 网页点一下就自动全量抓取并同步！');return false;" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm cursor-grab active:cursor-grabbing flex items-center space-x-1.5 transition-all select-none">
+            <i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i>
+            <span>⭐ 拖我到书签栏：FT一键抓取入库</span>
+          </a>
+        </div>
       </div>
 
       <!-- Cookie 设置折叠面板 -->
