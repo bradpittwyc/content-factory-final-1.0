@@ -131,23 +131,36 @@ def scrape_single_article(url: str, section: str = "General", cookie_str: Option
         # 5. Extract all paragraphs
         p_els = soup.select("article p, .article__content p, [data-component='article-body'] p, .n-content-body p, .article-body p")
         paragraphs = []
+        noise_keywords = [
+            "Subscribe to read", "Sign up to", "Cookies on the FT", "Terms & Conditions",
+            "Save now on essential digital access", "Complete digital access", "Cancel anytime during your trial",
+            "Check whether you already have free access", "Digital access for organisations",
+            "Save now on our curated print edition", "Discover all the plans currently available",
+            "*Hand delivery availability"
+        ]
+
         for p in p_els:
             t = p.get_text(strip=True)
-            if len(t) > 20 and not any(k in t for k in ["Subscribe to read", "Sign up to", "Cookies on the FT", "Terms & Conditions"]):
+            if len(t) > 20 and not any(k.lower() in t.lower() for k in noise_keywords):
                 paragraphs.append(t)
 
         # Fallback if specific selectors didn't catch
         if not paragraphs:
             for p in soup.find_all("p"):
                 t = p.get_text(strip=True)
-                if len(t) > 30 and not any(k in t for k in ["Subscribe to read", "Sign in", "Terms & Conditions"]):
+                if len(t) > 30 and not any(k.lower() in t.lower() for k in noise_keywords):
                     paragraphs.append(t)
 
         full_text = "\n\n".join(paragraphs)
         word_count = len(full_text.split())
 
         # Check paywall block
-        is_paywalled = "Subscribe to read" in title or (len(paragraphs) <= 1 and ("Subscribe" in html_text or "barrier" in html_text))
+        is_paywalled = (
+            "Subscribe to read" in title 
+            or len(paragraphs) == 0 
+            or "barrier" in html_text.lower()
+            or "trial" in title.lower()
+        )
 
         article_obj = {
             "id": f"ft_{int(time.time() * 1000)}",

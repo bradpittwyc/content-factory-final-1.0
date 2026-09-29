@@ -29,6 +29,7 @@ if sys.platform == "win32":
 
 from fastapi import FastAPI, BackgroundTasks, Query
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import yt_dlp
@@ -39,6 +40,15 @@ except Exception:
     scrape_with_native_chrome = None
 
 app = FastAPI(title="TikTok 视频批量抓取控制台")
+
+# 启用 CORS 跨域支持 (允许浏览器扩展与外部页面同步抓取数据)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 全局任务状态管理器
 class TaskManager:
@@ -371,6 +381,19 @@ def delete_ft_article_endpoint(req: FtDeleteArticleRequest):
     success = ft_store.delete_article(req.url)
     articles = ft_store.load_all_articles()
     return {"success": success, "articles": articles}
+
+class FtSyncBatchRequest(BaseModel):
+    articles: List[Dict[str, Any]]
+
+@app.post("/api/ft/sync_batch")
+def sync_ft_batch_endpoint(req: FtSyncBatchRequest):
+    count = 0
+    for art in req.articles:
+        if art.get("title") and art.get("url"):
+            ft_store.upsert_article(art)
+            count += 1
+    articles = ft_store.load_all_articles()
+    return {"success": True, "synced_count": count, "total": len(articles)}
 
 @app.post("/api/resolve_folder")
 def resolve_folder_api(req: ResolveFolderRequest):
@@ -2420,6 +2443,14 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </div>
 
+      <!-- 快捷操作与说明 -->
+      <div class="flex items-center justify-between pt-1 text-xs">
+        <button onclick="openFtBrowserSyncModal()" class="text-amber-400 hover:text-amber-300 transition-colors flex items-center space-x-1.5 font-medium cursor-pointer">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>独家付费文章无损秒传 (点击查看浏览器一键极速抓取助手)</span>
+        </button>
+      </div>
+
       <!-- Cookie 设置折叠面板 -->
       <details class="text-xs text-slate-400 cursor-pointer pt-1">
         <summary class="hover:text-amber-300 select-none flex items-center space-x-1.5 font-medium">
@@ -2543,6 +2574,45 @@ HTML_CONTENT = """<!DOCTYPE html>
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- 浏览器一键秒同步助手弹窗 (无视风控，直接通过浏览器内已登录权限同步) -->
+  <div id="ftBrowserSyncModal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 transform transition-all">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">已登录浏览器一键直抓同步助手</h3>
+            <p class="text-[11px] text-slate-400">直接利用你当前浏览器已有的 FT 付费会员权限，自动秒级抓取并入库</p>
+          </div>
+        </div>
+        <button onclick="closeFtBrowserSyncModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <p>因 Financial Times 对服务端自动化爬虫有严格的 Hard Paywall 拦截，而在你当前已登录的 Chrome/Edge 浏览器中，所有独家文章正文都是<strong>100% 完整解密渲染</strong>的。</p>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+          <div class="font-semibold text-amber-300">使用方法（只需两步）：</div>
+          <ol class="list-decimal list-inside space-y-1 text-slate-400">
+            <li>在已登录 FT 的任意网页按 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">F12</kbd> 打开控制台 (Console)</li>
+            <li>点击下方按钮复制采集脚本，粘贴到控制台回车，<strong>10 篇全文将自动秒级传输并同步到本系统</strong>！</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-2 border-t border-slate-800">
+        <button onclick="closeFtBrowserSyncModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">关闭</button>
+        <button onclick="copyFtSyncCollectorScript()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>一键复制全自动同步脚本</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -5445,6 +5515,85 @@ HTML_CONTENT = """<!DOCTYPE html>
       } catch (e) {
         showToast("保存 Cookie 出错: " + e, "error");
       }
+    }
+
+    function openFtBrowserSyncModal() {
+      const modal = document.getElementById('ftBrowserSyncModal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeFtBrowserSyncModal() {
+      const modal = document.getElementById('ftBrowserSyncModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyFtSyncCollectorScript() {
+      const scriptCode = `(async function syncFTBatchToLocal(maxCount = 10) {
+  console.log("🚀 开始通过已登录浏览器并发抓取 FT 深度文章全文...");
+  const rssRes = await fetch("https://www.ft.com/rss/home/international");
+  const rssXml = await rssRes.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(rssXml, "text/xml");
+  const items = Array.from(xmlDoc.querySelectorAll("item")).slice(0, maxCount);
+  console.log(\`📌 成功发现 \${items.length} 篇最新文章，正在逐篇提取全文...\`);
+  const articles = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const title = item.querySelector("title")?.textContent || "";
+    const link = item.querySelector("link")?.textContent || "";
+    const pubDate = item.querySelector("pubDate")?.textContent || "";
+    const category = item.querySelector("category")?.textContent || "General";
+    console.log(\`⏳ [\${i+1}/\${items.length}] 正在抓取: \${title.slice(0, 40)}...\`);
+    try {
+      const pageRes = await fetch(link);
+      const htmlText = await pageRes.text();
+      const doc = parser.parseFromString(htmlText, "text/html");
+      const standfirst = doc.querySelector('.article__standfirst, .standfirst, [data-component="standfirst"]')?.innerText?.trim() || "";
+      const pEls = Array.from(doc.querySelectorAll('article p, .article__content p, [data-component="article-body"] p, .n-content-body p'));
+      const paragraphs = pEls.map(p => p.innerText.trim()).filter(t => t.length > 20 && !t.includes("Subscribe to read") && !t.includes("Save now on"));
+      const authors = Array.from(doc.querySelectorAll('.article__author-name, a[data-trackable="author"]')).map(a => a.innerText.trim()).filter(Boolean);
+      const articleData = {
+        id: "ft_" + Date.now() + "_" + i,
+        title,
+        url: link,
+        section: category,
+        published_at: pubDate,
+        standfirst,
+        authors: Array.from(new Set(authors)),
+        paragraph_count: paragraphs.length,
+        paragraphs,
+        full_text: paragraphs.join("\\n\\n"),
+        word_count: paragraphs.join(" ").split(/\\s+/).length,
+        is_paywalled: paragraphs.length === 0,
+        scraped_at: new Date().toISOString()
+      };
+      articles.push(articleData);
+      console.log(\`  ✅ 成功获取 \${paragraphs.length} 个正文段落！\`);
+      await new Promise(r => setTimeout(r, 600));
+    } catch(err) {
+      console.error("抓取失败:", title, err);
+    }
+  }
+  console.log("📡 正在将完整文章同步至本地系统 (http://127.0.0.1:8000)...");
+  try {
+    const syncRes = await fetch("http://127.0.0.1:8000/api/ft/sync_batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ articles })
+    });
+    const syncData = await syncRes.json();
+    console.log(\`🎉 恭喜！已成功将 \${syncData.synced_count} 篇完整文章秒级同步到你的 Content Factory 系统中！\`);
+    alert(\`🎉 成功同步 \${syncData.synced_count} 篇 FT 全文到系统！请回到 Content Factory 页面刷新查看！\`);
+  } catch(e) {
+    console.error("同步至本地服务失败:", e);
+  }
+})();`;
+
+      navigator.clipboard.writeText(scriptCode).then(() => {
+        showToast("已成功复制采集脚本！请在已登录的 FT 网页控制台粘贴回车！", "success");
+        closeFtBrowserSyncModal();
+      });
     }
 
     // 页面初始化
