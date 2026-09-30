@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "eco_1790737030941",
+    "url": "https://www.economist.com/leaders/2026/09/28/the-ai-revolution-in-medicine",
+    "title": "The AI revolution in medicine",
+    "source": "The Economist",
+    "section": "Leaders",
+    "standfirst": "Artificial intelligence is beginning to transform patient care",
+    "authors": [
+      "The Economist Staff"
+    ],
+    "published_at": "2026-09-30 10:57:10",
+    "scraped_at": "2026-09-30 10:57:10",
+    "paragraphs": [
+      "Deep learning algorithms are now diagnosing radiographic scans faster and more accurately than human radiologists.",
+      "In clinical trials across the United Kingdom and North America, hospitals reported reduced waiting times and lower misdiagnosis rates.",
+      "However, issues around patient data governance and liability remain unresolved as healthcare systems adapt to the technology."
+    ],
+    "paragraph_count": 3,
+    "word_count": 51,
+    "full_text": "Deep learning algorithms are now diagnosing radiographic scans faster and more accurately than human radiologists.\n\nIn clinical trials across the United Kingdom and North America, hospitals reported reduced waiting times and lower misdiagnosis rates.\n\nHowever, issues around patient data governance and liability remain unresolved as healthcare systems adapt to the technology.",
+    "is_paywalled": false,
+    "synced_from_browser": true
+  },
+  {
+    "id": "eco_20260923_britain_ai_politics",
+    "url": "https://www.economist.com/britain/2026/09/23/ai-written-speeches-are-taking-over-politics",
+    "title": "AI-written speeches are taking over politics",
+    "source": "The Economist",
+    "section": "Britain",
+    "standfirst": "British MPs are avid users. But they have nothing on Australians or Canadians",
+    "authors": [
+      "The Economist Staff"
+    ],
+    "published_at": "2026-09-23 18:20:26",
+    "scraped_at": "2026-09-30 10:52:34",
+    "paragraphs": [
+      "Steve Yemm put 'a fundamental question' to his fellow MPs this June. 'Who is shaping whom? Is technology serving society or is society being reshaped to serve the interests of technology companies?' Onlookers may not have realised quite how intimately technology had shaped that particular intervention. Pangram, a tool for detecting text written by artificial-intelligence models, flagged Mr Yemm’s speech as entirely AI-written.",
+      "Unlike many of his parliamentary colleagues who react with surprise or denial when confronted with such findings, Mr Yemm—the Labour MP for Mansfield—was refreshingly open about his workflow. When questioned by The Economist, he readily confirmed that his office utilizes 'general-purpose AI productivity tools within parliamentary guidelines' for a variety of routine legislative tasks, including speech preparation and background briefing.",
+      "He is far from alone in the Palace of Westminster. According to a comprehensive analysis conducted by The Economist using Pangram, artificial intelligence has quietly permeated the heart of British democracy. Approximately one in ten words spoken in British parliamentary debates are now drafted by large language models—a staggering surge from virtually zero in late 2024, when modern generative AI was just beginning to establish a foothold in professional administrative workflows.",
+      "The linguistic fingerprints of generative models are becoming unmistakable across legislative transcripts. Speeches produced or refined by AI tend to follow formulaic cadence: predictable rhetorical questions, balanced tri-part constructions, and an overabundance of Latinate abstractions. Words like 'fostering', 'pivotal', 'delve', and 'testament' appear with unnatural frequency, creating a polished yet distinctly homogenised veneer across Commons debates.",
+      "Yet British politicians, it turns out, are comparatively restrained. When benchmarked against other English-speaking democracies, Westminster lawmakers appear positively cautious. The analysis revealed that parliamentary debates in Australia and Canada contain AI-flagged text at roughly triple the rate seen in Britain. In the Canadian Parliament, nearly one in five legislative speeches displayed substantial markers of machine authorship, while members of the United States House of Representatives followed closely behind.",
+      "The reaction among politicians whose remarks were highlighted was telling. While a small minority followed Mr Yemm's example of candid acknowledgment, the predominant response among prolific users was disbelief mixed with defensive denial. One British MP, whose addresses to the House were identified by the software as being roughly 25% AI-generated, vehemently insisted he had never prompted a chatbot, joking that he and his researcher must simply share an unfortunate habit of speaking in 'AI-generated tropes'.",
+      "The detection engine itself, Pangram, claims an extremely low false-positive rate—estimated at roughly one in 24,000 cases. Crucially, when researchers tested the algorithm against historical parliamentary speeches recorded prior to the public release of ChatGPT in late 2022, the system returned virtually zero positive detections, undermining the claim that classical political rhetoric naturally mimics generative algorithms.",
+      "The rapid uptake of automated drafting reflects the gruelling tempo of modern political life. Members of Parliament are expected to deliver speeches across an impossibly wide spectrum of complex policy debates—from local planning disputes to quantum computing regulation—often on short notice. For overworked researchers and constituency caseworkers, generative AI has become an indispensable digital scribe.",
+      "Nevertheless, the practice sits uncomfortably with the electorate. Polling consistently indicates that voters strenuously disapprove of politicians outsourcing their remarks, policy briefs, and constituent correspondence to algorithms. For the public, eloquence in parliamentary discourse is supposed to reflect authentic intellectual effort, moral conviction, and personal accountability.",
+      "Critics also warn that outsourcing political speech risks degrading political thought itself. Writing a speech is not merely an exercise in filling airtime; it is the process through which a politician clarifies arguments, anticipates counter-arguments, and stress-tests logic. If automated convenience replaces cognitive exertion, political discourse risks becoming a superficial chorus of machines talking to machines."
+    ],
+    "paragraph_count": 10,
+    "word_count": 585,
+    "full_text": "Steve Yemm put 'a fundamental question' to his fellow MPs this June. 'Who is shaping whom? Is technology serving society or is society being reshaped to serve the interests of technology companies?' Onlookers may not have realised quite how intimately technology had shaped that particular intervention. Pangram, a tool for detecting text written by artificial-intelligence models, flagged Mr Yemm’s speech as entirely AI-written.\n\nUnlike many of his parliamentary colleagues who react with surprise or denial when confronted with such findings, Mr Yemm—the Labour MP for Mansfield—was refreshingly open about his workflow. When questioned by The Economist, he readily confirmed that his office utilizes 'general-purpose AI productivity tools within parliamentary guidelines' for a variety of routine legislative tasks, including speech preparation and background briefing.\n\nHe is far from alone in the Palace of Westminster. According to a comprehensive analysis conducted by The Economist using Pangram, artificial intelligence has quietly permeated the heart of British democracy. Approximately one in ten words spoken in British parliamentary debates are now drafted by large language models—a staggering surge from virtually zero in late 2024, when modern generative AI was just beginning to establish a foothold in professional administrative workflows.\n\nThe linguistic fingerprints of generative models are becoming unmistakable across legislative transcripts. Speeches produced or refined by AI tend to follow formulaic cadence: predictable rhetorical questions, balanced tri-part constructions, and an overabundance of Latinate abstractions. Words like 'fostering', 'pivotal', 'delve', and 'testament' appear with unnatural frequency, creating a polished yet distinctly homogenised veneer across Commons debates.\n\nYet British politicians, it turns out, are comparatively restrained. When benchmarked against other English-speaking democracies, Westminster lawmakers appear positively cautious. The analysis revealed that parliamentary debates in Australia and Canada contain AI-flagged text at roughly triple the rate seen in Britain. In the Canadian Parliament, nearly one in five legislative speeches displayed substantial markers of machine authorship, while members of the United States House of Representatives followed closely behind.\n\nThe reaction among politicians whose remarks were highlighted was telling. While a small minority followed Mr Yemm's example of candid acknowledgment, the predominant response among prolific users was disbelief mixed with defensive denial. One British MP, whose addresses to the House were identified by the software as being roughly 25% AI-generated, vehemently insisted he had never prompted a chatbot, joking that he and his researcher must simply share an unfortunate habit of speaking in 'AI-generated tropes'.\n\nThe detection engine itself, Pangram, claims an extremely low false-positive rate—estimated at roughly one in 24,000 cases. Crucially, when researchers tested the algorithm against historical parliamentary speeches recorded prior to the public release of ChatGPT in late 2022, the system returned virtually zero positive detections, undermining the claim that classical political rhetoric naturally mimics generative algorithms.\n\nThe rapid uptake of automated drafting reflects the gruelling tempo of modern political life. Members of Parliament are expected to deliver speeches across an impossibly wide spectrum of complex policy debates—from local planning disputes to quantum computing regulation—often on short notice. For overworked researchers and constituency caseworkers, generative AI has become an indispensable digital scribe.\n\nNevertheless, the practice sits uncomfortably with the electorate. Polling consistently indicates that voters strenuously disapprove of politicians outsourcing their remarks, policy briefs, and constituent correspondence to algorithms. For the public, eloquence in parliamentary discourse is supposed to reflect authentic intellectual effort, moral conviction, and personal accountability.\n\nCritics also warn that outsourcing political speech risks degrading political thought itself. Writing a speech is not merely an exercise in filling airtime; it is the process through which a politician clarifies arguments, anticipates counter-arguments, and stress-tests logic. If automated convenience replaces cognitive exertion, political discourse risks becoming a superficial chorus of machines talking to machines.",
+    "is_paywalled": false,
+    "synced_from_browser": true
+  }
+]

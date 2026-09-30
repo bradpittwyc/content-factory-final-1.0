@@ -468,6 +468,11 @@ class EconomistBatchImportRequest(BaseModel):
     articles: List[Dict[str, Any]]
     cookie: Optional[str] = None
 
+class EconomistPasteImportRequest(BaseModel):
+    content: str
+    url: Optional[str] = ""
+    section: Optional[str] = "Leaders"
+
 class EconomistDeleteRequest(BaseModel):
     url: str
 
@@ -533,6 +538,11 @@ def batch_import_economist_endpoint(req: EconomistBatchImportRequest):
         "imported_count": count,
         "total": len(economist_store.load_all_articles())
     }
+
+@app.post("/api/economist/paste_import")
+def paste_import_economist_endpoint(req: EconomistPasteImportRequest):
+    res = economist_store.parse_and_import_text(req.content, default_url=req.url or "", default_section=req.section or "Leaders")
+    return res
 
 @app.post("/api/economist/delete")
 def delete_economist_article_endpoint(req: EconomistDeleteRequest):
@@ -2732,6 +2742,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
           <span class="px-3 py-1 font-bold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">FT 金融时报</span>
           <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+          <button onclick="openPubWorkstation('economist')" class="px-3 py-1 text-slate-400 hover:text-red-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">经济学人</button>
         </div>
       </div>
 
@@ -2968,6 +2979,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
           <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
           <span class="px-3 py-1 font-bold rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">彭博社周刊</span>
+          <button onclick="openPubWorkstation('economist')" class="px-3 py-1 text-slate-400 hover:text-red-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">经济学人</button>
         </div>
       </div>
 
@@ -3046,13 +3058,17 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <button onclick="openEcoBrowserSyncModal()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
-              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
-              <span>⚡ 已登录浏览器一键提取同步</span>
+            <button onclick="openEcoPasteImportModal()" class="px-3.5 py-2 text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-xl shadow-lg transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer" title="直接粘贴网页复制的文章正文或提取脚本生成的 JSON">
+              <i data-lucide="clipboard-paste" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>📋 智能粘贴 / 剪贴板入库</span>
             </button>
-            <button onclick="loadEconomistUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <button onclick="openEcoBrowserSyncModal()" class="px-3.5 py-2 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
+              <span>⚡ 浏览器一键提取同步</span>
+            </button>
+            <button onclick="loadEconomistUI()" class="px-3 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-red-400"></i>
-              <span>刷新经济学人库</span>
+              <span>刷新</span>
             </button>
           </div>
         </div>
@@ -3281,6 +3297,77 @@ HTML_CONTENT = """<!DOCTYPE html>
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span>一键复制全自动同步脚本</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 经济学人智能粘贴/剪贴板入库弹窗 -->
+  <div id="ecoPasteImportModal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 transform transition-all">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="clipboard-paste" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">智能粘贴 / 剪贴板快速入库</h3>
+            <p class="text-[11px] text-slate-400">100% 免疫浏览器跨域及网络风控拦截 · 支持网页复制文本或脚本导出的 JSON</p>
+          </div>
+        </div>
+        <button onclick="closeEcoPasteImportModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">文章原始链接 (可选):</label>
+            <input type="text" id="inputPasteEcoUrl" placeholder="https://www.economist.com/..." class="w-full bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-red-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">归属板块 (可选):</label>
+            <select id="selectPasteEcoSection" class="w-full bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-red-500">
+              <option value="Leaders">社论大势 (Leaders)</option>
+              <option value="Britain" selected>英国观察 (Britain)</option>
+              <option value="Finance & Economics">财经与金融 (Finance)</option>
+              <option value="Business">全球商业 (Business)</option>
+              <option value="Science & Technology">前沿科技 (Science & Tech)</option>
+              <option value="China">中国观察 (China)</option>
+              <option value="International">国际政治 (International)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold text-slate-400">粘贴正文内容或 JSON 数据:</label>
+            <button type="button" onclick="readFromClipboardToEcoPaste()" class="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center space-x-1 cursor-pointer">
+              <i data-lucide="clipboard" class="w-3 h-3"></i>
+              <span>从剪贴板读取并自动填充</span>
+            </button>
+          </div>
+          <textarea id="textareaEcoPasteContent" rows="9" placeholder="在此粘贴：
+1. 您在 Economist 网页按 Ctrl+A 全选复制的全部内容；或者
+2. 提取脚本自动复制到剪贴板的 JSON 数据；或者
+3. 您手工整理的文章标题与正文段落..." class="w-full bg-slate-950 px-3 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-red-500 font-mono custom-scroll"></textarea>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-center space-x-2">
+          <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+          <span>引擎会自动智能清洗网页导航广告、音频提示杂音，精准提炼标题、导读与段落，并自动统计词数入库。</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <button onclick="clearEcoPasteForm()" class="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">清空输入</button>
+        <div class="flex items-center space-x-2.5">
+          <button onclick="closeEcoPasteImportModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">取消</button>
+          <button id="btnSubmitEcoPaste" onclick="submitEcoPasteImport()" class="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>立即智能解析并入库</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -7251,6 +7338,84 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (modal) modal.classList.add('hidden');
     }
 
+    function openEcoPasteImportModal() {
+      const modal = document.getElementById('ecoPasteImportModal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEcoPasteImportModal() {
+      const modal = document.getElementById('ecoPasteImportModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function clearEcoPasteForm() {
+      const t = document.getElementById('textareaEcoPasteContent');
+      const u = document.getElementById('inputPasteEcoUrl');
+      if (t) t.value = '';
+      if (u) u.value = '';
+    }
+
+    async function readFromClipboardToEcoPaste() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            const textarea = document.getElementById('textareaEcoPasteContent');
+            if (textarea) textarea.value = text;
+            showToast("已成功从系统剪贴板读取并自动填充！", "success");
+            return;
+          }
+        }
+        showToast("请直接在文本框按 Ctrl+V 粘贴内容", "info");
+      } catch(e) {
+        showToast("无法直接访问剪贴板，请直接在输入框按 Ctrl+V 粘贴", "info");
+      }
+    }
+
+    async function submitEcoPasteImport() {
+      const textarea = document.getElementById('textareaEcoPasteContent');
+      const inputUrl = document.getElementById('inputPasteEcoUrl');
+      const selectSec = document.getElementById('selectPasteEcoSection');
+      const btn = document.getElementById('btnSubmitEcoPaste');
+
+      const content = textarea ? textarea.value.trim() : '';
+      const url = inputUrl ? inputUrl.value.trim() : '';
+      const section = selectSec ? selectSec.value : 'Britain';
+
+      if (!content) {
+        showToast("请先在文本框中粘贴文章正文或 JSON 数据", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在智能解析入库...</span>`;
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/economist/paste_import', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ content, url, section })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message || `成功入库 ${data.imported_count || 1} 篇《经济学人》全文！`, "success");
+          clearEcoPasteForm();
+          closeEcoPasteImportModal();
+          loadEconomistUI();
+        } else {
+          showToast(data.message || "解析入库失败，请检查粘贴文本", "error");
+        }
+      } catch(e) {
+        showToast("入库网络异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>立即智能解析并入库</span>`;
+        lucide.createIcons();
+      }
+    }
+
     async function saveEcoCookieManual() {
       const input = document.getElementById('inputEcoCookieStr');
       const val = input ? input.value.trim() : '';
@@ -7385,19 +7550,35 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
   }
 
-  console.log("📡 正在将完整无损文章及 Cookie 会话同步到本地知识工厂 (http://127.0.0.1:8000)...");
+  console.log("📡 正在准备文章数据与剪贴板同步...");
+  const payloadStr = JSON.stringify({ articles: articles, cookie: document.cookie });
+  
+  if (typeof copy === 'function') {
+    copy(payloadStr);
+  } else if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(payloadStr);
+  }
+
+  let directSynced = false;
   try {
     const res = await fetch("http://127.0.0.1:8000/api/economist/batch_import", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ articles: articles, cookie: document.cookie })
+      body: payloadStr
     });
     const resData = await res.json();
-    console.log("%c🎉 恭喜！已成功将 " + resData.imported_count + " 篇 The Economist 深度全文同步入库！", "color: #10b981; font-size: 15px; font-weight: bold;");
-    alert("🎉 成功同步 " + resData.imported_count + " 篇《经济学人》全文到本地工厂！请回到控制台刷新查看！");
+    if (resData.success) {
+      directSynced = true;
+      console.log("%c🎉 恭喜！已成功将 " + resData.imported_count + " 篇 The Economist 深度全文直接同步入库！", "color: #10b981; font-size: 15px; font-weight: bold;");
+      alert("🎉 成功同步 " + resData.imported_count + " 篇《经济学人》全文到本地工厂！\n数据也已备份至系统剪贴板，请回到工厂页面刷新查看！");
+    }
   } catch(e) {
-    console.error("同步至本地服务失败，请确保本地后台运行中:", e);
-    alert("同步至本地服务失败，请确认 http://127.0.0.1:8000 服务正常运行！");
+    console.warn("直接网络同步受跨域策略拦截，转为剪贴板免拦截模式:", e);
+  }
+
+  if (!directSynced) {
+    console.log("%c🎉 文章数据已成功复制到系统剪贴板！", "color: #10b981; font-size: 15px; font-weight: bold;");
+    alert("🎉 恭喜！已成功提取 " + articles.length + " 篇《经济学人》VIP 无损全文！\n\n因 Chrome 跨域策略保护，数据已自动复制到您的系统剪贴板！\n请切换回控制台，点击【📋 智能粘贴 / 剪贴板入库】，点击立即入库即可秒级收录！");
   }
 })();`;
 

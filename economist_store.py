@@ -229,6 +229,54 @@ def parse_economist_html(html_text: str, url: str, section_hint: str = "Leaders"
         "is_paywalled": len(paragraphs) < 3
     }
 
+def scrape_via_reader_fallback(url: str, section: str = "Leaders") -> Optional[Dict[str, Any]]:
+    jina_url = f"https://r.jina.ai/{url}"
+    try:
+        import urllib.request
+        req = urllib.request.Request(jina_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=18) as resp:
+            content = resp.read().decode("utf-8")
+        
+        title_m = re.search(r"^Title:\s*(.+)$", content, re.MULTILINE)
+        title = title_m.group(1).strip() if title_m else ""
+        if title.endswith(" | The Economist"):
+            title = title[:-16].strip()
+            
+        md_start = content.find("Markdown Content:")
+        body = content[md_start:] if md_start != -1 else content
+        
+        paras = []
+        noise = ["subscribe", "log in", "create account", "already have an account", "reuse this content", "explore more", "listen to this story"]
+        for line in body.splitlines():
+            l = line.strip()
+            if len(l) > 30 and not l.startswith("#") and not l.startswith("![") and not l.startswith("[") and not l.startswith("*"):
+                if not any(n in l.lower() for n in noise):
+                    paras.append(l)
+                    
+        if len(paras) >= 1:
+            full_text = "\n\n".join(paras)
+            word_count = len(re.findall(r'\b\w+\b', full_text))
+            return {
+                "id": f"eco_{int(time.time() * 1000)}",
+                "url": url,
+                "title": title or "The Economist Article",
+                "source": "The Economist",
+                "section": section,
+                "standfirst": "",
+                "authors": ["The Economist Staff"],
+                "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "paragraphs": paras,
+                "paragraph_count": len(paras),
+                "word_count": word_count,
+                "full_text": full_text,
+                "is_paywalled": len(paras) < 3,
+                "synced_via_reader": True
+            }
+    except Exception:
+        pass
+    return None
+
 def scrape_single_article(url: str, section: str = "Leaders", cookie_str: Optional[str] = None) -> Dict[str, Any]:
     headers = build_headers(cookie_str)
     try:
@@ -236,8 +284,24 @@ def scrape_single_article(url: str, section: str = "Leaders", cookie_str: Option
         article = parse_economist_html(res.text, url, section)
         if article.get("paragraph_count", 0) > 0 and not article.get("security_blocked"):
             upsert_article(article)
+            return article
+        
+        # If Cloudflare blocked or empty, fallback to reader proxy
+        if article.get("security_blocked") or article.get("paragraph_count", 0) == 0:
+            reader_art = scrape_via_reader_fallback(url, section)
+            if reader_art and reader_art.get("paragraph_count", 0) > 0:
+                upsert_article(reader_art)
+                return reader_art
         return article
     except Exception as e:
+        # Fallback to reader proxy
+        try:
+            reader_art = scrape_via_reader_fallback(url, section)
+            if reader_art and reader_art.get("paragraph_count", 0) > 0:
+                upsert_article(reader_art)
+                return reader_art
+        except Exception:
+            pass
         return {
             "id": f"eco_{int(time.time() * 1000)}",
             "url": url,
@@ -323,3 +387,105 @@ def batch_import_browser_articles(articles_data: List[Dict[str, Any]], cookie_st
         count += 1
 
     return count
+
+def parse_and_import_text(content: str, default_url: str = "", default_section: str = "Leaders") -> Dict[str, Any]:
+    content = content.strip()
+    if not content:
+        return {"success": False, "message": "内容为空"}
+
+    # 1. Check if JSON payload (from F12 script copy)
+    if (content.startswith("{") and content.endswith("}")) or (content.startswith("[") and content.endswith("]")):
+        try:
+            parsed_json = json.loads(content)
+            if isinstance(parsed_json, dict):
+                ck = parsed_json.get("cookie", "")
+                if ck:
+                    save_cookie(ck)
+                arts = parsed_json.get("articles", [])
+                if not arts and "title" in parsed_json:
+                    arts = [parsed_json]
+                c = batch_import_browser_articles(arts, ck)
+                return {"success": True, "imported_count": c, "message": f"成功从 JSON 解析并导入 {c} 篇《经济学人》全文！"}
+            elif isinstance(parsed_json, list):
+                c = batch_import_browser_articles(parsed_json)
+                return {"success": True, "imported_count": c, "message": f"成功从 JSON 解析并导入 {c} 篇《经济学人》全文！"}
+        except Exception:
+            pass
+
+    # 2. Parse Raw Article Text
+    lines = [l.strip() for l in content.splitlines() if l.strip()]
+    if not lines:
+        return {"success": False, "message": "无法识别有效文本内容"}
+
+    section = default_section or "Leaders"
+    title = ""
+    standfirst = ""
+    paras = []
+    url = default_url or f"https://www.economist.com/manual/{int(time.time())}"
+
+    idx = 0
+    # First line might be Section or Section | Rubric
+    if "|" in lines[0] and len(lines[0]) < 80:
+        sec_parts = lines[0].split("|")
+        section = sec_parts[0].strip()
+        idx += 1
+    elif len(lines[0]) < 35 and idx + 1 < len(lines) and len(lines[1]) > 20:
+        section = lines[0]
+        idx += 1
+
+    if idx < len(lines):
+        title = lines[idx]
+        idx += 1
+
+    if idx < len(lines) and len(lines[idx]) < 250 and not any(lines[idx].lower().startswith(m) for m in ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", "202"]) and "min read" not in lines[idx].lower():
+        standfirst = lines[idx]
+        idx += 1
+
+    noise_keywords = [
+        "min read", "listen to this story", "enjoy more audio", "save time by listening",
+        "the economist app", "for more coverage", "illustration:", "photograph:", "share"
+    ]
+    date_months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+    while idx < len(lines):
+        line = lines[idx]
+        idx += 1
+        low = line.lower()
+        if any(n in low for n in noise_keywords):
+            continue
+        if any(low.startswith(m) for m in date_months) and ("202" in low or "min" in low):
+            continue
+        if len(line) > 20:
+            paras.append(line)
+
+    if not paras:
+        return {"success": False, "message": "未能从粘贴文本中识别出有效段落内容"}
+
+    full_text = "\n\n".join(paras)
+    word_count = len(re.findall(r'\b\w+\b', full_text))
+
+    article = {
+        "id": f"eco_{int(time.time() * 1000)}",
+        "url": url,
+        "title": title or "The Economist Article",
+        "source": "The Economist",
+        "section": section,
+        "standfirst": standfirst,
+        "authors": ["The Economist Staff"],
+        "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "paragraphs": paras,
+        "paragraph_count": len(paras),
+        "word_count": word_count,
+        "full_text": full_text,
+        "is_paywalled": False,
+        "synced_from_browser": True
+    }
+    upsert_article(article)
+    return {
+        "success": True,
+        "imported_count": 1,
+        "article": article,
+        "message": f"成功识别并入库文章: 《{article['title']}》 ({len(paras)} 段, {word_count} 词)！"
+    }
+
