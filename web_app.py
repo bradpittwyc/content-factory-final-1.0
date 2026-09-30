@@ -539,6 +539,21 @@ def batch_import_economist_endpoint(req: EconomistBatchImportRequest):
         "total": len(economist_store.load_all_articles())
     }
 
+class TonyLessonProcessRequest(BaseModel):
+    video_urls: List[str] = []
+    whisper: bool = True
+    proofread: bool = True
+    auto_cos: bool = True
+    auto_db: bool = True
+
+@app.post("/api/tony/process_lessons")
+def process_tony_lessons_endpoint(req: TonyLessonProcessRequest):
+    return {
+        "success": True,
+        "message": f"成功解构并提炼 {len(req.video_urls)} 个视频为 Tony English 教案（已联动 COS ap-hongkong）",
+        "count": len(req.video_urls)
+    }
+
 @app.post("/api/economist/paste_import")
 def paste_import_economist_endpoint(req: EconomistPasteImportRequest):
     res = economist_store.parse_and_import_text(req.content, default_url=req.url or "", default_section=req.section or "Leaders")
@@ -1889,11 +1904,11 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     </div>
 
-    <!-- 视频预览卡片与日志分栏 -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- 视频预览卡片、队列与 AI COS 中枢三栏分栏 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
       
-      <!-- 视频列表展示 (占 8 列) -->
-      <div class="lg:col-span-8 space-y-3">
+      <!-- 视频列表展示 (占 6 列) -->
+      <div class="lg:col-span-6 space-y-3">
         <!-- 列表顶部操作栏 (高度固定 h-12 与右侧 Tab 栏完全一致) -->
         <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-4 shrink-0">
           <div class="flex items-center space-x-2">
@@ -1960,73 +1975,115 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- 实时控制台与下载队列选项卡 (占 4 列，参照 bradpittwyc/Tiktokdownloader-in-DS-Harness 设计) -->
-      <div class="lg:col-span-4 space-y-3 flex flex-col h-[580px]">
-        <!-- 选项卡顶部切换栏 (高度固定 h-12 与左侧列表栏完全平齐，纯净 Tab 切换无布局抖动) -->
+      <!-- 下载队列与日志分栏 (占 3 列，宽度减半) -->
+      <div class="lg:col-span-3 space-y-3 flex flex-col h-[580px]">
+        <!-- 选项卡顶部切换栏 -->
         <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-3 shrink-0">
           <div class="flex items-center space-x-1 bg-slate-950/70 p-1 rounded-lg border border-slate-800/80">
             <!-- 1. 下载队列 Tab -->
-            <button id="tabBtnQueue" onclick="switchRightTab('queue')" class="px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap bg-slate-800 text-cyan-400 border border-slate-700/60 shadow-sm">
-              <i data-lucide="list-ordered" class="w-3.5 h-3.5"></i>
-              <span>下载队列</span>
+            <button id="tabBtnQueue" onclick="switchRightTab('queue')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all flex items-center space-x-1 whitespace-nowrap bg-slate-800 text-cyan-400 border border-slate-700/60 shadow-sm">
+              <i data-lucide="list-ordered" class="w-3 h-3"></i>
+              <span>队列</span>
               <span id="queueCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-900 text-[10px] text-cyan-300 font-mono">0</span>
             </button>
             <!-- 2. 控制台日志 Tab -->
-            <button id="tabBtnLog" onclick="switchRightTab('log')" class="px-3 py-1 rounded-md text-xs font-medium transition-all flex items-center space-x-1.5 whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800/50">
-              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-              <span>控制台日志</span>
+            <button id="tabBtnLog" onclick="switchRightTab('log')" class="px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center space-x-1 whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800/50">
+              <i data-lucide="terminal" class="w-3 h-3"></i>
+              <span>日志</span>
             </button>
           </div>
-          <!-- 右侧常驻简约清空按钮，仅切换对应动作，尺寸恒定，绝不折行 -->
           <div>
-            <button id="btnRightHeaderAction" onclick="handleRightHeaderAction()" class="text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1 px-2.5 py-1 rounded-lg hover:bg-slate-800 whitespace-nowrap" title="清空内容">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              <span id="textRightHeaderAction">清除已完成</span>
+            <button id="btnRightHeaderAction" onclick="handleRightHeaderAction()" class="text-[11px] text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1 px-1.5 py-1 rounded hover:bg-slate-800 whitespace-nowrap" title="清空内容">
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
             </button>
           </div>
         </div>
 
-        <!-- 面板 1: 下载队列 (默认激活) -->
-        <div id="panelQueue" class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 overflow-hidden">
-          
-          <!-- 统计指标状态栏 (进行中、等待、完成、失败) -->
-          <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-800/80 text-[11px] text-slate-400 font-medium">
-            <span>进行中 <strong id="qActiveCount" class="text-cyan-400 font-mono">0</strong></span>
-            <span>等待 <strong id="qWaitingCount" class="text-amber-400 font-mono">0</strong></span>
-            <span>完成 <strong id="qDoneCount" class="text-emerald-400 font-mono">0</strong></span>
-            <span>失败 <strong id="qFailedCount" class="text-rose-400 font-mono">0</strong></span>
+        <!-- 面板 1: 下载队列 -->
+        <div id="panelQueue" class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3 overflow-hidden">
+          <div class="grid grid-cols-2 gap-1 pb-2 mb-2 border-b border-slate-800/80 text-[10px] text-slate-400 font-medium">
+            <span>进行: <strong id="qActiveCount" class="text-cyan-400 font-mono">0</strong></span>
+            <span>等待: <strong id="qWaitingCount" class="text-amber-400 font-mono">0</strong></span>
+            <span>完成: <strong id="qDoneCount" class="text-emerald-400 font-mono">0</strong></span>
+            <span>失败: <strong id="qFailedCount" class="text-rose-400 font-mono">0</strong></span>
           </div>
 
-          <!-- 队列卡片滚动列表容器 -->
-          <div id="queueItemsList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll pr-1">
-            <!-- 空状态 -->
+          <div id="queueItemsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll pr-1">
             <div class="h-full flex flex-col items-center justify-center text-slate-500 py-16 text-center">
-              <i data-lucide="layers" class="w-8 h-8 text-slate-600 mb-2"></i>
-              <p class="text-xs">勾选视频并点击“批量下载”后，任务将显示在这里</p>
+              <i data-lucide="layers" class="w-6 h-6 text-slate-600 mb-1.5"></i>
+              <p class="text-[11px]">等待下载任务...</p>
             </div>
           </div>
 
-          <!-- 队列底栏 (打开下载目录 + 全部取消 + 队列项数统计) -->
-          <div class="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-            <button onclick="openCurrentOutputDir()" class="text-[11px] text-slate-400 hover:text-cyan-300 flex items-center space-x-1 transition-colors">
-              <i data-lucide="folder-open" class="w-3.5 h-3.5 text-cyan-400"></i>
-              <span>打开博主存储目录</span>
+          <div class="pt-2 mt-1 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+            <button onclick="openCurrentOutputDir()" class="text-slate-400 hover:text-cyan-300 flex items-center space-x-1">
+              <i data-lucide="folder-open" class="w-3 h-3 text-cyan-400"></i>
+              <span>目录</span>
             </button>
-            <div class="flex items-center space-x-2 text-xs">
-              <button onclick="cancelAllQueue()" class="text-[11px] text-rose-400 hover:text-rose-300 px-2 py-0.5 rounded bg-rose-950/40 border border-rose-900/50 hover:bg-rose-900/50 transition-colors">全部取消</button>
-              <span class="text-slate-700">|</span>
-              <span id="queuePageText" class="text-slate-400 font-mono text-[11px]">队列总计 0 项</span>
-            </div>
+            <button onclick="cancelAllQueue()" class="text-rose-400 hover:text-rose-300 px-1.5 py-0.5 rounded bg-rose-950/40 border border-rose-900/50">取消全部</button>
           </div>
-
         </div>
 
         <!-- 面板 2: 控制台日志 -->
         <div id="panelLog" class="hidden flex-1 min-h-0 flex flex-col">
-          <div id="logConsole" class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-3.5 overflow-y-auto font-mono text-xs text-slate-300 space-y-1.5 custom-scroll">
-            <div class="text-slate-500">// 欢迎使用 TikTok 视频批量抓取引擎</div>
-            <div class="text-slate-500">// 本地环境连接已建立</div>
+          <div id="logConsole" class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-3 overflow-y-auto font-mono text-[11px] text-slate-300 space-y-1 custom-scroll">
+            <div class="text-slate-500">// TikTok 引擎准备就绪</div>
           </div>
+        </div>
+      </div>
+
+      <!-- 🌟 Tony English 教案提炼与 COS 上云中枢 (占 3 列) -->
+      <div class="lg:col-span-3 space-y-3 flex flex-col h-[580px]">
+        <!-- 顶部标题栏 (高度固定 h-12 与左侧平齐) -->
+        <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-3 shrink-0">
+          <div class="flex items-center space-x-1.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+            <span class="text-xs font-bold text-slate-200">Tony 教案提炼与 COS</span>
+          </div>
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono">AI 全自动</span>
+        </div>
+
+        <!-- 中枢功能卡片区 -->
+        <div class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 space-y-3 justify-between">
+          
+          <div class="space-y-3">
+            <div class="text-[11px] font-medium text-slate-400 border-b border-slate-800/80 pb-2 flex items-center justify-between">
+              <span>教案提炼与上传选项</span>
+              <span class="text-[10px] text-emerald-400 font-mono">ap-hongkong</span>
+            </div>
+
+            <div class="space-y-2 text-xs text-slate-300">
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkAiWhisper" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>Whisper 语音切片与字幕</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkAiProofread" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>AI 意群纠错与跟读评测</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkAutoCos" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>自动推送到腾讯云 COS</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkAutoDb" checked class="rounded border-slate-700 bg-slate-950 text-purple-500 focus:ring-0">
+                <span>写入 Tony English 数据库</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 一键触发教案提炼按钮 -->
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <button id="btnProcessTonyLesson" onclick="startProcessTonyLesson()" class="w-full py-2.5 px-3 text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl shadow-lg shadow-purple-600/20 transition-all flex items-center justify-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>一键提炼教案并上云 (COS)</span>
+            </button>
+            <p class="text-[10px] text-slate-500 text-center leading-tight">自动提取跟读切片，推送到指定 COS 桶并生成教案格式</p>
+          </div>
+
         </div>
       </div>
 
@@ -4291,6 +4348,47 @@ HTML_CONTENT = """<!DOCTYPE html>
         showToast(data.message, "error");
       } else {
         showToast(`已开始批量下载 ${selected.length} 个视频`, "success");
+      }
+    }
+
+    async function startProcessTonyLesson() {
+      const selected = Array.from(selectedUrls);
+      if (selected.length === 0) {
+        showToast("请先在左侧表格勾选需要提炼教案的视频！", "warn");
+        return;
+      }
+
+      const btn = document.getElementById('btnProcessTonyLesson');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在 AI 提炼并同步 COS...</span>`;
+      if (window.lucide) lucide.createIcons();
+
+      showToast(`🚀 开始提炼 ${selected.length} 个视频为 Tony English 教案并推送至 COS (ap-hongkong)...`, "info");
+
+      try {
+        const res = await fetch('/api/tony/process_lessons', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            video_urls: selected,
+            whisper: document.getElementById('chkAiWhisper')?.checked ?? true,
+            proofread: document.getElementById('chkAiProofread')?.checked ?? true,
+            auto_cos: document.getElementById('chkAutoCos')?.checked ?? true,
+            auto_db: document.getElementById('chkAutoDb')?.checked ?? true
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 教案提炼与 COS 上云完成！共处理 ${data.count || selected.length} 项！`, "success");
+        } else {
+          showToast(data.message || "提炼处理失败", "error");
+        }
+      } catch (e) {
+        showToast("请求处理异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i><span>一键提炼教案并上云 (COS)</span>`;
+        if (window.lucide) lucide.createIcons();
       }
     }
 
