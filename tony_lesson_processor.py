@@ -204,7 +204,7 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
         "playlistend": 1
     }
     
-    print(f"🎬 Processing SINGLE selected video: {url}")
+    print(f"[Processor] Processing SINGLE selected video: {url}")
     info = None
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
