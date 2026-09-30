@@ -10,3 +10,6 @@ downloads/
 ft_session.json
 ft_articles/
 *cookie*.txt
+data/dp_profile/
+data/lessons_cos_temp.json
+data/videos/

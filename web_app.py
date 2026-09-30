@@ -4276,6 +4276,10 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     function selectAllVideos(select) {
+      if (select === undefined) {
+        const allSelected = currentVideos.length > 0 && currentVideos.every(v => selectedUrls.has(v.url));
+        select = !allSelected;
+      }
       if (select) {
         currentVideos.forEach(v => selectedUrls.add(v.url));
       } else {
@@ -4310,6 +4314,11 @@ HTML_CONTENT = """<!DOCTYPE html>
       const btnDl = document.getElementById('btnDownloadAllText');
       if (btnDl) {
         btnDl.innerText = selectedUrls.size > 0 ? `批量下载已选 (${selectedUrls.size})` : `批量下载已选`;
+      }
+      const btnAll = document.getElementById('btnToggleSelectAll');
+      if (btnAll) {
+        const isAllSelected = currentVideos.length > 0 && currentVideos.every(v => selectedUrls.has(v.url));
+        btnAll.innerText = isAllSelected ? "取消全选" : "全选所有";
       }
     }
 

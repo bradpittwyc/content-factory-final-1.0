@@ -10,6 +10,7 @@ from cos_service import upload_file_to_cos
 
 LESSONS_FILE = os.path.join(os.path.dirname(__file__), "data", "tony_shadowing_lessons.json")
 FRONTEND_MOCK_VIDEOS_PATH = r"C:\Users\Administrator\.gemini\antigravity\scratch\tony-frontend-demo\src\data\mockVideos.ts"
+COS_LESSONS_KEY = "videos/tiktok/lessons.json"
 
 def load_env():
     env_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -42,11 +43,12 @@ def save_lessons(lessons: List[Dict[str, Any]]):
     with open(LESSONS_FILE, "w", encoding="utf-8") as f:
         json.dump(lessons, f, ensure_ascii=False, indent=2)
 
-def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
-    """Syncs generated TikTok lessons directly into tony-frontend-demo/src/data/mockVideos.ts"""
-    if not os.path.exists(FRONTEND_MOCK_VIDEOS_PATH):
-        return
-
+def sync_to_frontend_and_cos(lessons: List[Dict[str, Any]]):
+    """
+    1. Formats lessons into TikTokVideo schema.
+    2. Uploads videos/tiktok/lessons.json directly to Tencent Cloud COS for 0-second live website/app sync!
+    3. Syncs directly into tony-frontend-demo/src/data/mockVideos.ts as a local static fallback.
+    """
     formatted_videos = []
     for l in lessons:
         formatted_videos.append({
@@ -54,9 +56,9 @@ def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
             "title": l.get("title", "TikTok English Lesson"),
             "author": l.get("author", "@tiktok_creator"),
             "duration": f"{int(l.get('duration', 30)//60)}:{int(l.get('duration', 30)%60):02d}",
-            "level": "高阶口语",
-            "views": "10.5k",
-            "likes": "1.2k",
+            "level": "认知思维",
+            "views": "185.2k",
+            "likes": "24.6k",
             "themeColor": "linear-gradient(135deg, #1E293B, #0F172A)",
             "videoUrl": l.get("video_cos_url", ""),
             "coverUrl": l.get("cover_cos_url", ""),
@@ -72,13 +74,26 @@ def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
             ]
         })
 
-    ts_content = f"""import {{ TikTokVideo }} from '../types';
+    # Save temporary JSON and upload to COS
+    temp_json_path = os.path.join(os.path.dirname(LESSONS_FILE), "lessons_cos_temp.json")
+    with open(temp_json_path, "w", encoding="utf-8") as f:
+        json.dump(formatted_videos, f, ensure_ascii=False, indent=2)
+
+    try:
+        cos_lessons_url = upload_file_to_cos(temp_json_path, COS_LESSONS_KEY)
+        print(f"Live lessons JSON uploaded to COS: {cos_lessons_url}")
+    except Exception as cos_e:
+        print(f"Failed to upload lessons.json to COS: {cos_e}")
+
+    # Sync to local frontend repo mockVideos.ts
+    if os.path.exists(FRONTEND_MOCK_VIDEOS_PATH):
+        ts_content = f"""import {{ TikTokVideo }} from '../types';
 
 export const mockTikTokVideos: TikTokVideo[] = {json.dumps(formatted_videos, ensure_ascii=False, indent=2)};
 """
-    with open(FRONTEND_MOCK_VIDEOS_PATH, "w", encoding="utf-8") as f:
-        f.write(ts_content)
-    print(f"Successfully synced {len(formatted_videos)} lessons directly to Tony English frontend!")
+        with open(FRONTEND_MOCK_VIDEOS_PATH, "w", encoding="utf-8") as f:
+            f.write(ts_content)
+        print(f"Successfully synced {len(formatted_videos)} lessons to Tony English frontend code!")
 
 def process_subtitles_with_ai(subtitles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     deepseek_key = os.environ.get("DEEPSEEK_API_KEY")
@@ -174,7 +189,6 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     out_prefix = os.path.join(output_dir, f"tiktok_{video_id}")
     outtmpl = f"{out_prefix}.%(ext)s"
     
-    # CRITICAL: noplaylist=True & playlistend=1 ensures strictly ONLY 1 SINGLE video is downloaded!
     ydl_opts = {
         "outtmpl": outtmpl,
         "format": "bestvideo+bestaudio/best",
@@ -210,7 +224,6 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     local_jpg = jpg_files[0] if jpg_files else None
     local_sub = sub_files[0] if sub_files else None
     
-    # Upload strictly to videos/tiktok/{video_id}.mp4
     cos_mp4_key = f"videos/tiktok/{video_id}.mp4"
     cos_mp4_url = upload_file_to_cos(local_mp4, cos_mp4_key)
     
@@ -242,12 +255,10 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     return lesson
 
 def process_batch_tiktok_lessons(urls: List[str]) -> List[Dict[str, Any]]:
-    # STRICTLY ONLY PROCESS THE EXACT CHECKED URLS FROM FRONTEND SELECTION!
     processed = []
     lessons = load_lessons()
     
     for url in urls:
-        # Ignore empty or non-video URLs
         if not url or not isinstance(url, str):
             continue
         try:
@@ -262,5 +273,5 @@ def process_batch_tiktok_lessons(urls: List[str]) -> List[Dict[str, Any]]:
             print(f"Error processing selected video {url}: {e}")
             
     save_lessons(lessons)
-    sync_to_frontend_mock_videos(lessons)
+    sync_to_frontend_and_cos(lessons)
     return processed
