@@ -539,6 +539,8 @@ def batch_import_economist_endpoint(req: EconomistBatchImportRequest):
         "total": len(economist_store.load_all_articles())
     }
 
+import tony_lesson_processor
+
 class TonyLessonProcessRequest(BaseModel):
     video_urls: List[str] = []
     whisper: bool = True
@@ -548,11 +550,18 @@ class TonyLessonProcessRequest(BaseModel):
 
 @app.post("/api/tony/process_lessons")
 def process_tony_lessons_endpoint(req: TonyLessonProcessRequest):
-    return {
-        "success": True,
-        "message": f"成功解构并提炼 {len(req.video_urls)} 个视频为 Tony English 教案（已联动 COS ap-hongkong）",
-        "count": len(req.video_urls)
-    }
+    if not req.video_urls:
+        return {"success": False, "message": "未勾选任何视频 URL"}
+    try:
+        processed = tony_lesson_processor.process_batch_tiktok_lessons(req.video_urls)
+        return {
+            "success": True,
+            "message": f"成功解构并提炼 {len(processed)} 个 TikTok 视频为 Tony English 教案（已同步上传至 COS videos/tiktok 目录）",
+            "count": len(processed),
+            "lessons": processed
+        }
+    except Exception as e:
+        return {"success": False, "message": f"教案处理失败: {str(e)}"}
 
 @app.post("/api/economist/paste_import")
 def paste_import_economist_endpoint(req: EconomistPasteImportRequest):
