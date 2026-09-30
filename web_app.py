@@ -7280,7 +7280,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
   let candidateUrls = [];
   
-  if (document.querySelector('article') || window.location.pathname.match(/\\/202[0-9]\\//)) {
+  if (document.querySelector('article') || window.location.pathname.includes('/202')) {
     candidateUrls.push(window.location.href);
   }
 
@@ -7312,14 +7312,14 @@ HTML_CONTENT = """<!DOCTYPE html>
   }
 
   candidateUrls = candidateUrls.slice(0, maxCount);
-  console.log(\`📌 发现 \${candidateUrls.length} 篇经济学人深度文章，正在借助您的会员权限并发获取 100% 完整段落...\`);
+  console.log("📌 发现 " + candidateUrls.length + " 篇经济学人深度文章，正在借助您的会员权限并发获取 100% 完整段落...");
 
   const articles = [];
   const parser = new DOMParser();
 
   for (let i = 0; i < candidateUrls.length; i++) {
     const url = candidateUrls[i];
-    console.log(\`⏳ [\${i+1}/\${candidateUrls.length}] 正在解析: \${url}\`);
+    console.log("⏳ [" + (i+1) + "/" + candidateUrls.length + "] 正在解析: " + url);
     try {
       let doc = document;
       if (url !== window.location.href) {
@@ -7378,7 +7378,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       };
 
       articles.push(artObj);
-      console.log(\`  ✅ 成功获取: 《\${title.slice(0, 25)}...》 (\${paragraphs.length} 个段落, \${wordCount} 词)\`);
+      console.log("  ✅ 成功获取: 《" + title.slice(0, 25) + "...》 (" + paragraphs.length + " 个段落, " + wordCount + " 词)");
       await new Promise(r => setTimeout(r, 400));
     } catch(err) {
       console.error("解析文章异常:", url, err);
@@ -7393,8 +7393,8 @@ HTML_CONTENT = """<!DOCTYPE html>
       body: JSON.stringify({ articles: articles, cookie: document.cookie })
     });
     const resData = await res.json();
-    console.log(\`%c🎉 恭喜！已成功将 \${resData.imported_count} 篇 The Economist 深度全文同步入库！\`, "color: #10b981; font-size: 15px; font-weight: bold;");
-    alert(\`🎉 成功同步 \${resData.imported_count} 篇《经济学人》全文到本地工厂！请回到控制台刷新查看！\`);
+    console.log("%c🎉 恭喜！已成功将 " + resData.imported_count + " 篇 The Economist 深度全文同步入库！", "color: #10b981; font-size: 15px; font-weight: bold;");
+    alert("🎉 成功同步 " + resData.imported_count + " 篇《经济学人》全文到本地工厂！请回到控制台刷新查看！");
   } catch(e) {
     console.error("同步至本地服务失败，请确保本地后台运行中:", e);
     alert("同步至本地服务失败，请确认 http://127.0.0.1:8000 服务正常运行！");
