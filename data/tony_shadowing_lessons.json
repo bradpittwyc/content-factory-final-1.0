@@ -1,5 +1,243 @@
 [
   {
+    "id": "tk-7665507950982647054",
+    "video_id": "7665507950982647054",
+    "title": "Getting your 2000s digital closet has never been easier Give Codex th...",
+    "author": "@openai",
+    "source_url": "https://www.tiktok.com/@openai/video/7665507950982647054",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/tiktok/7665507950982647054.mp4",
+    "cover_cos_url": "",
+    "duration": 29,
+    "subtitles": [
+      {
+        "start": 0.0,
+        "end": 1.38,
+        "en": "I don't really know what to wear today,",
+        "cn": "我今天真不知道该穿什么，"
+      },
+      {
+        "start": 1.38,
+        "end": 4.54,
+        "en": "so I built my own virtual wardrobe with all of my clothes",
+        "cn": "所以我用自己的所有衣服建了一个虚拟衣橱，"
+      },
+      {
+        "start": 4.54,
+        "end": 7.06,
+        "en": "and had it generate outfit recommendations for me.",
+        "cn": "然后让它给我生成穿搭推荐。"
+      },
+      {
+        "start": 7.06,
+        "end": 9.82,
+        "en": "And here's how I did it. Well,",
+        "cn": "下面说说我是怎么做的。嗯，"
+      },
+      {
+        "start": 9.82,
+        "end": 12.3,
+        "en": "first, I asked Codex to go through my entire camera roll",
+        "cn": "首先，我让Codex翻遍我整个相册，"
+      },
+      {
+        "start": 12.3,
+        "end": 15.12,
+        "en": "and extract photos of every piece of clothing that I own.",
+        "cn": "提取出我拥有的每一件衣服的照片。"
+      },
+      {
+        "start": 15.42,
+        "end": 17.54,
+        "en": "Then, with ChatGPT's new generation,",
+        "cn": "然后，用ChatGPT的新一代模型，"
+      },
+      {
+        "start": 17.54,
+        "end": 19.5,
+        "en": "I asked it to create 100 new outfits",
+        "cn": "我让它用我已经有的所有衣服，"
+      },
+      {
+        "start": 19.5,
+        "end": 21.34,
+        "en": "with all the clothes that I already had,",
+        "cn": "创作出100套新穿搭，"
+      },
+      {
+        "start": 21.34,
+        "end": 23.22,
+        "en": "generating what it might look like on me.",
+        "cn": "生成穿在我身上可能的样子。"
+      },
+      {
+        "start": 23.22,
+        "end": 25.42,
+        "en": "And it's open source, so you can do this, too.",
+        "cn": "而且它是开源的，所以你也能这么做。"
+      },
+      {
+        "start": 25.42,
+        "end": 27.02,
+        "en": "Just download Openai Codex",
+        "cn": "只要下载OpenAI Codex，"
+      },
+      {
+        "start": 27.02,
+        "end": 29.95,
+        "en": "and ask it to set up your own virtual wardrobe based on my code.",
+        "cn": "然后让它基于我的代码搭建你自己的虚拟衣橱。"
+      }
+    ],
+    "subtitle_count": 13,
+    "created_at": "2026-10-01 00:33:31"
+  },
+  {
+    "id": "tk-7652370582188756255",
+    "video_id": "7652370582188756255",
+    "title": "Protocols: An Operating Manual for the Human Body… is finally ready f...",
+    "author": "@hubermanlab",
+    "source_url": "https://www.tiktok.com/@hubermanlab/video/7652370582188756255",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/tiktok/7652370582188756255.mp4",
+    "cover_cos_url": "",
+    "duration": 55,
+    "subtitles": [
+      {
+        "start": 0.1,
+        "end": 1.86,
+        "en": "Hey everyone. Alright,",
+        "cn": "大家好。好了，"
+      },
+      {
+        "start": 1.86,
+        "end": 4.2,
+        "en": "my book is finally ready for release.",
+        "cn": "我的书终于准备发布了。"
+      },
+      {
+        "start": 4.58,
+        "end": 5.3,
+        "en": "Protocols,",
+        "cn": "《协议》，"
+      },
+      {
+        "start": 5.3,
+        "end": 8.86,
+        "en": "an operating Manual for the human body is coming out in 3 months.",
+        "cn": "一本关于人体的操作手册将在3个月后出版。"
+      },
+      {
+        "start": 8.86,
+        "end": 12.68,
+        "en": "It's my first book and I've been working on it for many years now.",
+        "cn": "这是我的第一本书，我已经写了很多年。"
+      },
+      {
+        "start": 12.74,
+        "end": 15.9,
+        "en": "And it's really a reflection of decades of research and experience",
+        "cn": "它实际上反映了几十年的研究和经验，"
+      },
+      {
+        "start": 15.9,
+        "end": 17.94,
+        "en": "that came even prior to starting the book.",
+        "cn": "这些甚至早于我开始写这本书。"
+      },
+      {
+        "start": 17.94,
+        "end": 21.36,
+        "en": "My goal for this book is that it serves as an easy to use manual",
+        "cn": "我对这本书的目标是，它能够作为一本易于使用的手册，"
+      },
+      {
+        "start": 21.42,
+        "end": 23.46,
+        "en": "for dealing with any number of different pain points",
+        "cn": "用来处理任何数量不同的痛点"
+      },
+      {
+        "start": 23.46,
+        "end": 25.3,
+        "en": "or performance goals that you might have",
+        "cn": "或者你可能有的表现目标，"
+      },
+      {
+        "start": 25.3,
+        "end": 26.38,
+        "en": "in terms of mental health,",
+        "cn": "就心理健康而言，"
+      },
+      {
+        "start": 26.38,
+        "end": 28.0,
+        "en": "physical health and performance.",
+        "cn": "身体健康和表现。"
+      },
+      {
+        "start": 28.12,
+        "end": 31.54,
+        "en": "It covers the science and most effective protocols for sleep, nutrition,",
+        "cn": "它涵盖了睡眠、营养、"
+      },
+      {
+        "start": 31.54,
+        "end": 32.94,
+        "en": "exercise, focus,",
+        "cn": "运动、专注、"
+      },
+      {
+        "start": 32.94,
+        "end": 34.26,
+        "en": "learning and neuroplasticity,",
+        "cn": "学习和神经可塑性、"
+      },
+      {
+        "start": 34.26,
+        "end": 36.3,
+        "en": "stress management and much more.",
+        "cn": "压力管理等方面的科学和最有效的方案，以及更多内容。"
+      },
+      {
+        "start": 36.3,
+        "end": 38.54,
+        "en": "I'm super excited to share it with all of you.",
+        "cn": "我非常兴奋能与大家分享。"
+      },
+      {
+        "start": 38.54,
+        "end": 40.78,
+        "en": "The launch date is September 15th.",
+        "cn": "发布日期是9月15日。"
+      },
+      {
+        "start": 40.78,
+        "end": 44.02,
+        "en": "You can learn more about it or pre order by going to protocolsbook.",
+        "cn": "你可以通过访问protocolsbook."
+      },
+      {
+        "start": 44.02,
+        "end": 46.66,
+        "en": "Com. It's also available on Amazon.",
+        "cn": "com来了解更多或预购。它也可以在亚马逊上购买。"
+      },
+      {
+        "start": 46.66,
+        "end": 52.12,
+        "en": "Com. And I'm super excited that protocols is finally ready for release.",
+        "cn": "com上。我非常兴奋《协议》终于准备发布了。"
+      },
+      {
+        "start": 52.18,
+        "end": 55.17,
+        "en": "And as always, thank you for your interest in science.",
+        "cn": "一如既往，感谢你对科学的兴趣。"
+      }
+    ],
+    "subtitle_count": 22,
+    "created_at": "2026-10-01 00:22:13"
+  },
+  {
     "id": "tk-7689131958399503647",
     "video_id": "7689131958399503647",
     "title": "Would you want your children to have your marriage? World-renowned di...",

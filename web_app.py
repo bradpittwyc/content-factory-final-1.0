@@ -1084,7 +1084,15 @@ def run_download_task(username: str, urls: List[str], req: DownloadRequest):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             manager.current_ydl = ydl
             ydl.download(urls)
-        manager.finish_state(True, f"批量下载完毕，博主专属目录: {abs_out_dir}")
+        
+        manager.add_log("⚡ 开始自动提炼 AI 双语教案并上传至腾讯云 COS...", "info")
+        try:
+            processed = tony_lesson_processor.process_batch_tiktok_lessons(urls)
+            manager.add_log(f"✨ 成功自动将 {len(processed)} 个视频提炼为跟读教案并上传 COS！", "success")
+        except Exception as pe:
+            manager.add_log(f"⚠️ 自动提炼教案上云告警: {pe}", "warn")
+
+        manager.finish_state(True, f"全部下载、AI 提炼及 COS 上云完成！保存路径: {abs_out_dir}")
     except Exception as e:
         if "用户主动中止" in str(e):
             manager.finish_state(False, "任务已被用户取消")
