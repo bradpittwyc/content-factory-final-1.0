@@ -45,10 +45,8 @@ def save_lessons(lessons: List[Dict[str, Any]]):
 def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
     """Syncs generated TikTok lessons directly into tony-frontend-demo/src/data/mockVideos.ts"""
     if not os.path.exists(FRONTEND_MOCK_VIDEOS_PATH):
-        print(f"Frontend path {FRONTEND_MOCK_VIDEOS_PATH} not found, skipping sync.")
         return
 
-    # Convert lessons to TikTokVideo schema format
     formatted_videos = []
     for l in lessons:
         formatted_videos.append({
@@ -74,7 +72,6 @@ def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
             ]
         })
 
-    # Write formatted TypeScript array file
     ts_content = f"""import {{ TikTokVideo }} from '../types';
 
 export const mockTikTokVideos: TikTokVideo[] = {json.dumps(formatted_videos, ensure_ascii=False, indent=2)};
@@ -125,7 +122,6 @@ def process_subtitles_with_ai(subtitles: List[Dict[str, Any]]) -> List[Dict[str,
                     if isinstance(item, dict):
                         subtitles[i]["en"] = item.get("en", subtitles[i]["en"])
                         subtitles[i]["cn"] = item.get("cn", "")
-                print(f"AI successfully proofread & translated {len(subtitles)} subtitle lines!")
     except Exception as e:
         print(f"AI processing exception: {e}")
         
@@ -178,6 +174,7 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     out_prefix = os.path.join(output_dir, f"tiktok_{video_id}")
     outtmpl = f"{out_prefix}.%(ext)s"
     
+    # CRITICAL: noplaylist=True & playlistend=1 ensures strictly ONLY 1 SINGLE video is downloaded!
     ydl_opts = {
         "outtmpl": outtmpl,
         "format": "bestvideo+bestaudio/best",
@@ -188,10 +185,12 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
         "subtitleslangs": ["en.*", "en"],
         "skip_download": False,
         "quiet": True,
-        "no_warnings": True
+        "no_warnings": True,
+        "noplaylist": True,
+        "playlistend": 1
     }
     
-    print(f"🎬 Downloading TikTok video: {url}")
+    print(f"🎬 Processing SINGLE selected video: {url}")
     info = None
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
@@ -205,13 +204,13 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     sub_files = glob.glob(f"{out_prefix}*.vtt") or glob.glob(f"{out_prefix}*.srt")
     
     if not mp4_files:
-        raise Exception(f"Failed to locate downloaded video for {url}")
+        raise Exception(f"Failed to locate downloaded video file for {url}")
         
     local_mp4 = mp4_files[0]
     local_jpg = jpg_files[0] if jpg_files else None
     local_sub = sub_files[0] if sub_files else None
     
-    # Upload to COS under videos/tiktok/
+    # Upload strictly to videos/tiktok/{video_id}.mp4
     cos_mp4_key = f"videos/tiktok/{video_id}.mp4"
     cos_mp4_url = upload_file_to_cos(local_mp4, cos_mp4_key)
     
@@ -221,9 +220,7 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
         cos_jpg_key = f"videos/tiktok/{video_id}{ext}"
         cos_jpg_url = upload_file_to_cos(local_jpg, cos_jpg_key)
         
-    # Parse Subtitles & Run AI Proofread + Translate
     subtitles = parse_vtt_subtitles(local_sub) if local_sub else []
-    
     if not subtitles and duration > 0:
         subtitles = [{"start": 0.0, "end": float(duration), "en": title, "cn": ""}]
         subtitles = process_subtitles_with_ai(subtitles)
@@ -245,10 +242,14 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
     return lesson
 
 def process_batch_tiktok_lessons(urls: List[str]) -> List[Dict[str, Any]]:
+    # STRICTLY ONLY PROCESS THE EXACT CHECKED URLS FROM FRONTEND SELECTION!
     processed = []
     lessons = load_lessons()
     
     for url in urls:
+        # Ignore empty or non-video URLs
+        if not url or not isinstance(url, str):
+            continue
         try:
             lesson = process_single_tiktok_video(url)
             idx = next((i for i, item in enumerate(lessons) if item["video_id"] == lesson["video_id"]), None)
@@ -258,11 +259,8 @@ def process_batch_tiktok_lessons(urls: List[str]) -> List[Dict[str, Any]]:
                 lessons.insert(0, lesson)
             processed.append(lesson)
         except Exception as e:
-            print(f"Error processing TikTok video {url}: {e}")
+            print(f"Error processing selected video {url}: {e}")
             
     save_lessons(lessons)
-    
-    # Sync directly to Tony English frontend repo
     sync_to_frontend_mock_videos(lessons)
-    
     return processed
