@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "interval_minutes": 60,
+  "current_section_idx": 1,
+  "last_run": null,
+  "next_run": "2026-09-30 10:13:53",
+  "total_scraped": 0,
+  "last_title": "",
+  "last_status": "⚠️ 触发 FT 安全验证拦截 (Cloudflare 403)！已自动开启 2 小时安全熔断休眠保护",
+  "cooldown_until": "2026-09-30T10:13:53.664403",
+  "logs": [
+    "[08:13:53] ⚠️ 触发 FT 安全验证拦截 (Cloudflare 403)！已自动开启 2 小时安全熔断休眠保护"
+  ]
+}

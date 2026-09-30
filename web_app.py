@@ -99,6 +99,9 @@ from youtube_study_helper import (
 import channels_store
 import ft_store
 import bloomberg_store
+import ft_scheduler
+
+ft_scheduler.start_scheduler()
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 
@@ -359,6 +362,25 @@ def save_ft_cookie_endpoint(req: FtSaveCookieRequest):
         "success": True,
         "message": "Cookie 保存成功"
     }
+
+class FtSchedulerToggleRequest(BaseModel):
+    enabled: Optional[bool] = None
+
+@app.get("/api/ft/scheduler/status")
+def get_ft_scheduler_status_endpoint():
+    state = ft_scheduler.load_state()
+    return {"success": True, "state": state}
+
+@app.post("/api/ft/scheduler/toggle")
+def toggle_ft_scheduler_endpoint(req: FtSchedulerToggleRequest = FtSchedulerToggleRequest()):
+    state = ft_scheduler.toggle_scheduler(req.enabled)
+    return {"success": True, "state": state}
+
+@app.post("/api/ft/scheduler/trigger")
+def trigger_ft_scheduler_endpoint():
+    res = ft_scheduler.trigger_now()
+    state = ft_scheduler.load_state()
+    return {"success": True, "result": res, "state": state}
 
 @app.post("/api/ft/scrape_url")
 def scrape_ft_url_endpoint(req: FtScrapeUrlRequest):
@@ -2703,33 +2725,74 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- 🏭 自动化内容工厂生产控制台：板块一键全量抓取 + 单篇极速解析 -->
+      <!-- ⏰ 智能自动化计划任务控制中心 (防风控低频滴灌模式：每小时 1 篇，自跑自入库) -->
+      <div class="bg-gradient-to-r from-slate-900/95 via-indigo-950/40 to-slate-900/95 border border-amber-500/30 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <!-- 任务状态与呼吸灯 -->
+          <div class="flex items-center space-x-3">
+            <div id="ftSchedulerStatusIcon" class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <i data-lucide="clock" class="w-5 h-5 animate-pulse"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-sm font-bold text-slate-100 flex items-center space-x-1.5">
+                  <span>FT 自动化计划任务</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">滴灌防风控模式</span>
+                </h3>
+                <span id="ftSchedulerBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  <span>运行中 (每小时 1 篇)</span>
+                </span>
+              </div>
+              <p id="ftSchedulerDesc" class="text-xs text-slate-400 mt-0.5 font-mono">
+                下次预计运行: <span id="ftSchedNextRun" class="text-amber-300">计算中...</span> · 累计自入库: <span id="ftSchedTotalScraped" class="text-cyan-300 font-bold">0</span> 篇 · 轮换板块自动去重
+              </p>
+            </div>
+          </div>
+
+          <!-- 控制操作按钮 -->
+          <div class="flex items-center space-x-2">
+            <button id="btnToggleFtScheduler" onclick="toggleFtScheduler()" class="px-3.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+              <i id="iconToggleFtScheduler" data-lucide="pause-circle" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span id="textToggleFtScheduler">暂停计划任务</span>
+            </button>
+            <button id="btnTriggerFtSchedulerNow" onclick="triggerFtSchedulerNow()" class="px-3.5 py-1.5 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95" title="立刻执行一次单篇安全低频拉取测试">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
+              <span>立即试跑 1 篇</span>
+            </button>
+            <button onclick="toggleFtSchedulerLogs()" class="px-3 py-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-xl border border-slate-800 transition-colors flex items-center space-x-1 cursor-pointer">
+              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+              <span>运行日志</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 调度日志展开面板 -->
+        <div id="ftSchedulerLogsPanel" class="hidden pt-2 border-t border-slate-800/80">
+          <div class="bg-black/60 rounded-xl p-3 border border-slate-800 font-mono text-[11px] text-slate-300 max-h-36 overflow-y-auto custom-scroll space-y-1" id="ftSchedulerLogsContainer">
+            <div class="text-slate-500">正在获取调度器日志...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 应急单篇生产与手动工具条 -->
       <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-1">
-        <!-- 左侧：板块一键批量全自动生产 -->
-        <div class="md:col-span-7 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
-          <span class="text-xs font-semibold text-amber-300 pl-2 shrink-0 flex items-center space-x-1">
-            <i data-lucide="cpu" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>生产批次:</span>
-          </span>
-          <select id="selectFtBatchCount" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none">
-            <option value="5">最新 5 篇 (极速抽检)</option>
-            <option value="10" selected>标准 10 篇 (推荐生产)</option>
-            <option value="15">批量 15 篇</option>
-            <option value="20">深度 20 篇</option>
-            <option value="30">满负荷 30 篇 (长文大库)</option>
-          </select>
-          <button id="btnFtScanSection" onclick="scanCurrentFtSection()" class="flex-1 px-5 py-2 text-xs font-bold bg-gradient-to-r from-amber-500 via-rose-500 to-amber-600 hover:from-amber-400 hover:to-rose-400 text-white rounded-lg shadow-lg shadow-amber-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer active:scale-95">
-            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
-            <span id="btnFtScanSectionText">一键启动自动化批量生产入库</span>
+        <!-- 左侧：单篇 URL 极速加急提取 -->
+        <div class="md:col-span-8 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
+          <input type="text" id="inputFtSingleUrl" placeholder="输入任意 FT 文章链接进行加急生产: https://www.ft.com/content/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+          <button id="btnFtScrapeSingle" onclick="scrapeSingleFtUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>单篇加急生产</span>
           </button>
         </div>
 
-        <!-- 右侧：单篇 URL 极速提取 -->
-        <div class="md:col-span-5 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
-          <input type="text" id="inputFtSingleUrl" placeholder="输入任意 FT 文章链接: https://www.ft.com/content/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
-          <button id="btnFtScrapeSingle" onclick="scrapeSingleFtUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
-            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-            <span>单篇生产</span>
+        <!-- 右侧：手动批量（提示易风控） -->
+        <div class="md:col-span-4 flex items-center justify-between bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-400">
+          <span class="text-[11px] text-slate-500 truncate mr-2" title="高频批量请求容易被 Cloudflare 识别为爬虫并拦截">
+            ⚠️ 批量建议走计划任务
+          </span>
+          <button id="btnFtScanSection" onclick="scanCurrentFtSection()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-all shrink-0 cursor-pointer" title="手动强制单次批量抓取当前板块前5篇">
+            <span id="btnFtScanSectionText">手动抽检 5 篇</span>
           </button>
         </div>
       </div>
@@ -5646,9 +5709,151 @@ HTML_CONTENT = """<!DOCTYPE html>
 
           renderFtTabs();
           renderFtArticlesGrid();
+          loadFtSchedulerUI();
         }
       } catch (e) {
         console.error("加载 FT 数据失败:", e);
+      }
+    }
+
+    async function loadFtSchedulerUI() {
+      try {
+        const res = await fetch('/api/ft/scheduler/status');
+        const data = await res.json();
+        if (data.success && data.state) {
+          const st = data.state;
+          const statusIcon = document.getElementById('ftSchedulerStatusIcon');
+          const badge = document.getElementById('ftSchedulerBadge');
+          const nextRunEl = document.getElementById('ftSchedNextRun');
+          const totalScrapedEl = document.getElementById('ftSchedTotalScraped');
+          const iconToggle = document.getElementById('iconToggleFtScheduler');
+          const textToggle = document.getElementById('textToggleFtScheduler');
+          const logsContainer = document.getElementById('ftSchedulerLogsContainer');
+
+          if (totalScrapedEl) totalScrapedEl.innerText = st.total_scraped || 0;
+          if (nextRunEl) {
+            if (!st.enabled) {
+              nextRunEl.innerText = '已暂停';
+              nextRunEl.className = 'text-slate-500 font-bold';
+            } else if (st.cooldown_until && new Date() < new Date(st.cooldown_until)) {
+              nextRunEl.innerText = `熔断冷却至 ${st.cooldown_until.slice(11, 16)}`;
+              nextRunEl.className = 'text-rose-400 font-bold';
+            } else if (st.next_run) {
+              nextRunEl.innerText = st.next_run.slice(11, 19);
+              nextRunEl.className = 'text-amber-300 font-bold';
+            } else {
+              nextRunEl.innerText = '就绪等待中';
+              nextRunEl.className = 'text-emerald-400 font-bold';
+            }
+          }
+
+          if (badge) {
+            if (st.cooldown_until && new Date() < new Date(st.cooldown_until)) {
+              badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 flex items-center space-x-1";
+              badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>熔断冷却保护中</span>`;
+            } else if (st.enabled) {
+              badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center space-x-1";
+              badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span>运行中 (每小时 1 篇)</span>`;
+            } else {
+              badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 flex items-center space-x-1";
+              badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><span>已暂停</span>`;
+            }
+          }
+
+          if (statusIcon) {
+            if (!st.enabled) {
+              statusIcon.className = "w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 shrink-0";
+            } else if (st.cooldown_until && new Date() < new Date(st.cooldown_until)) {
+              statusIcon.className = "w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0";
+            } else {
+              statusIcon.className = "w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0";
+            }
+          }
+
+          if (textToggle && iconToggle) {
+            if (st.enabled) {
+              textToggle.innerText = '暂停计划任务';
+              iconToggle.setAttribute('data-lucide', 'pause-circle');
+              iconToggle.className = 'w-3.5 h-3.5 text-amber-400';
+            } else {
+              textToggle.innerText = '开启计划任务';
+              iconToggle.setAttribute('data-lucide', 'play-circle');
+              iconToggle.className = 'w-3.5 h-3.5 text-emerald-400';
+            }
+          }
+
+          if (logsContainer && st.logs) {
+            if (st.logs.length === 0) {
+              logsContainer.innerHTML = '<div class="text-slate-500">暂无任务调度日志</div>';
+            } else {
+              logsContainer.innerHTML = st.logs.map(log => {
+                let color = "text-slate-300";
+                if (log.includes('✅')) color = "text-emerald-400 font-semibold";
+                else if (log.includes('⚠️') || log.includes('🛡️')) color = "text-amber-300";
+                else if (log.includes('❌') || log.includes('🛑')) color = "text-rose-400 font-semibold";
+                else if (log.includes('⚡')) color = "text-yellow-300";
+                return `<div class="${color}">${log}</div>`;
+              }).join('');
+            }
+          }
+          lucide.createIcons();
+        }
+      } catch (e) {
+        console.error("加载 FT Scheduler 状态失败:", e);
+      }
+    }
+
+    async function toggleFtScheduler() {
+      try {
+        const res = await fetch('/api/ft/scheduler/toggle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.state.enabled ? "已开启 FT 滴灌计划任务" : "已暂停 FT 计划任务", "success");
+          loadFtSchedulerUI();
+        }
+      } catch (e) {
+        showToast("切换失败: " + e, "error");
+      }
+    }
+
+    async function triggerFtSchedulerNow() {
+      const btn = document.getElementById('btnTriggerFtSchedulerNow');
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      }
+      showToast("正在执行安全防风控拉取 (单篇)... 请稍候", "info");
+      try {
+        const res = await fetch('/api/ft/scheduler/trigger', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          if (data.result && data.result.success) {
+            showToast(`抓取入库成功: 《${(data.result.article.title || '').slice(0, 20)}...》`, "success");
+            loadFtUI();
+          } else {
+            showToast(data.result?.message || "未抓取到新文章或处于冷却中", "warning");
+          }
+        } else {
+          showToast(data.message || "执行失败", "error");
+        }
+        loadFtSchedulerUI();
+      } catch (e) {
+        showToast("执行异常: " + e, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+        }
+      }
+    }
+
+    function toggleFtSchedulerLogs() {
+      const panel = document.getElementById('ftSchedulerLogsPanel');
+      if (panel) {
+        panel.classList.toggle('hidden');
+        if (!panel.classList.contains('hidden')) {
+          loadFtSchedulerUI();
+        }
       }
     }
 
@@ -6208,6 +6413,14 @@ HTML_CONTENT = """<!DOCTYPE html>
       const sidebar = document.getElementById('leftSidebar');
       if (sidebar) sidebar.classList.add('collapsed');
     }
+
+    // 定时轮询 FT 计划任务状态 (每 20 秒刷新一次，轻量级)
+    setInterval(() => {
+      const ftView = document.getElementById('ftPublicationView');
+      if (ftView && !ftView.classList.contains('hidden')) {
+        loadFtSchedulerUI();
+      }
+    }, 20000);
 
     setTimeout(() => {
       loadDemo();

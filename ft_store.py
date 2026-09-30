@@ -65,6 +65,13 @@ def save_all_articles(articles: List[Dict[str, Any]]) -> None:
         json.dump(articles, f, ensure_ascii=False, indent=2)
 
 def upsert_article(article_data: Dict[str, Any]) -> None:
+    if article_data.get("security_blocked"):
+        return
+    if "security verification" in article_data.get("title", "").lower():
+        return
+    if article_data.get("paragraph_count", 0) < 3:
+        return
+
     articles = load_all_articles()
     # Filter out duplicate by URL
     existing_idx = next((i for i, a in enumerate(articles) if a.get("url") == article_data.get("url")), None)
@@ -115,6 +122,29 @@ def scrape_single_article(url: str, section: str = "General", cookie_str: Option
         if not title:
             og_title = soup.find("meta", property="og:title")
             title = og_title.get("content", "").strip() if og_title else "Financial Times Article"
+
+        # Check security / Cloudflare challenge
+        is_security_blocked = (
+            "Security Verification" in title or 
+            "Just a moment" in title or 
+            "Verify you are human" in html_text or 
+            "help.ft.com" in html_text or 
+            res.status_code == 403
+        )
+        if is_security_blocked:
+            return {
+                "id": f"ft_{int(time.time() * 1000)}",
+                "url": url,
+                "title": "Security Verification Blocked",
+                "security_blocked": True,
+                "paragraph_count": 0,
+                "paragraphs": [],
+                "full_text": "",
+                "word_count": 0,
+                "is_paywalled": True,
+                "error": "Cloudflare / FT Security Verification Triggered (CG000 / 403)",
+                "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
 
         # 2. Standfirst / Subtitle
         standfirst_el = soup.select_one(".article__standfirst, .standfirst, [data-component='standfirst']")
