@@ -5636,10 +5636,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
 
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono flex items-center space-x-1" title="入库时间: ${a.scraped_at || scrapedTimeStr}">
-                <i data-lucide="clock" class="w-3 h-3 text-slate-500 shrink-0"></i>
-                <span>入库: ${scrapedTimeStr}</span>
-              </span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
@@ -5972,10 +5969,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
             <!-- 底栏入库时间与操作按钮 -->
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono flex items-center space-x-1" title="入库时间: ${a.scraped_at || scrapedTimeStr}">
-                <i data-lucide="clock" class="w-3 h-3 text-slate-500 shrink-0"></i>
-                <span>入库: ${scrapedTimeStr}</span>
-              </span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
