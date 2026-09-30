@@ -2923,7 +2923,7 @@ HTML_CONTENT = """<!DOCTYPE html>
           <span id="ftModalWordCountBadge" class="text-[11px] text-slate-400 font-mono">21 段落 • 约 1,240 词</span>
         </div>
         <div class="flex items-center space-x-2">
-          <button onclick="copyFtArticleMarkdown()" class="px-2.5 py-1.5 text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-lg transition-colors flex items-center space-x-1 cursor-pointer" title="复制完整 Markdown (含作者导读，供下游分发/知识库)">
+          <button onclick="copyFtArticleMarkdown('', this)" class="px-2.5 py-1.5 text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-lg transition-colors flex items-center space-x-1 cursor-pointer" title="复制完整 Markdown (含作者导读，供下游分发/知识库)">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
             <span>复制 Markdown</span>
           </button>
@@ -5639,7 +5639,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
-                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
                   <i data-lucide="copy" class="w-3 h-3"></i>
                   <span>复制</span>
                 </button>
@@ -5972,7 +5972,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
-                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
                   <i data-lucide="copy" class="w-3 h-3"></i>
                   <span>复制</span>
                 </button>
@@ -6147,46 +6147,163 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (modal) modal.classList.add('hidden');
     }
 
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(() => {
+          return fallbackCopyText(text);
+        });
+      } else {
+        return fallbackCopyText(text);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      return new Promise((resolve, reject) => {
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.top = "-9999px";
+          textArea.style.left = "-9999px";
+          textArea.style.opacity = "0";
+          textArea.setAttribute("readonly", "");
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          textArea.setSelectionRange(0, 999999);
+          const successful = document.execCommand("copy");
+          document.body.removeChild(textArea);
+          if (successful) resolve();
+          else reject(new Error("execCommand copy failed"));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
     function copyFtArticleText() {
       if (!currentViewingFtArticle) return;
       const doubleNl = String.fromCharCode(10, 10);
       const paras = currentViewingFtArticle.paragraphs || [];
       const body = currentViewingFtArticle.full_text || paras.join(doubleNl);
       const text = [currentViewingFtArticle.title, currentViewingFtArticle.standfirst || '', body].filter(Boolean).join(doubleNl);
-      navigator.clipboard.writeText(text).then(() => {
+      copyTextToClipboard(text).then(() => {
         showToast("已成功复制纯文本全文到剪贴板！", "success");
+      }).catch(err => {
+        console.error("复制失败:", err);
+        showToast("复制失败，请检查浏览器剪贴板权限", "error");
       });
     }
 
-    function copyFtArticleMarkdown(encodedUrl) {
+    function copyFtArticleMarkdown(encodedUrl, btnEl) {
       const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
-      const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
-      if (!a) return;
+      let a = null;
+      if (url) {
+        if (typeof ftArticles !== 'undefined' && Array.isArray(ftArticles)) {
+          a = ftArticles.find(x => x.url === url);
+        }
+        if (!a && typeof bloombergArticles !== 'undefined' && Array.isArray(bloombergArticles)) {
+          a = bloombergArticles.find(x => x.url === url);
+        }
+      }
+      if (!a) a = currentViewingFtArticle;
+
+      if (!a) {
+        showToast("未找到对应文章内容，请刷新重试", "error");
+        return;
+      }
+
       const doubleNl = String.fromCharCode(10, 10);
       const singleNl = String.fromCharCode(10);
       const paras = a.paragraphs || [];
       const body = a.full_text || paras.join(doubleNl);
-      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
-      const md = ['# ' + a.title, '', '* **来源**: Financial Times', '* **板块**: ' + (a.section || 'General'), '* **作者**: ' + authors, '* **发布时间**: ' + (a.published_at || ''), '* **原文链接**: ' + a.url, '', '> **核心导读**: ' + (a.standfirst || ''), '', '---', '', body].join(singleNl);
-      navigator.clipboard.writeText(md).then(() => {
-        showToast("已成功复制 Markdown 全文 (含导读与元数据，可直接分发给用户或知识库)！", "success");
+      const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
+      const sourceName = isBb ? 'Bloomberg' : 'Financial Times';
+      const defaultAuthor = isBb ? 'Bloomberg Staff' : 'FT 记者';
+      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
+
+      const md = [
+        '# ' + (a.title || '无标题深度文章'),
+        '',
+        '* **来源**: ' + sourceName,
+        '* **板块**: ' + (a.section || 'General'),
+        '* **作者**: ' + authors,
+        '* **发布时间**: ' + (a.published_at || ''),
+        '* **入库时间**: ' + (a.scraped_at || ''),
+        '* **原文链接**: ' + a.url,
+        '',
+        a.standfirst ? ('> **核心导读**: ' + a.standfirst + singleNl) : '',
+        '---',
+        '',
+        body
+      ].filter(x => x !== null && x !== undefined && x !== '').join(singleNl);
+
+      copyTextToClipboard(md).then(() => {
+        const shortTitle = (a.title || '文章').slice(0, 20);
+        showToast(`已成功复制《${shortTitle}...》Markdown 全文！`, "success");
+        if (btnEl) {
+          const originalHtml = btnEl.innerHTML;
+          btnEl.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-emerald-400"></i><span class="text-emerald-300">已复制</span>`;
+          if (window.lucide) lucide.createIcons();
+          setTimeout(() => {
+            btnEl.innerHTML = originalHtml;
+            if (window.lucide) lucide.createIcons();
+          }, 1600);
+        }
+      }).catch(err => {
+        console.error("复制失败:", err);
+        showToast("复制失败，请检查浏览器剪贴板权限", "error");
       });
     }
 
     function downloadFtSingleMarkdown(encodedUrl) {
       const url = encodedUrl ? decodeURIComponent(encodedUrl) : (currentViewingFtArticle ? currentViewingFtArticle.url : '');
-      const a = ftArticles.find(x => x.url === url) || currentViewingFtArticle;
-      if (!a) return;
+      let a = null;
+      if (url) {
+        if (typeof ftArticles !== 'undefined' && Array.isArray(ftArticles)) {
+          a = ftArticles.find(x => x.url === url);
+        }
+        if (!a && typeof bloombergArticles !== 'undefined' && Array.isArray(bloombergArticles)) {
+          a = bloombergArticles.find(x => x.url === url);
+        }
+      }
+      if (!a) a = currentViewingFtArticle;
+
+      if (!a) {
+        showToast("未找到对应文章内容，请刷新重试", "error");
+        return;
+      }
+
       const doubleNl = String.fromCharCode(10, 10);
       const singleNl = String.fromCharCode(10);
       const paras = a.paragraphs || [];
       const body = a.full_text || paras.join(doubleNl);
-      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'FT 记者';
-      const md = ['# ' + a.title, '', '* **来源**: Financial Times', '* **板块**: ' + (a.section || 'General'), '* **作者**: ' + authors, '* **发布时间**: ' + (a.published_at || ''), '* **原文链接**: ' + a.url, '', '> **核心导读**: ' + (a.standfirst || ''), '', '---', '', body].join(singleNl);
+      const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
+      const sourceName = isBb ? 'Bloomberg' : 'Financial Times';
+      const defaultAuthor = isBb ? 'Bloomberg Staff' : 'FT 记者';
+      const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
+
+      const md = [
+        '# ' + (a.title || '无标题深度文章'),
+        '',
+        '* **来源**: ' + sourceName,
+        '* **板块**: ' + (a.section || 'General'),
+        '* **作者**: ' + authors,
+        '* **发布时间**: ' + (a.published_at || ''),
+        '* **入库时间**: ' + (a.scraped_at || ''),
+        '* **原文链接**: ' + a.url,
+        '',
+        a.standfirst ? ('> **核心导读**: ' + a.standfirst + singleNl) : '',
+        '---',
+        '',
+        body
+      ].filter(x => x !== null && x !== undefined && x !== '').join(singleNl);
+
       const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
       const anchor = document.createElement('a');
       anchor.href = URL.createObjectURL(blob);
-      const safeTitle = (a.title || 'FT_Article').replace(/[\/\\:*?"<>|]/g, '_').slice(0, 50);
+      const prefix = isBb ? 'Bloomberg' : 'FT';
+      const safeTitle = (a.title || `${prefix}_Article`).replace(/[\/\\:*?"<>|]/g, '_').slice(0, 50);
       anchor.download = safeTitle + '.md';
       anchor.click();
       showToast("已启动单篇 Markdown 导出下载！", "success");
