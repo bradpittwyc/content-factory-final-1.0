@@ -9,3 +9,4 @@ downloads/
 *.html
 ft_session.json
 ft_articles/
+*cookie*.txt

@@ -100,6 +100,7 @@ import channels_store
 import ft_store
 import bloomberg_store
 import ft_scheduler
+import economist_store
 
 ft_scheduler.start_scheduler()
 
@@ -449,6 +450,95 @@ def launch_ft_login_endpoint(background_tasks: BackgroundTasks):
     import gui_login_helper
     background_tasks.add_task(asyncio.run, gui_login_helper.run_gui_login())
     return {"success": True, "message": "已在系统桌面弹窗调起登录页面，完成验证后系统将自动保存凭证"}
+
+# ==================== The Economist (经济学人) APIs ====================
+class EconomistSaveCookieRequest(BaseModel):
+    cookie: str
+
+class EconomistScrapeUrlRequest(BaseModel):
+    url: str
+    section: Optional[str] = "Leaders"
+    cookie: Optional[str] = None
+
+class EconomistScanRequest(BaseModel):
+    section: Optional[str] = "leaders"
+    limit: Optional[int] = 10
+
+class EconomistBatchImportRequest(BaseModel):
+    articles: List[Dict[str, Any]]
+    cookie: Optional[str] = None
+
+class EconomistDeleteRequest(BaseModel):
+    url: str
+
+@app.get("/api/economist/sections")
+def get_economist_sections_endpoint():
+    return {
+        "success": True,
+        "sections": economist_store.ECONOMIST_SECTIONS
+    }
+
+@app.get("/api/economist/articles")
+def get_economist_articles_endpoint():
+    articles = economist_store.load_all_articles()
+    return {
+        "success": True,
+        "articles": articles,
+        "total": len(articles),
+        "sections": economist_store.ECONOMIST_SECTIONS,
+        "has_cookie": bool(economist_store.get_saved_cookie())
+    }
+
+@app.get("/api/economist/cookie")
+def get_economist_cookie_endpoint():
+    cookie = economist_store.get_saved_cookie()
+    return {
+        "success": True,
+        "cookie": cookie,
+        "has_cookie": bool(cookie)
+    }
+
+@app.post("/api/economist/cookie")
+def save_economist_cookie_endpoint(req: EconomistSaveCookieRequest):
+    economist_store.save_cookie(req.cookie)
+    return {
+        "success": True,
+        "message": "Cookie 保存成功"
+    }
+
+@app.post("/api/economist/scrape_url")
+def scrape_economist_url_endpoint(req: EconomistScrapeUrlRequest):
+    url = req.url.strip()
+    if not url:
+        return {"success": False, "message": "URL 不能为空"}
+    try:
+        article = economist_store.scrape_single_article(url, section=req.section or "Leaders", cookie_str=req.cookie)
+        if article.get("paragraph_count", 0) > 0 and not article.get("security_blocked"):
+            return {"success": True, "article": article}
+        else:
+            return {"success": False, "message": article.get("error") or "未能提取到完整正文，建议使用浏览器一键同步", "article": article}
+    except Exception as e:
+        return {"success": False, "message": f"抓取异常: {str(e)}"}
+
+@app.post("/api/economist/scan")
+def scan_economist_section_endpoint(req: EconomistScanRequest = EconomistScanRequest()):
+    res = economist_store.scan_rss_section(section_id=req.section or "leaders", limit=req.limit or 10)
+    return res
+
+@app.post("/api/economist/batch_import")
+def batch_import_economist_endpoint(req: EconomistBatchImportRequest):
+    count = economist_store.batch_import_browser_articles(req.articles, req.cookie)
+    return {
+        "success": True,
+        "imported_count": count,
+        "total": len(economist_store.load_all_articles())
+    }
+
+@app.post("/api/economist/delete")
+def delete_economist_article_endpoint(req: EconomistDeleteRequest):
+    ok = economist_store.delete_article(req.url)
+    articles = economist_store.load_all_articles()
+    return {"success": ok, "articles": articles}
 
 @app.post("/api/resolve_folder")
 def resolve_folder_api(req: ResolveFolderRequest):
@@ -2560,20 +2650,21 @@ HTML_CONTENT = """<!DOCTYPE html>
           </div>
         </div>
 
-        <!-- 卡片 4: 经济学人 (The Economist) - 接入中 -->
-        <div onclick="showIncomingPubToast('经济学人 (The Economist)')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none">
+        <!-- 卡片 4: 经济学人 (The Economist) - 已上线 -->
+        <div onclick="openPubWorkstation('economist')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-red-500/50 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none hover:shadow-red-950/20 hover:shadow-2xl">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <div class="w-11 h-11 rounded-xl bg-[#e3120b] flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm">
                 E
               </div>
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
-                接入中
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-950 text-red-300 border border-red-800/60 font-mono flex items-center space-x-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                <span>已就绪 · VIP同步</span>
               </span>
             </div>
 
             <div class="space-y-0.5">
-              <h3 class="text-base font-bold text-slate-200">经济学人</h3>
+              <h3 class="text-base font-bold text-slate-100 group-hover:text-red-400 transition-colors">经济学人</h3>
               <p class="text-xs text-slate-400 font-serif">The Economist</p>
             </div>
 
@@ -2582,8 +2673,12 @@ HTML_CONTENT = """<!DOCTYPE html>
             </p>
           </div>
 
-          <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-500">
-            <span>抓取管线排期中</span>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+            <span id="pubStatEcoCount" class="font-mono text-slate-400">0 篇收录</span>
+            <span class="text-xs font-semibold text-red-400 group-hover:text-red-300 flex items-center space-x-1">
+              <span>进入 Economist Studio</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </span>
           </div>
         </div>
 
@@ -2910,6 +3005,133 @@ HTML_CONTENT = """<!DOCTYPE html>
       </div>
     </div>
 
+    <!-- 视图 4: 经济学人内容工厂 (The Economist Studio) -->
+    <div id="economistFactoryWorkstation" class="space-y-6 hidden">
+      <!-- 顶栏导航与面包屑 -->
+      <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-3.5 shadow-lg">
+        <div class="flex items-center space-x-3">
+          <button onclick="returnToPubMatrix()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-red-400"></i>
+            <span>返回全球精选刊源 (5)</span>
+          </button>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="text-slate-400">全球刊源</span>
+            <span class="text-slate-600">/</span>
+            <span class="font-bold text-red-400">经济学人 (The Economist)</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
+          <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+          <span class="px-3 py-1 font-bold rounded-lg bg-red-500/20 text-red-300 border border-red-500/30">经济学人</span>
+        </div>
+      </div>
+
+      <!-- 经济学人监控看板与控制中心 -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-[#e3120b] flex items-center justify-center text-white font-serif font-black text-2xl shadow-lg">
+              E
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-base font-bold text-slate-100">《经济学人》The Economist Studio</h2>
+                <span id="ecoArticlesCountBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800/60 font-mono">0 篇已收录</span>
+                <span id="ecoCookieStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 font-mono">未激活 Cookie</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5 font-serif">典雅英式议论文笔，修辞与逻辑严密 · 100% 段落级深度长文全文生产与知识库分发</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="openEcoBrowserSyncModal()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/20 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
+              <span>⚡ 已登录浏览器一键提取同步</span>
+            </button>
+            <button onclick="loadEconomistUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-red-400"></i>
+              <span>刷新经济学人库</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 产能数据看板 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">收录文章总数</span>
+            <span id="ecoStatTotalArticles" class="text-lg font-bold text-slate-200 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">累计正文段落</span>
+            <span id="ecoStatTotalParas" class="text-lg font-bold text-emerald-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">预估总英文词数</span>
+            <span id="ecoStatTotalWords" class="text-lg font-bold text-red-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">同步模式</span>
+            <span class="text-xs font-semibold text-cyan-400 font-mono">VIP 浏览器免登录同步</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 应急单篇提取与手动工具条 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-1">
+        <!-- 左侧：单篇 URL 加急提取 -->
+        <div class="md:col-span-8 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
+          <input type="text" id="inputEcoSingleUrl" placeholder="输入任意 Economist 文章链接: https://www.economist.com/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+          <button id="btnEcoScrapeSingle" onclick="scrapeSingleEcoUrl()" class="px-4 py-2 text-xs font-semibold bg-red-600/30 hover:bg-red-600/50 text-red-300 border border-red-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>单篇加急提取</span>
+          </button>
+        </div>
+
+        <!-- 右侧：板块扫描探测 -->
+        <div class="md:col-span-4 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800">
+          <select id="selectEcoBatchCount" class="bg-slate-900 border border-slate-700 text-xs text-slate-300 rounded-lg px-2 py-1.5 focus:outline-none">
+            <option value="5">最新 5 篇</option>
+            <option value="10" selected>最新 10 篇</option>
+            <option value="15">最新 15 篇</option>
+          </select>
+          <button id="btnEcoScanSection" onclick="scanCurrentEcoSection()" class="flex-1 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95">
+            <i data-lucide="compass" class="w-3.5 h-3.5 text-red-400"></i>
+            <span id="btnEcoScanSectionText">板块探测抓取</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 板块 Tabs 筛选条与批量操作 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80">
+        <div id="ecoSectionTabs" class="flex flex-wrap items-center gap-1.5">
+          <!-- 动态渲染板块 tabs -->
+        </div>
+
+        <!-- 批量操作按钮组 -->
+        <div class="flex items-center space-x-2">
+          <button onclick="toggleSelectAllEco()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors cursor-pointer flex items-center space-x-1">
+            <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+            <span id="btnEcoSelectAllText">全选</span>
+          </button>
+          <button onclick="exportEcoSelected('markdown')" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-lg border border-slate-700 transition-colors cursor-pointer flex items-center space-x-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>导出选中 MD</span>
+          </button>
+          <button onclick="deleteEcoSelected()" class="px-3 py-1.5 text-xs font-medium bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-lg border border-rose-800/60 transition-colors cursor-pointer flex items-center space-x-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>删除选中</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 经济学人文章卡片网格 -->
+      <div id="economistArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
+        <!-- 动态渲染经济学人文章卡片 -->
+      </div>
+    </div>
+
   </main>
 
   <!-- 文章阅读弹窗模态框 (优雅全文阅读器) -->
@@ -3006,6 +3228,56 @@ HTML_CONTENT = """<!DOCTYPE html>
       <div class="flex items-center justify-end space-x-3 pt-2 border-t border-slate-800">
         <button onclick="closeFtBrowserSyncModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">关闭</button>
         <button onclick="copyFtSyncCollectorScript()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>一键复制全自动同步脚本</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 经济学人浏览器一键同步弹窗 -->
+  <div id="ecoBrowserSyncModal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 transform transition-all">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">已登录浏览器一键提取与同步 (The Economist)</h3>
+            <p class="text-[11px] text-slate-400">利用您当前浏览器已登录的 VIP 权限，毫秒级无损提取并同步至本地工厂</p>
+          </div>
+        </div>
+        <button onclick="closeEcoBrowserSyncModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <p>《经济学人》同样部署了 Cloudflare 验证与会员 Paywall 保护。只要您在平时使用的 Chrome 浏览器中已成功登录过账号，即可使用本通道直接提取 <strong>100% 完整无损全文</strong>。</p>
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+          <div class="font-semibold text-red-400 flex items-center space-x-1.5">
+            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+            <span>极简 2 步操作说明：</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1.5 text-slate-400">
+            <li>在您已经登录的 <span class="text-slate-200 font-mono">economist.com</span> 标签页按 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">F12</kbd> 打开控制台 (Console)；</li>
+            <li>点击下方按钮复制脚本，粘贴到控制台回车，<strong>10 篇高阶深度全文及会话凭证将自动秒级传输并入库</strong>！</li>
+          </ol>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800/80">
+          <label class="text-[11px] text-slate-400 block mb-1 font-mono">或者直接粘贴 Cookie 凭证 (可选):</label>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="inputEcoCookieStr" placeholder="在控制台执行 copy(document.cookie) 即可一键复制并粘贴在此处..." class="flex-1 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+            <button onclick="saveEcoCookieManual()" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 cursor-pointer">保存凭证</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-800">
+        <button onclick="closeEcoBrowserSyncModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">关闭</button>
+        <button onclick="copyEcoSyncCollectorScript()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span>一键复制全自动同步脚本</span>
         </button>
@@ -5477,10 +5749,15 @@ HTML_CONTENT = """<!DOCTYPE html>
     let ftArticles = [];
     let ftSections = [];
     let bloombergArticles = [];
+    let economistArticles = [];
+    let economistSections = [];
     let currentPubWorkstation = 'matrix';
     let currentFtSectionTab = 'all';
+    let currentEcoSectionTab = 'all';
     let ftSelectedUrls = new Set();
+    let ecoSelectedUrls = new Set();
     let ftSearchKeyword = '';
+    let ecoSearchKeyword = '';
     let currentViewingFtArticle = null;
 
     function returnToPubMatrix() {
@@ -5488,9 +5765,11 @@ HTML_CONTENT = """<!DOCTYPE html>
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
+      const ecoView = document.getElementById('economistFactoryWorkstation');
       if (matrixView) matrixView.classList.remove('hidden');
       if (ftView) ftView.classList.add('hidden');
       if (bbView) bbView.classList.add('hidden');
+      if (ecoView) ecoView.classList.add('hidden');
 
       const headerTitle = document.getElementById('headerAppTitle');
       const headerSubtitle = document.getElementById('headerAppSubtitle');
@@ -5506,11 +5785,13 @@ HTML_CONTENT = """<!DOCTYPE html>
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
+      const ecoView = document.getElementById('economistFactoryWorkstation');
 
       if (pub === 'ft') {
         if (matrixView) matrixView.classList.add('hidden');
         if (ftView) ftView.classList.remove('hidden');
         if (bbView) bbView.classList.add('hidden');
+        if (ecoView) ecoView.classList.add('hidden');
 
         const headerTitle = document.getElementById('headerAppTitle');
         const headerSubtitle = document.getElementById('headerAppSubtitle');
@@ -5522,6 +5803,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (matrixView) matrixView.classList.add('hidden');
         if (ftView) ftView.classList.add('hidden');
         if (bbView) bbView.classList.remove('hidden');
+        if (ecoView) ecoView.classList.add('hidden');
 
         const headerTitle = document.getElementById('headerAppTitle');
         const headerSubtitle = document.getElementById('headerAppSubtitle');
@@ -5529,6 +5811,18 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (headerSubtitle) headerSubtitle.innerText = "全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪 · 深度长文精读";
 
         loadBloombergUI();
+      } else if (pub === 'economist') {
+        if (matrixView) matrixView.classList.add('hidden');
+        if (ftView) ftView.classList.add('hidden');
+        if (bbView) bbView.classList.add('hidden');
+        if (ecoView) ecoView.classList.remove('hidden');
+
+        const headerTitle = document.getElementById('headerAppTitle');
+        const headerSubtitle = document.getElementById('headerAppSubtitle');
+        if (headerTitle) headerTitle.innerText = "经济学人 · The Economist Studio";
+        if (headerSubtitle) headerSubtitle.innerText = "典雅英式议论文笔，修辞与逻辑严密 · 100% 段落级深度长文全文生产与知识库分发";
+
+        loadEconomistUI();
       }
       lucide.createIcons();
     }
@@ -5556,6 +5850,15 @@ HTML_CONTENT = """<!DOCTYPE html>
           const bbCount = bloombergArticles.length;
           const pubStatBb = document.getElementById('pubStatBbCount');
           if (pubStatBb) pubStatBb.innerText = bbCount;
+        }
+
+        const ecoRes = await fetch('/api/economist/articles');
+        const ecoData = await ecoRes.json();
+        if (ecoData.success) {
+          economistArticles = ecoData.articles || [];
+          const ecoCount = economistArticles.length;
+          const pubStatEco = document.getElementById('pubStatEcoCount');
+          if (pubStatEco) pubStatEco.innerText = `${ecoCount} 篇收录`;
         }
       } catch (e) {
         console.error("更新刊源矩阵数据失败:", e);
@@ -6101,14 +6404,28 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function openFtArticleModal(encodedUrl) {
       const url = decodeURIComponent(encodedUrl);
-      const article = ftArticles.find(a => a.url === url) || (bloombergArticles || []).find(a => a.url === url);
+      const article = ftArticles.find(a => a.url === url) || (bloombergArticles || []).find(a => a.url === url) || (economistArticles || []).find(a => a.url === url);
       if (!article) return;
 
       currentViewingFtArticle = article;
       const modal = document.getElementById('ftArticleReaderModal');
       
-      document.getElementById('ftModalSectionBadge').innerText = article.section || 'FT 深度报道';
-      document.getElementById('ftModalWordCountBadge').innerText = `${article.paragraph_count || article.paragraphs.length} 个段落 • 约 ${article.word_count || 0} 词`;
+      const isBb = (article.source && article.source.toLowerCase().includes('bloomberg')) || (article.url && article.url.includes('bloomberg'));
+      const isEco = (article.source && article.source.toLowerCase().includes('economist')) || (article.url && article.url.includes('economist'));
+
+      const secBadge = document.getElementById('ftModalSectionBadge');
+      if (secBadge) {
+        secBadge.innerText = article.section || (isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'FT 深度报道'));
+        if (isEco) {
+          secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800/60 font-medium";
+        } else if (isBb) {
+          secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-medium";
+        } else {
+          secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-medium";
+        }
+      }
+
+      document.getElementById('ftModalWordCountBadge').innerText = `${article.paragraph_count || (article.paragraphs ? article.paragraphs.length : 0)} 个段落 • 约 ${article.word_count || 0} 词`;
       document.getElementById('ftModalTitle').innerText = article.title || '';
       
       const standfirstEl = document.getElementById('ftModalStandfirst');
@@ -6119,20 +6436,22 @@ HTML_CONTENT = """<!DOCTYPE html>
         standfirstEl.style.display = 'none';
       }
 
-      document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : 'Financial Times';
+      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'Financial Times');
+      document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : defaultAuthor;
       document.getElementById('ftModalPublishedAt').innerText = article.published_at || '近期发布';
       document.getElementById('ftModalScrapedAt').innerText = `入库: ${article.scraped_at || ''}`;
       document.getElementById('ftModalOriginalLink').href = article.url;
 
       // 渲染段落
       const parasContainer = document.getElementById('ftModalParagraphs');
+      const numColor = isEco ? 'text-red-400/70' : (isBb ? 'text-cyan-400/70' : 'text-amber-500/60');
       if (article.paragraphs && article.paragraphs.length > 0) {
         parasContainer.innerHTML = article.paragraphs.map((p, idx) => `
-          <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
+          <p class="indent-0 leading-relaxed"><span class="text-xs ${numColor} font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
         `).join('');
       } else if (article.full_text) {
         parasContainer.innerHTML = article.full_text.split(/\\r?\\n\\r?\\n/).map((p, idx) => `
-          <p class="indent-0 leading-relaxed"><span class="text-xs text-amber-500/60 font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
+          <p class="indent-0 leading-relaxed"><span class="text-xs ${numColor} font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
         `).join('');
       } else {
         parasContainer.innerHTML = `<p class="text-slate-500 italic">暂无正文段落</p>`;
@@ -6205,6 +6524,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (!a && typeof bloombergArticles !== 'undefined' && Array.isArray(bloombergArticles)) {
           a = bloombergArticles.find(x => x.url === url);
         }
+        if (!a && typeof economistArticles !== 'undefined' && Array.isArray(economistArticles)) {
+          a = economistArticles.find(x => x.url === url);
+        }
       }
       if (!a) a = currentViewingFtArticle;
 
@@ -6218,8 +6540,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       const paras = a.paragraphs || [];
       const body = a.full_text || paras.join(doubleNl);
       const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
-      const sourceName = isBb ? 'Bloomberg' : 'Financial Times';
-      const defaultAuthor = isBb ? 'Bloomberg Staff' : 'FT 记者';
+      const isEco = (a.source && a.source.toLowerCase().includes('economist')) || (a.url && a.url.includes('economist'));
+      const sourceName = isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times');
+      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者');
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
 
       const md = [
@@ -6266,6 +6589,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (!a && typeof bloombergArticles !== 'undefined' && Array.isArray(bloombergArticles)) {
           a = bloombergArticles.find(x => x.url === url);
         }
+        if (!a && typeof economistArticles !== 'undefined' && Array.isArray(economistArticles)) {
+          a = economistArticles.find(x => x.url === url);
+        }
       }
       if (!a) a = currentViewingFtArticle;
 
@@ -6279,8 +6605,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       const paras = a.paragraphs || [];
       const body = a.full_text || paras.join(doubleNl);
       const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
-      const sourceName = isBb ? 'Bloomberg' : 'Financial Times';
-      const defaultAuthor = isBb ? 'Bloomberg Staff' : 'FT 记者';
+      const isEco = (a.source && a.source.toLowerCase().includes('economist')) || (a.url && a.url.includes('economist'));
+      const sourceName = isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times');
+      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者');
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
 
       const md = [
@@ -6302,7 +6629,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
       const anchor = document.createElement('a');
       anchor.href = URL.createObjectURL(blob);
-      const prefix = isBb ? 'Bloomberg' : 'FT';
+      const prefix = isEco ? 'Economist' : (isBb ? 'Bloomberg' : 'FT');
       const safeTitle = (a.title || `${prefix}_Article`).replace(/[\/\\:*?"<>|]/g, '_').slice(0, 50);
       anchor.download = safeTitle + '.md';
       anchor.click();
@@ -6516,6 +6843,554 @@ HTML_CONTENT = """<!DOCTYPE html>
       } catch (e) {
         showToast("调起登录窗口失败: " + e, "error");
       }
+    }
+
+    // =========================================================================
+    // 经济学人 (The Economist Studio) 前端全流程控制与交互
+    // =========================================================================
+    async function loadEconomistUI() {
+      try {
+        const [artRes, secRes, ckRes] = await Promise.all([
+          fetch('/api/economist/articles').then(r => r.json()).catch(() => ({ success: false })),
+          fetch('/api/economist/sections').then(r => r.json()).catch(() => ({ success: false })),
+          fetch('/api/economist/cookie').then(r => r.json()).catch(() => ({ success: false }))
+        ]);
+
+        if (secRes && secRes.success) {
+          economistSections = secRes.sections || [];
+        }
+
+        if (artRes && artRes.success) {
+          economistArticles = artRes.articles || [];
+          
+          // 更新顶部徽章与看板指标
+          const totalBadge = document.getElementById('ecoArticlesCountBadge');
+          if (totalBadge) totalBadge.innerText = `${economistArticles.length} 篇已收录`;
+
+          const totalParas = economistArticles.reduce((acc, a) => acc + (a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0)), 0);
+          const totalWords = economistArticles.reduce((acc, a) => acc + (a.word_count || 0), 0);
+
+          const statArticles = document.getElementById('ecoStatTotalArticles');
+          if (statArticles) statArticles.innerText = economistArticles.length;
+
+          const statParas = document.getElementById('ecoStatTotalParas');
+          if (statParas) statParas.innerText = totalParas.toLocaleString();
+
+          const statWords = document.getElementById('ecoStatTotalWords');
+          if (statWords) {
+            statWords.innerText = totalWords >= 10000 ? (totalWords / 10000).toFixed(1) + '万' : totalWords.toLocaleString();
+          }
+
+          const cookieBadge = document.getElementById('ecoCookieStatusBadge');
+          if (cookieBadge) {
+            if (artRes.has_cookie) {
+              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1";
+              cookieBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>VIP 授权已激活</span>`;
+            } else {
+              cookieBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono";
+              cookieBadge.innerText = "未激活 Cookie";
+            }
+          }
+        }
+
+        // 同步 Cookie 输入框
+        if (ckRes && ckRes.cookie) {
+          const input = document.getElementById('inputEcoCookieStr');
+          if (input) input.value = ckRes.cookie;
+        }
+
+        renderEcoTabs();
+        renderEconomistGrid();
+        updatePubMatrixStats();
+      } catch (e) {
+        console.error("加载经济学人数据失败:", e);
+      }
+    }
+
+    function renderEcoTabs() {
+      const container = document.getElementById('ecoSectionTabs');
+      if (!container) return;
+
+      const tabs = [
+        { id: 'all', name: '全部文章' },
+        ...economistSections
+      ];
+
+      container.innerHTML = tabs.map(t => {
+        const isActive = (currentEcoSectionTab === t.id);
+        const count = t.id === 'all'
+          ? economistArticles.length
+          : economistArticles.filter(a => a.section && (a.section.toLowerCase().includes(t.id) || a.section.includes(t.name.split(' ')[0]))).length;
+
+        const activeCls = isActive
+          ? "bg-red-950/60 text-red-300 border border-red-700/60 font-bold shadow-sm"
+          : "bg-slate-900/60 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-slate-800 font-medium";
+
+        return `
+          <button onclick="switchEcoSectionTab('${t.id}')" class="px-3 py-1.5 rounded-lg text-xs transition-all whitespace-nowrap flex items-center space-x-1.5 cursor-pointer ${activeCls}">
+            <span>${t.name}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-red-900 text-red-200' : 'bg-slate-800 text-slate-500'} font-mono">${count}</span>
+          </button>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function switchEcoSectionTab(tabId) {
+      currentEcoSectionTab = tabId;
+      renderEcoTabs();
+      renderEconomistGrid();
+    }
+
+    function getFilteredEcoArticles() {
+      let list = economistArticles;
+      if (currentEcoSectionTab !== 'all') {
+        const secObj = economistSections.find(s => s.id === currentEcoSectionTab);
+        const secName = secObj ? secObj.name.split(' ')[0] : '';
+        list = list.filter(a => a.section && (a.section.toLowerCase().includes(currentEcoSectionTab) || (secName && a.section.includes(secName))));
+      }
+      if (ecoSearchKeyword) {
+        list = list.filter(a => {
+          const t = (a.title || '').toLowerCase();
+          const s = (a.standfirst || '').toLowerCase();
+          const f = (a.full_text || '').toLowerCase();
+          const auth = (a.authors || []).join(' ').toLowerCase();
+          return t.includes(ecoSearchKeyword) || s.includes(ecoSearchKeyword) || f.includes(ecoSearchKeyword) || auth.includes(ecoSearchKeyword);
+        });
+      }
+      return list;
+    }
+
+    function renderEconomistGrid() {
+      const container = document.getElementById('economistArticlesGrid');
+      if (!container) return;
+
+      const list = getFilteredEcoArticles();
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-slate-900/40 border border-slate-800/80 rounded-2xl">
+            <div class="w-12 h-12 rounded-xl bg-red-950/40 border border-red-800/40 text-red-400 mx-auto flex items-center justify-center font-serif font-black text-xl">
+              E
+            </div>
+            <p class="text-sm text-slate-300 font-medium">暂无经济学人文章</p>
+            <p class="text-xs text-slate-500">点击右上角“⚡ 已登录浏览器一键提取同步”，或在上方输入文章 URL 极速提取</p>
+          </div>
+        `;
+        lucide.createIcons();
+        updateEcoSelectedCount();
+        return;
+      }
+
+      container.innerHTML = list.map(a => {
+        const isSelected = ecoSelectedUrls.has(a.url);
+        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
+        const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
+
+        return `
+          <div class="bg-slate-900/80 hover:bg-slate-900 border ${isSelected ? 'border-red-500/80 ring-1 ring-red-500/50' : 'border-slate-800'} hover:border-slate-700 rounded-2xl p-4 shadow-lg transition-all flex flex-col justify-between space-y-3 group select-none">
+            
+            <div class="space-y-2.5">
+              <!-- 顶部标签与勾选框 -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectEcoArticle('${encodeURIComponent(a.url)}', this.checked)" class="w-4 h-4 rounded bg-slate-800 border-slate-700 text-red-500 focus:ring-0 cursor-pointer">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-red-950 text-red-300 border border-red-800/60 font-medium font-serif">${a.section || 'Leaders'}</span>
+                  ${a.is_paywalled ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">未完全解密</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">VIP 全文无损</span>'}
+                </div>
+                <span class="text-[11px] text-slate-500 font-mono">${parasCount} 段 • ${a.word_count || 0} 词</span>
+              </div>
+
+              <!-- 标题 -->
+              <h3 onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="text-sm font-bold text-slate-100 group-hover:text-red-300 transition-colors line-clamp-2 cursor-pointer font-serif leading-snug">
+                ${a.title || '无标题文章'}
+              </h3>
+
+              <!-- 摘要 / Standfirst -->
+              ${a.standfirst ? `<p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">${a.standfirst}</p>` : ''}
+            </div>
+
+            <!-- 底栏入库时间与操作按钮 (符合规范：无时钟图标，干净排版) -->
+            <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
+              
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>复制</span>
+                </button>
+                <button onclick="downloadFtSingleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="导出单篇 .md">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>MD</span>
+                </button>
+                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="深度阅读全文">
+                  <i data-lucide="book-open" class="w-3 h-3"></i>
+                  <span>阅读</span>
+                </button>
+                <a href="${a.url}" target="_blank" class="p-1 hover:text-red-400 rounded hover:bg-slate-800 transition-colors" title="在 The Economist 原网查看">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+                <button onclick="deleteEcoArticle('${encodeURIComponent(a.url)}')" class="p-1 hover:text-rose-400 rounded hover:bg-slate-800 transition-colors" title="删除">
+                  <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+      updateEcoSelectedCount();
+    }
+
+    function toggleSelectEcoArticle(encodedUrl, isChecked) {
+      const url = decodeURIComponent(encodedUrl);
+      if (isChecked) {
+        ecoSelectedUrls.add(url);
+      } else {
+        ecoSelectedUrls.delete(url);
+      }
+      updateEcoSelectedCount();
+      renderEconomistGrid();
+    }
+
+    function toggleSelectAllEco() {
+      const list = getFilteredEcoArticles();
+      const allSelected = list.every(a => ecoSelectedUrls.has(a.url));
+      if (allSelected) {
+        list.forEach(a => ecoSelectedUrls.delete(a.url));
+      } else {
+        list.forEach(a => ecoSelectedUrls.add(a.url));
+      }
+      const btnText = document.getElementById('btnEcoSelectAllText');
+      if (btnText) btnText.innerText = allSelected ? "全选" : "取消全选";
+      updateEcoSelectedCount();
+      renderEconomistGrid();
+    }
+
+    function updateEcoSelectedCount() {
+      // 保持状态同步
+    }
+
+    async function scrapeSingleEcoUrl() {
+      const input = document.getElementById('inputEcoSingleUrl');
+      const btn = document.getElementById('btnEcoScrapeSingle');
+      const url = input ? input.value.trim() : '';
+      if (!url) {
+        showToast("请输入有效的 Economist 文章链接", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>抓取中...</span>`;
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/economist/scrape_url', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url: url, section: currentEcoSectionTab === 'all' ? 'Leaders' : currentEcoSectionTab })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`抓取成功！已获取 ${data.article.paragraph_count} 个段落`, "success");
+          input.value = '';
+          loadEconomistUI();
+        } else {
+          showToast(data.message || "抓取失败，请检查链接或 Cookie", "error");
+        }
+      } catch (e) {
+        showToast("抓取请求异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="plus-circle" class="w-3.5 h-3.5"></i><span>单篇加急提取</span>`;
+        lucide.createIcons();
+      }
+    }
+
+    async function scanCurrentEcoSection() {
+      const btn = document.getElementById('btnEcoScanSection');
+      const btnText = document.getElementById('btnEcoScanSectionText');
+      const selectCount = document.getElementById('selectEcoBatchCount');
+      const limit = selectCount ? parseInt(selectCount.value) : 10;
+      const targetSec = currentEcoSectionTab === 'all' ? 'leaders' : currentEcoSectionTab;
+
+      btn.disabled = true;
+      btnText.innerText = `正在探测最新 ${limit} 篇...`;
+      showToast(`正在批量扫描 The Economist [${targetSec}] 板块...`, "info");
+
+      try {
+        const res = await fetch('/api/economist/scan', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ section: targetSec, limit: limit })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 批量扫描完成！共探测 ${data.scanned_count} 篇，成功入库 ${data.scraped_count} 篇！`, "success");
+          loadEconomistUI();
+        } else {
+          showToast(data.message || "批量扫描失败", "error");
+        }
+      } catch (e) {
+        showToast("批量扫描网络异常: " + e, "error");
+      } finally {
+        btn.disabled = false;
+        btnText.innerText = "板块探测抓取";
+        lucide.createIcons();
+      }
+    }
+
+    function exportEcoSelected(format) {
+      const list = economistArticles.filter(a => ecoSelectedUrls.has(a.url));
+      const targetList = list.length > 0 ? list : getFilteredEcoArticles();
+      if (targetList.length === 0) {
+        showToast("当前无可用文章可导出", "error");
+        return;
+      }
+
+      let content = "";
+      let filename = `Economist_Articles_${new Date().toISOString().slice(0,10)}`;
+      let mimeType = "text/plain";
+
+      if (format === 'json') {
+        content = JSON.stringify(targetList, null, 2);
+        filename += ".json";
+        mimeType = "application/json";
+      } else if (format === 'markdown') {
+        content = targetList.map(a => {
+          const body = a.full_text || (a.paragraphs || []).join('\n\n');
+          return `# ${a.title}\n* 来源: The Economist\n* 板块: ${a.section || 'Leaders'}\n* 作者: ${(a.authors || []).join(', ')}\n* 时间: ${a.published_at || ''}\n* 原文链接: ${a.url}\n\n> ${a.standfirst || ''}\n\n---\n\n${body}\n\n======================================================\n`;
+        }).join('\n');
+        filename += ".md";
+        mimeType = "text/markdown";
+      }
+
+      const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      showToast(`已成功导出 ${targetList.length} 篇经济学人文章 (${format.toUpperCase()})！`, "success");
+    }
+
+    async function deleteEcoArticle(encodedUrl) {
+      const url = decodeURIComponent(encodedUrl);
+      if (!confirm("确定要删除这篇经济学人文章吗？")) return;
+      try {
+        const res = await fetch('/api/economist/delete', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        if (data.success) {
+          economistArticles = data.articles;
+          ecoSelectedUrls.delete(url);
+          showToast("文章已成功删除", "success");
+          loadEconomistUI();
+        } else {
+          showToast("删除失败", "error");
+        }
+      } catch (e) {
+        showToast("删除请求异常: " + e, "error");
+      }
+    }
+
+    async function deleteEcoSelected() {
+      if (ecoSelectedUrls.size === 0) {
+        showToast("请先勾选需要删除的文章", "warning");
+        return;
+      }
+      if (!confirm(`确定要批量删除选中的 ${ecoSelectedUrls.size} 篇文章吗？`)) return;
+
+      const urls = Array.from(ecoSelectedUrls);
+      let successCount = 0;
+      for (const u of urls) {
+        try {
+          const res = await fetch('/api/economist/delete', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ url: u })
+          });
+          const data = await res.json();
+          if (data.success) successCount++;
+        } catch(e) {}
+      }
+      ecoSelectedUrls.clear();
+      showToast(`已批量删除 ${successCount} 篇文章`, "success");
+      loadEconomistUI();
+    }
+
+    function openEcoBrowserSyncModal() {
+      const modal = document.getElementById('ecoBrowserSyncModal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEcoBrowserSyncModal() {
+      const modal = document.getElementById('ecoBrowserSyncModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function saveEcoCookieManual() {
+      const input = document.getElementById('inputEcoCookieStr');
+      const val = input ? input.value.trim() : '';
+      if (!val) {
+        showToast("请输入有效的 Cookie 字符串", "error");
+        return;
+      }
+      try {
+        const res = await fetch('/api/economist/cookie', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ cookie: val })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast("经济学人 Cookie 凭证已成功保存！", "success");
+          loadEconomistUI();
+        }
+      } catch (e) {
+        showToast("保存凭证出错: " + e, "error");
+      }
+    }
+
+    function copyEcoSyncCollectorScript() {
+      const scriptCode = `(async function syncEconomistBatchToLocal(maxCount = 10) {
+  console.log("%c🚀 [The Economist] 正在通过您已登录的 Chrome 浏览器并发提取深度全文...", "color: #e3120b; font-size: 14px; font-weight: bold;");
+
+  let candidateUrls = [];
+  
+  if (document.querySelector('article') || window.location.pathname.match(/\\/202[0-9]\\//)) {
+    candidateUrls.push(window.location.href);
+  }
+
+  const links = Array.from(document.querySelectorAll('a[href*="/20"], a[data-analytics-label="article"], a[class*="headline"], a[class*="teaser"]'));
+  links.forEach(a => {
+    let href = a.getAttribute('href');
+    if (!href) return;
+    if (href.startsWith('/')) href = 'https://www.economist.com' + href;
+    if (href.includes('economist.com') && !href.includes('/audio/') && !href.includes('/podcasts/') && !candidateUrls.includes(href)) {
+      candidateUrls.push(href);
+    }
+  });
+
+  if (candidateUrls.length < 5) {
+    try {
+      console.log("📡 正在从 The Economist 官方 RSS 源补充最新篇目...");
+      const rssRes = await fetch("https://www.economist.com/sections/leaders/rss.xml");
+      const rssXml = await rssRes.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(rssXml, "text/xml");
+      const items = Array.from(xmlDoc.querySelectorAll("item"));
+      items.forEach(it => {
+        const l = it.querySelector("link")?.textContent?.trim();
+        if (l && !candidateUrls.includes(l)) candidateUrls.push(l);
+      });
+    } catch(e) {
+      console.warn("RSS 嗅探备选跳过:", e);
+    }
+  }
+
+  candidateUrls = candidateUrls.slice(0, maxCount);
+  console.log(\`📌 发现 \${candidateUrls.length} 篇经济学人深度文章，正在借助您的会员权限并发获取 100% 完整段落...\`);
+
+  const articles = [];
+  const parser = new DOMParser();
+
+  for (let i = 0; i < candidateUrls.length; i++) {
+    const url = candidateUrls[i];
+    console.log(\`⏳ [\${i+1}/\${candidateUrls.length}] 正在解析: \${url}\`);
+    try {
+      let doc = document;
+      if (url !== window.location.href) {
+        const pageRes = await fetch(url);
+        const htmlText = await pageRes.text();
+        doc = parser.parseFromString(htmlText, "text/html");
+      }
+
+      let title = doc.querySelector('h1')?.innerText?.trim() || doc.querySelector('meta[property="og:title"]')?.content || "";
+      if (title.endsWith(' | The Economist')) title = title.replace(' | The Economist', '');
+
+      const standfirst = doc.querySelector('[data-capsule-element="subheadline"], .article__subheadline, meta[name="description"]')?.innerText?.trim() 
+        || doc.querySelector('meta[name="description"]')?.content || "";
+
+      const section = doc.querySelector('[data-capsule-element="rubric"], .article__rubric, meta[property="article:section"]')?.innerText?.trim()
+        || doc.querySelector('meta[property="article:section"]')?.content || "Leaders";
+
+      const byline = doc.querySelector('[data-capsule-element="byline"], .article__byline')?.innerText?.trim() || "The Economist";
+
+      let paragraphs = [];
+      const nextDataEl = doc.querySelector('#__NEXT_DATA__');
+      if (nextDataEl && nextDataEl.textContent) {
+        try {
+          const nextJson = JSON.parse(nextDataEl.textContent);
+          const nodes = nextJson?.props?.pageProps?.content || [];
+          nodes.forEach(n => {
+            if (n && (n.type === 'paragraph' || String(n.type).includes('paragraph'))) {
+              let t = n.text || "";
+              if (!t && n.children) t = n.children.map(c => c.text || "").join("");
+              if (t && t.trim().length > 15) paragraphs.push(t.trim());
+            }
+          });
+        } catch(e) {}
+      }
+
+      if (paragraphs.length === 0) {
+        const pEls = Array.from(doc.querySelectorAll('article p, [data-capsule-element="body"] p, .article__body-text, [data-component="paragraph"] p, main p'));
+        const noise = ["listen to this story", "enjoy more audio", "save time by listening", "subscriber-only audio", "the economist app", "for more coverage"];
+        paragraphs = pEls.map(p => p.innerText.trim()).filter(t => t.length > 20 && !noise.some(n => t.toLowerCase().includes(n)));
+      }
+
+      const fullText = paragraphs.join("\\n\\n");
+      const wordCount = fullText.split(/\\s+/).filter(Boolean).length;
+
+      const artObj = {
+        title: title || "The Economist Article",
+        url: url,
+        section: section,
+        standfirst: standfirst,
+        authors: [byline],
+        published_at: doc.querySelector('time')?.getAttribute('datetime') || doc.querySelector('meta[property="article:published_time"]')?.content || new Date().toISOString(),
+        paragraphs: paragraphs,
+        paragraph_count: paragraphs.length,
+        full_text: fullText,
+        word_count: wordCount
+      };
+
+      articles.push(artObj);
+      console.log(\`  ✅ 成功获取: 《\${title.slice(0, 25)}...》 (\${paragraphs.length} 个段落, \${wordCount} 词)\`);
+      await new Promise(r => setTimeout(r, 400));
+    } catch(err) {
+      console.error("解析文章异常:", url, err);
+    }
+  }
+
+  console.log("📡 正在将完整无损文章及 Cookie 会话同步到本地知识工厂 (http://127.0.0.1:8000)...");
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/economist/batch_import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ articles: articles, cookie: document.cookie })
+    });
+    const resData = await res.json();
+    console.log(\`%c🎉 恭喜！已成功将 \${resData.imported_count} 篇 The Economist 深度全文同步入库！\`, "color: #10b981; font-size: 15px; font-weight: bold;");
+    alert(\`🎉 成功同步 \${resData.imported_count} 篇《经济学人》全文到本地工厂！请回到控制台刷新查看！\`);
+  } catch(e) {
+    console.error("同步至本地服务失败，请确保本地后台运行中:", e);
+    alert("同步至本地服务失败，请确认 http://127.0.0.1:8000 服务正常运行！");
+  }
+})();`;
+
+      copyTextToClipboard(scriptCode).then(() => {
+        showToast("已成功复制经济学人采集脚本！请在已登录 Economist 的网页控制台 (F12) 粘贴回车！", "success");
+        closeEcoBrowserSyncModal();
+      }).catch(err => {
+        console.error("复制失败:", err);
+        showToast("复制失败，请检查浏览器剪贴板权限", "error");
+      });
     }
 
     // 页面初始化
