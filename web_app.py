@@ -3100,8 +3100,8 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="md:col-span-8 flex items-center space-x-2 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner">
           <input type="text" id="inputEcoSingleUrl" placeholder="输入任意 Economist 文章链接: https://www.economist.com/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
           <button id="btnEcoScrapeSingle" onclick="scrapeSingleEcoUrl()" class="px-4 py-2 text-xs font-semibold bg-red-600/30 hover:bg-red-600/50 text-red-300 border border-red-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
-            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-            <span>单篇加急提取</span>
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+            <span>一键抓取 (单篇)</span>
           </button>
         </div>
 
@@ -3113,8 +3113,8 @@ HTML_CONTENT = """<!DOCTYPE html>
             <option value="15">最新 15 篇</option>
           </select>
           <button id="btnEcoScanSection" onclick="scanCurrentEcoSection()" class="flex-1 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95">
-            <i data-lucide="compass" class="w-3.5 h-3.5 text-red-400"></i>
-            <span id="btnEcoScanSectionText">板块探测抓取</span>
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-red-400"></i>
+            <span id="btnEcoScanSectionText">一键批量抓取板块</span>
           </button>
         </div>
       </div>

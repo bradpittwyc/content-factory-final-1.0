@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from bs4 import BeautifulSoup
+from DrissionPage import ChromiumPage, ChromiumOptions
+import threading
 
 try:
     from curl_cffi import requests as cffi_requests
@@ -277,7 +279,179 @@ def scrape_via_reader_fallback(url: str, section: str = "Leaders") -> Optional[D
         pass
     return None
 
-def scrape_single_article(url: str, section: str = "Leaders", cookie_str: Optional[str] = None) -> Dict[str, Any]:
+
+_dp_lock = threading.Lock()
+
+def get_dp_page(cookie_str=None):
+    co = ChromiumOptions()
+    co.set_browser_path(r"C:\Program Files\Google\Chrome\Application\chrome.exe")
+    co.set_local_port(9223)
+    co.set_user_data_path(os.path.join(os.path.dirname(__file__), "data", "dp_profile"))
+    # Disable headless to bypass Cloudflare reliably
+    # co.set_argument("--headless=new")
+
+    page = ChromiumPage(co)
+    if cookie_str:
+        try:
+            page.get("https://www.economist.com/404", timeout=15)
+            # parse cookie_str manually to dicts
+            cookies_list = []
+            for item in cookie_str.split(';'):
+                if '=' in item:
+                    k, v = item.strip().split('=', 1)
+                    cookies_list.append({'name': k, 'value': v, 'domain': '.economist.com'})
+            for c in cookies_list:
+                page.set.cookies(c)
+        except:
+            pass
+    return page
+
+
+def scrape_single_article_dp(url: str, section: str = "Leaders", cookie_str: Optional[str] = None) -> Dict[str, Any]:
+    with _dp_lock:
+        page = None
+        try:
+            page = get_dp_page(cookie_str)
+            page.get(url, timeout=30)
+            
+            if "just a moment" in page.title.lower() or "verify" in page.title.lower():
+                page.wait(10)
+                
+            page.wait(3) # Wait for React content to render!
+            
+            h1 = page.ele('tag:h1')
+            title = h1.text if h1 else page.title
+            
+            ps = page.eles('css:article p, [data-component="paragraph"] p, main p')
+            paras = []
+            noise = ['listen to this story', 'enjoy more audio', 'save time', 'to stay on top', 'subscriber-only', 'the economist app']
+            for p in ps:
+                txt = p.text.strip()
+                if len(txt) > 20 and not any(n in txt.lower() for n in noise):
+                    paras.append(txt)
+                    
+            full_text = "\n\n".join(paras)
+            word_count = len(re.findall(r'\b\w+\b', full_text))
+            
+            article = {
+                "id": f"eco_{int(time.time() * 1000)}",
+                "url": url,
+                "title": title or "The Economist Article",
+                "source": "The Economist",
+                "section": section,
+                "standfirst": "",
+                "authors": ["The Economist Staff"],
+                "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "paragraphs": paras,
+                "paragraph_count": len(paras),
+                "word_count": word_count,
+                "full_text": full_text,
+                "is_paywalled": len(paras) < 3,
+                "synced_via_dp": True
+            }
+            if len(paras) > 0:
+                upsert_article(article)
+            return article
+        except Exception as e:
+            return {
+                "id": f"eco_{int(time.time() * 1000)}",
+                "url": url,
+                "title": "Scrape Exception",
+                "source": "The Economist",
+                "error": str(e),
+                "paragraph_count": 0,
+                "paragraphs": [],
+                "full_text": "",
+                "word_count": 0,
+                "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        finally:
+            if page:
+                try: page.quit()
+                except: pass
+
+def scan_rss_section_dp(section_id: str = "leaders", limit: int = 10, cookie_str: Optional[str] = None) -> Dict[str, Any]:
+    sec_info = next((s for s in ECONOMIST_SECTIONS if s["id"] == section_id), ECONOMIST_SECTIONS[0])
+    
+    with _dp_lock:
+        page = None
+        try:
+            page = get_dp_page(cookie_str)
+            sec_url = f"https://www.economist.com/{section_id}/" if section_id != "leaders" else "https://www.economist.com/leaders/"
+            
+            page.get(sec_url, timeout=30)
+            if "just a moment" in page.title.lower() or "verify" in page.title.lower():
+                page.wait(10)
+                
+            links = page.eles('tag:a')
+            results = []
+            for a in links:
+                href = a.attr('href')
+                text = a.text
+                if href and re.search(r'economist\.com/[a-z-]+/\d{4}/\d{2}/\d{2}/', href):
+                    if 'weeklyedition' not in href and 'podcasts' not in href and text and len(text.strip()) > 5:
+                        results.append(href)
+                        
+            unique_links = list(dict.fromkeys(results))[:limit]
+            
+            scraped_count = 0
+            for link in unique_links:
+                try:
+                    page.get(link, timeout=30)
+                    page.wait(3) # Wait for React content!
+                    
+                    h1 = page.ele('tag:h1')
+                    title = h1.text if h1 else page.title
+                    
+                    ps = page.eles('css:article p, [data-component="paragraph"] p, main p')
+                    paras = []
+                    noise = ['listen to this story', 'enjoy more audio', 'save time', 'to stay on top', 'subscriber-only']
+                    for p in ps:
+                        txt = p.text.strip()
+                        if len(txt) > 20 and not any(n in txt.lower() for n in noise):
+                            paras.append(txt)
+                            
+                    if len(paras) >= 3:
+                        full_text = "\n\n".join(paras)
+                        word_count = len(re.findall(r'\b\w+\b', full_text))
+                        article = {
+                            "id": f"eco_{int(time.time() * 1000)}",
+                            "url": link,
+                            "title": title or "The Economist Article",
+                            "source": "The Economist",
+                            "section": sec_info["name"].split()[0],
+                            "standfirst": "",
+                            "authors": ["The Economist Staff"],
+                            "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "paragraphs": paras,
+                            "paragraph_count": len(paras),
+                            "word_count": word_count,
+                            "full_text": full_text,
+                            "is_paywalled": False,
+                            "synced_via_dp": True
+                        }
+                        upsert_article(article)
+                        scraped_count += 1
+                except:
+                    continue
+                    
+            return {
+                "success": True,
+                "scanned_count": len(unique_links),
+                "scraped_count": scraped_count,
+                "section": sec_info["name"]
+            }
+        except Exception as e:
+            return {"success": False, "message": f"探测异常: {e}", "scanned_count": 0, "scraped_count": 0}
+        finally:
+            if page:
+                try: page.quit()
+                except: pass
+
+
+def old_scrape_single_article(url: str, section: str = "Leaders", cookie_str: Optional[str] = None) -> Dict[str, Any]:
     headers = build_headers(cookie_str)
     try:
         res = cffi_requests.get(url, headers=headers, impersonate="chrome124", timeout=25)
@@ -315,7 +489,7 @@ def scrape_single_article(url: str, section: str = "Leaders", cookie_str: Option
             "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
 
-def scan_rss_section(section_id: str = "leaders", limit: int = 10, cookie_str: Optional[str] = None) -> Dict[str, Any]:
+def old_scan_rss_section(section_id: str = "leaders", limit: int = 10, cookie_str: Optional[str] = None) -> Dict[str, Any]:
     sec_info = next((s for s in ECONOMIST_SECTIONS if s["id"] == section_id), ECONOMIST_SECTIONS[0])
     rss_url = sec_info["url"]
     
@@ -489,3 +663,9 @@ def parse_and_import_text(content: str, default_url: str = "", default_section: 
         "message": f"成功识别并入库文章: 《{article['title']}》 ({len(paras)} 段, {word_count} 词)！"
     }
 
+
+def scrape_single_article(url: str, section: str = "Leaders", cookie_str: Optional[str] = None) -> Dict[str, Any]:
+    return scrape_single_article_dp(url, section, cookie_str)
+
+def scan_rss_section(section_id: str = "leaders", limit: int = 10, cookie_str: Optional[str] = None) -> Dict[str, Any]:
+    return scan_rss_section_dp(section_id, limit, cookie_str)
