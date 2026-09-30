@@ -9,6 +9,7 @@ import yt_dlp
 from cos_service import upload_file_to_cos
 
 LESSONS_FILE = os.path.join(os.path.dirname(__file__), "data", "tony_shadowing_lessons.json")
+FRONTEND_MOCK_VIDEOS_PATH = r"C:\Users\Administrator\.gemini\antigravity\scratch\tony-frontend-demo\src\data\mockVideos.ts"
 
 def load_env():
     env_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -41,12 +42,48 @@ def save_lessons(lessons: List[Dict[str, Any]]):
     with open(LESSONS_FILE, "w", encoding="utf-8") as f:
         json.dump(lessons, f, ensure_ascii=False, indent=2)
 
+def sync_to_frontend_mock_videos(lessons: List[Dict[str, Any]]):
+    """Syncs generated TikTok lessons directly into tony-frontend-demo/src/data/mockVideos.ts"""
+    if not os.path.exists(FRONTEND_MOCK_VIDEOS_PATH):
+        print(f"Frontend path {FRONTEND_MOCK_VIDEOS_PATH} not found, skipping sync.")
+        return
+
+    # Convert lessons to TikTokVideo schema format
+    formatted_videos = []
+    for l in lessons:
+        formatted_videos.append({
+            "id": l.get("id", f"tk-{l.get('video_id')}"),
+            "title": l.get("title", "TikTok English Lesson"),
+            "author": l.get("author", "@tiktok_creator"),
+            "duration": f"{int(l.get('duration', 30)//60)}:{int(l.get('duration', 30)%60):02d}",
+            "level": "高阶口语",
+            "views": "10.5k",
+            "likes": "1.2k",
+            "themeColor": "linear-gradient(135deg, #1E293B, #0F172A)",
+            "videoUrl": l.get("video_cos_url", ""),
+            "coverUrl": l.get("cover_cos_url", ""),
+            "description": l.get("title", ""),
+            "subtitles": [
+                {
+                    "id": f"sub-{l.get('video_id')}-{i+1}",
+                    "start": s.get("start", 0),
+                    "end": s.get("end", 0),
+                    "en": s.get("en", ""),
+                    "cn": s.get("cn", "")
+                } for i, s in enumerate(l.get("subtitles", []))
+            ]
+        })
+
+    # Write formatted TypeScript array file
+    ts_content = f"""import {{ TikTokVideo }} from '../types';
+
+export const mockTikTokVideos: TikTokVideo[] = {json.dumps(formatted_videos, ensure_ascii=False, indent=2)};
+"""
+    with open(FRONTEND_MOCK_VIDEOS_PATH, "w", encoding="utf-8") as f:
+        f.write(ts_content)
+    print(f"Successfully synced {len(formatted_videos)} lessons directly to Tony English frontend!")
+
 def process_subtitles_with_ai(subtitles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Dual-AI Pipeline:
-    1. Proofread English subtitles for spoken accuracy (Gemini / DeepSeek)
-    2. Translate English subtitles into natural spoken Chinese (DeepSeek)
-    """
     deepseek_key = os.environ.get("DEEPSEEK_API_KEY")
     if not deepseek_key or not subtitles:
         return subtitles
@@ -95,7 +132,6 @@ def process_subtitles_with_ai(subtitles: List[Dict[str, Any]]) -> List[Dict[str,
     return subtitles
 
 def parse_vtt_subtitles(vtt_file: str) -> List[Dict[str, Any]]:
-    """Parse WebVTT or SRT subtitle file into timestamped lines"""
     if not os.path.exists(vtt_file):
         return []
     
@@ -134,11 +170,6 @@ def parse_vtt_subtitles(vtt_file: str) -> List[Dict[str, Any]]:
     return process_subtitles_with_ai(filtered)
 
 def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict[str, Any]:
-    """
-    1. Downloads TikTok video + thumbnail + native subtitles
-    2. Uploads video & thumbnail to COS under target path: videos/tiktok/{video_id}.mp4
-    3. Proofreads English & translates into Chinese via AI
-    """
     os.makedirs(output_dir, exist_ok=True)
     
     video_id_match = re.search(r"/video/(\d+)", url)
@@ -166,6 +197,7 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
         info = ydl.extract_info(url, download=True)
         
     title = info.get("title") if info else f"TikTok Lesson {video_id}"
+    author = info.get("uploader") or info.get("channel") or "@tiktok_creator"
     duration = info.get("duration", 0) if info else 0
     
     mp4_files = glob.glob(f"{out_prefix}*.mp4") or glob.glob(f"{out_prefix}*.webm")
@@ -197,9 +229,10 @@ def process_single_tiktok_video(url: str, output_dir: str = "downloads") -> Dict
         subtitles = process_subtitles_with_ai(subtitles)
         
     lesson = {
-        "id": f"tt_lesson_{video_id}",
+        "id": f"tk-{video_id}",
         "video_id": video_id,
         "title": title,
+        "author": author if author.startswith("@") else f"@{author}",
         "source_url": url,
         "video_cos_url": cos_mp4_url,
         "cover_cos_url": cos_jpg_url,
@@ -228,4 +261,8 @@ def process_batch_tiktok_lessons(urls: List[str]) -> List[Dict[str, Any]]:
             print(f"Error processing TikTok video {url}: {e}")
             
     save_lessons(lessons)
+    
+    # Sync directly to Tony English frontend repo
+    sync_to_frontend_mock_videos(lessons)
+    
     return processed
