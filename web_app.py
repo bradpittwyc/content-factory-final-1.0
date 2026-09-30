@@ -7159,10 +7159,27 @@ HTML_CONTENT = """<!DOCTYPE html>
         filename += ".json";
         mimeType = "application/json";
       } else if (format === 'markdown') {
+        const doubleNl = String.fromCharCode(10, 10);
+        const singleNl = String.fromCharCode(10);
         content = targetList.map(a => {
-          const body = a.full_text || (a.paragraphs || []).join('\n\n');
-          return `# ${a.title}\n* 来源: The Economist\n* 板块: ${a.section || 'Leaders'}\n* 作者: ${(a.authors || []).join(', ')}\n* 时间: ${a.published_at || ''}\n* 原文链接: ${a.url}\n\n> ${a.standfirst || ''}\n\n---\n\n${body}\n\n======================================================\n`;
-        }).join('\n');
+          const body = a.full_text || (a.paragraphs || []).join(doubleNl);
+          const authors = (a.authors || []).join(', ');
+          return [
+            '# ' + (a.title || 'The Economist Article'),
+            '* 来源: The Economist',
+            '* 板块: ' + (a.section || 'Leaders'),
+            '* 作者: ' + authors,
+            '* 时间: ' + (a.published_at || ''),
+            '* 原文链接: ' + a.url,
+            '',
+            a.standfirst ? ('> ' + a.standfirst + singleNl) : '',
+            '---',
+            '',
+            body,
+            '',
+            '======================================================'
+          ].join(singleNl);
+        }).join(doubleNl);
         filename += ".md";
         mimeType = "text/markdown";
       }
