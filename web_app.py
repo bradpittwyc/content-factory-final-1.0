@@ -5614,8 +5614,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (!container) return;
 
       container.innerHTML = bloombergArticles.map(a => {
-        const authorsStr = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : 'Bloomberg Staff';
-        const pubDateStr = a.published_at ? a.published_at.slice(0, 10) : '近期';
+        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
         return `
@@ -5637,7 +5636,10 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
 
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[130px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono flex items-center space-x-1" title="入库时间: ${a.scraped_at || scrapedTimeStr}">
+                <i data-lucide="clock" class="w-3 h-3 text-slate-500 shrink-0"></i>
+                <span>入库: ${scrapedTimeStr}</span>
+              </span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
@@ -5942,8 +5944,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       container.innerHTML = list.map(a => {
         const isSelected = ftSelectedUrls.has(a.url);
-        const authorsStr = (a.authors && a.authors.length > 0) ? a.authors.slice(0, 2).join(', ') : 'FT 记者';
-        const pubDateStr = a.published_at ? a.published_at.slice(0, 10) : (a.scraped_at ? a.scraped_at.slice(0, 10) : '近期');
+        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
         return `
@@ -5969,9 +5970,12 @@ HTML_CONTENT = """<!DOCTYPE html>
               ${a.standfirst ? `<p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">${a.standfirst}</p>` : ''}
             </div>
 
-            <!-- 底栏作者与操作按钮 -->
+            <!-- 底栏入库时间与操作按钮 -->
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[130px] text-[11px] text-slate-400" title="${authorsStr}">✍️ ${authorsStr} • ${pubDateStr}</span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono flex items-center space-x-1" title="入库时间: ${a.scraped_at || scrapedTimeStr}">
+                <i data-lucide="clock" class="w-3 h-3 text-slate-500 shrink-0"></i>
+                <span>入库: ${scrapedTimeStr}</span>
+              </span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
