@@ -12,6 +12,94 @@
     "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
     "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
     "cross_proofread_score": 97.5,
+    "id": "tw_1790831180_three ",
+    "created_at": "2026-10-01 13:06:20",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790831180_three _0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790831180_three _0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790831180_three _1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790831180_three _1.0.mp3"
+  },
+  {
+    "title": "Three Thick Thistles",
+    "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
+    "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "target_sounds": [
+      "/θ/",
+      "/s/"
+    ],
+    "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
+    "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
+    "cross_proofread_score": 97.5,
+    "id": "tw_1790830979_three ",
+    "created_at": "2026-10-01 13:02:59",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790830979_three _0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790830979_three _0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790830979_three _1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790830979_three _1.0.mp3"
+  },
+  {
+    "title": "Brave Blue Bugs",
+    "english_text": "Brave blue bugs bite big black bears.",
+    "chinese_text": "勇敢的蓝色小虫叮咬大黑熊。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/b/",
+      "/p/"
+    ],
+    "phonetic_tips": "注意 /b/ 爆破浊辅音与双唇张合节奏",
+    "linking_tips": "blue_bugs 自然连读，bite_big 快速过渡",
+    "cross_proofread_score": 96.0,
+    "id": "tw_1790830307_brave ",
+    "created_at": "2026-10-01 12:51:47",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790830307_brave _0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790830307_brave _0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790830307_brave _1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790830307_brave _1.0.mp3"
+  },
+  {
+    "title": "Brave Blue Bugs",
+    "english_text": "Brave blue bugs bite big black bears.",
+    "chinese_text": "勇敢的蓝色小虫叮咬大黑熊。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/b/",
+      "/p/"
+    ],
+    "phonetic_tips": "注意 /b/ 爆破浊辅音与双唇张合节奏",
+    "linking_tips": "blue_bugs 自然连读，bite_big 快速过渡",
+    "cross_proofread_score": 96.0,
+    "id": "tw_1790830292_brave ",
+    "created_at": "2026-10-01 12:51:32",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790830292_brave _0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790830292_brave _0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790830292_brave _1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790830292_brave _1.0.mp3"
+  },
+  {
+    "title": "Three Thick Thistles",
+    "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
+    "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "target_sounds": [
+      "/θ/",
+      "/s/"
+    ],
+    "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
+    "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
+    "cross_proofread_score": 97.5,
     "id": "tw_1790830015_three ",
     "created_at": "2026-10-01 12:46:55",
     "audio_urls": {

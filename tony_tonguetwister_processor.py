@@ -164,6 +164,19 @@ LEVEL_MAP = {
     "Advanced": "Advanced"
 }
 
+def get_network_opener():
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY") or os.environ.get("proxy") or ""
+    cfg_path = os.path.join(os.path.dirname(__file__), "config.json")
+    if not proxy and os.path.exists(cfg_path):
+        try:
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                proxy = json.load(f).get("proxy", "")
+        except Exception:
+            pass
+    if proxy:
+        return urllib.request.build_opener(urllib.request.ProxyHandler({'http': proxy, 'https': proxy}))
+    return urllib.request.build_opener()
+
 def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自由发音/常见易混淆音标", topic: str = "日常口语") -> Dict[str, Any]:
     normalized_level = LEVEL_MAP.get(level, "Beginner")
     level_cn = "初级" if normalized_level == "Beginner" else ("中级" if normalized_level == "Intermediate" else "高级")
@@ -196,6 +209,7 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
     openai_key = os.environ.get("OPENAI_API_KEY")
 
     raw_response = None
+    opener = get_network_opener()
 
     # 第一顺位: Gemini 2.5 Flash
     if gemini_key:
@@ -203,7 +217,7 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
             req_data = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode('utf-8')
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}"
             req = urllib.request.Request(url, data=req_data, headers={'Content-Type': 'application/json'})
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with opener.open(req, timeout=20) as resp:
                 res_json = json.loads(resp.read().decode('utf-8'))
                 raw_response = res_json['candidates'][0]['content']['parts'][0]['text']
         except Exception as e:
@@ -212,12 +226,13 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
     # 第二顺位: OpenAI / DeepSeek API
     if not raw_response and (openai_key or deepseek_key):
         try:
-            api_key = deepseek_key or openai_key
-            base_url = "https://api.deepseek.com/v1" if deepseek_key else "https://api.openai.com/v1"
-            model = "deepseek-chat" if deepseek_key else "gpt-4o-mini"
+            api_key = openai_key or deepseek_key
+            default_url = "https://api.deepseek.com/v1" if (deepseek_key and not openai_key) else "https://api.openai.com/v1"
+            base_url = os.environ.get("OPENAI_BASE_URL", default_url).rstrip('/')
+            model = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
             req_data = json.dumps({"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": 0.7}).encode('utf-8')
             req = urllib.request.Request(f"{base_url}/chat/completions", data=req_data, headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {api_key}'})
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with opener.open(req, timeout=30) as resp:
                 res_json = json.loads(resp.read().decode('utf-8'))
                 raw_response = res_json['choices'][0]['message']['content']
         except Exception as e:
