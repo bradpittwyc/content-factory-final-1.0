@@ -1587,9 +1587,18 @@ def run_youtube_download_task(channel_name: str, urls: List[str], req: DownloadR
         ydl_opts["proxy"] = req.proxy
 
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            yt_manager.current_ydl = ydl
-            ydl.download(urls)
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                yt_manager.current_ydl = ydl
+                ydl.download(urls)
+        except Exception as dl_err:
+            yt_manager.add_log(f"⚠️ 带有字幕抓取时提示: {dl_err}，正在自动尝试降级模式重新下载...", "warn")
+            ydl_opts["writesubtitles"] = False
+            ydl_opts["writeautomaticsub"] = False
+            ydl_opts["format"] = "bestvideo[height<=1080]+bestaudio/best" if not audio_only else "ba/b"
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                yt_manager.current_ydl = ydl
+                ydl.download(urls)
         
         yt_manager.add_log("⚡ 开始自动提炼 YouTube AI 双语教案并上传至腾讯云 COS...", "info")
         try:
@@ -5865,7 +5874,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             quality: quality,
             video_codec: videoCodec,
             also_audio: alsoAudio,
-            audio_only: (quality === 'audio'),
+            audio_only: (quality === 'audio' || quality === 'audio_only'),
             study_doc: studyDoc,
             bilingual_subs: bilingualSubs,
             study_api_base: appSettings.study_api_base || "",
