@@ -5401,22 +5401,12 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         return `
           <div class="bg-[#0f172a] border border-slate-800/90 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl space-y-0 transition-all flex flex-col justify-between group">
-            <!-- 顶部 AI 画面占位符 / 场景图片 Banner -->
-            <div class="relative w-full h-48 bg-slate-950 overflow-hidden group">
-              <img src="${escapeHtml(imgUrl)}" alt="Scene" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-85">
-              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-black/30"></div>
-              
-              <div class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-[10px] text-amber-300 font-mono font-bold flex items-center space-x-1">
-                <i data-lucide="image" class="w-3 h-3 text-amber-400"></i>
-                <span>画面占位符 (AI Prompt)</span>
-              </div>
-
-              <!-- Prompt 浮层与复制按钮 -->
-              <div class="absolute bottom-2 left-2 right-2 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-800/80 flex items-center justify-between text-[11px] text-slate-300">
-                <span class="truncate mr-2 text-slate-300"><strong class="text-amber-400">Prompt:</strong> ${escapeHtml(imgPrompt)}</span>
-                <button onclick="navigator.clipboard.writeText('${escapeHtml(imgPrompt)}'); showToast('已复制 AI 画面 Prompt 提示词！', 'success')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] shrink-0 font-medium transition-colors">复制 Prompt</button>
-              </div>
+            <!-- 顶部 AI 渲染场景图片 Banner -->
+            <div class="relative w-full h-52 bg-slate-950 overflow-hidden">
+              <img src="${escapeHtml(imgUrl)}" alt="Scene" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-black/20"></div>
             </div>
+
 
             <!-- 卡片主体区 -->
             <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">

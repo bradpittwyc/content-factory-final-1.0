@@ -1,5 +1,149 @@
 [
   {
+    "title": "Sharks Shadowing Ship",
+    "image_prompt": "Seven sleek shiny silver sharks swimming gracefully in clear turquoise ocean water, silently gliding around an ancient shallow sunken wooden ship, dramatic underwater sunbeams piercing through the surface, photorealistic style, highly detailed, cinematic lighting",
+    "image_url": "/audio/tonguetwisters/tw_1790834303_sharks_cover.png",
+    "english_text": "Seven shiny silver sharks silently shadow a shallow sunken ship.",
+    "chinese_text": "七条闪光的银鲨静悄悄地跟踪着一艘停泊在浅水区的沉船。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "main_sound": "/s/ vs /ʃ/",
+    "target_sounds": [
+      "/s/",
+      "/ʃ/"
+    ],
+    "words": [
+      {
+        "word": "Seven",
+        "ipa": "/ˈsev.ən/"
+      },
+      {
+        "word": "shiny",
+        "ipa": "/ˈʃaɪ.ni/"
+      },
+      {
+        "word": "silver",
+        "ipa": "/ˈsɪl.vər/"
+      },
+      {
+        "word": "sharks",
+        "ipa": "/ʃɑːrks/"
+      },
+      {
+        "word": "silently",
+        "ipa": "/ˈsaɪ.lənt.li/"
+      },
+      {
+        "word": "shadow",
+        "ipa": "/ˈʃæd.oʊ/"
+      },
+      {
+        "word": "a",
+        "ipa": "/ə/"
+      },
+      {
+        "word": "shallow",
+        "ipa": "/ˈʃæl.oʊ/"
+      },
+      {
+        "word": "sunken",
+        "ipa": "/ˈsʌŋ.kən/"
+      },
+      {
+        "word": "ship",
+        "ipa": "/ʃɪp/"
+      }
+    ],
+    "sound_tags": [
+      "/s/ 与 /ʃ/ 极速切换",
+      "扁唇 vs 撅唇肌肉控制",
+      "清擦音气流精准控制"
+    ],
+    "phonetic_tips": "发 /s/ 音时，嘴角向两侧微咧呈扁平状，舌尖靠近上齿龈，气流从狭缝中挤出发吹气声；发 /ʃ/ 音时，双唇必须向前突出收圆（如发出‘嘘’声），舌身向后缩并抬高。本句的难点在于 /s/（Seven, silver, silently, sunken）与 /ʃ/（shiny, sharks, shadow, shallow, ship）的密集交替，练习时需大幅度训练嘴唇‘拉扁’与‘撅圆’的肌肉记忆。",
+    "linking_tips": "节奏上保持轻快而有韵律：'Seven shiny silver sharks' 词组重音落在 'Seven', 'shiny', 'silver', 'sharks' 首音节；'silently shadow' 之间保持气流不中断；'shallow sunken ship' 结尾处注意 'sunken' 的末尾鼻音 /n/ 需干净利落地过渡到 'ship' 的 /ʃ/ 音，切勿漏发或加元音。",
+    "cross_proofread_score": 98.8,
+    "id": "tw_1790834303_sharks",
+    "created_at": "2026-10-01 13:58:23",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790834303_sharks_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790834303_sharks_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790834303_sharks_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790834303_sharks_1.0.mp3"
+  },
+  {
+    "title": "The Thick Sister's Socks",
+    "image_prompt": "A stylish young woman in a thick cozy sweater sitting on a sunny porch, carefully sorting colorful cotton socks into neat stacks, photorealistic style, high detail, 8k resolution",
+    "image_url": "/audio/tonguetwisters/tw_1790834075_thethi_cover.png",
+    "english_text": "The thoughtful sister sews thick socks for six sick smiths.",
+    "chinese_text": "这位体贴的姐姐正在为六位生病的铁匠缝制厚袜子。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "main_sound": "/θ/ vs /s/",
+    "target_sounds": [
+      "/θ/",
+      "/s/"
+    ],
+    "words": [
+      {
+        "word": "The",
+        "ipa": "/ðə/"
+      },
+      {
+        "word": "thoughtful",
+        "ipa": "/ˈθɔːtfl/"
+      },
+      {
+        "word": "sister",
+        "ipa": "/ˈsɪstər/"
+      },
+      {
+        "word": "sews",
+        "ipa": "/soʊz/"
+      },
+      {
+        "word": "thick",
+        "ipa": "/θɪk/"
+      },
+      {
+        "word": "socks",
+        "ipa": "/sɑːks/"
+      },
+      {
+        "word": "for",
+        "ipa": "/fɔːr/"
+      },
+      {
+        "word": "six",
+        "ipa": "/sɪks/"
+      },
+      {
+        "word": "sick",
+        "ipa": "/sɪk/"
+      },
+      {
+        "word": "smiths",
+        "ipa": "/smɪðz/"
+      }
+    ],
+    "sound_tags": [
+      "/θ/ 齿间摩擦音",
+      "/s/ 齿龈摩擦音",
+      "清浊对立"
+    ],
+    "phonetic_tips": "难点在于 /θ/（如 thoughtful, thick）与 /s/（如 sister, socks）的快速切换。发 /θ/ 时，舌尖必须轻触上齿切缘或微露齿外，气流从舌齿间摩擦而出，声带不振动；而发 /s/ 时，舌尖收回靠近齿龈，牙齿合拢，气流从舌端发出，切忌将 /θ/ 读成 /s/ 或 /f/。",
+    "linking_tips": "注意 'sews thick' 中 /z/ 与 /θ/ 的辅音连缀交替，语速需由慢到快，保持口腔肌肉的敏捷度。'six sick' 属于连续的 /s/ 音，注意不要吞音。",
+    "cross_proofread_score": 99.1,
+    "id": "tw_1790834075_thethi",
+    "created_at": "2026-10-01 13:54:35",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790834075_thethi_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790834075_thethi_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790834075_thethi_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790834075_thethi_1.0.mp3"
+  },
+  {
     "title": "Baking Bears",
     "image_prompt": "A cozy rustic kitchen inside a sunlit forest cabin, two cute brown bears wearing white aprons baking fresh big berry biscuits on a wooden table, vibrant blackberries and raspberries around, soft golden morning light, cinematic, photorealistic, 8k high detail",
     "image_url": "/audio/tonguetwisters/tw_1790833871_baking_cover.png",
@@ -115,284 +259,5 @@
       "1.0": "/audio/tonguetwisters/tw_1790833281_bigbro_1.0.mp3"
     },
     "audio_url": "/audio/tonguetwisters/tw_1790833281_bigbro_1.0.mp3"
-  },
-  {
-    "title": "Victor's Wild Waves",
-    "english_text": "Victor weaves wide velvet waves.",
-    "chinese_text": "维克托编织着宽阔的丝绒波浪。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/v/",
-      "/w/"
-    ],
-    "phonetic_tips": "/v/ 是齿唇音：上齿轻轻咬住下唇，声带振动，气流从齿缝摩擦而出；/w/ 是双唇软腭音：双唇收圆成小孔，向前突出，然后迅速滑向后元音，发音时声带振动，注意上下齿不能接触，切忌将 /v/ 读成 /w/ 或将 /w/ 读成 /v/。",
-    "linking_tips": "句子节奏为重音节拍（Stress-timed）：Victor (重) weaves (重) wide (重) velvet (重) waves (重)。每个实词都要清晰饱满，注意 weaves 和 wide 之间的元音过渡，保持气息平稳。",
-    "cross_proofread_score": 99.0,
-    "id": "tw_1790832278_victor",
-    "created_at": "2026-10-01 13:24:38",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832278_victor_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832278_victor_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832278_victor_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832278_victor_1.0.mp3"
-  },
-  {
-    "title": "Red Lollipops",
-    "english_text": "Red rabbits love large lollipops.",
-    "chinese_text": "红兔子喜欢大棒棒糖。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/r/",
-      "/l/"
-    ],
-    "phonetic_tips": "/r/ 音要求舌尖上卷，不触碰口腔任何部位，唇形微圆；/l/ 音则需要舌尖紧贴上齿龈，气流从舌头两侧通过。在交替发 /r/ 和 /l/ 时，切记舌头要瞬间完成“卷起”与“顶上”的切换，避免混淆。",
-    "linking_tips": "这句话节奏明快，采用“重-轻-重”的主谓宾结构。Red 和 rabbits 之间无需停顿，love 要适当加重以突显句意，large lollipops 连读时注意 l 的顺畅过渡。",
-    "cross_proofread_score": 99.0,
-    "id": "tw_1790832261_redlol",
-    "created_at": "2026-10-01 13:24:21",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832261_redlol_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832261_redlol_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832261_redlol_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832261_redlol_1.0.mp3"
-  },
-  {
-    "title": "Thief’s Thick Thief",
-    "english_text": "Three thieves thought the thin thief fought.",
-    "chinese_text": "三个小偷以为那个瘦小偷打架了。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/θ/",
-      "/f/"
-    ],
-    "phonetic_tips": "本卡片核心难点在于 /θ/ 与 /f/ 的极易混淆。发 /θ/（如 three, thieves, thought, thin）时，舌尖必须轻轻咬在上下齿之间，气流从齿缝摩擦而出，声带不震动；而发 /f/（如 fought）时，上齿要轻轻咬住下唇内侧，吹出气流。练习时切忌将 /θ/ 读成 /f/（把 three 读成 free）或 /s/。",
-    "linking_tips": "句中动词与代词可适度弱化：'Three thieves' 连读为 /θriː θiːvz/，'thought the' 中的 'ght' 与 'the' 可以平滑过渡。整体节奏遵循强读实词（Three, thieves, thought, thin, thief, fought），保持短小精悍的爆破感。",
-    "cross_proofread_score": 99.0,
-    "id": "tw_1790832220_thiefs",
-    "created_at": "2026-10-01 13:23:40",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832220_thiefs_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832220_thiefs_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832220_thiefs_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832220_thiefs_1.0.mp3"
-  },
-  {
-    "title": "Smart Snakes",
-    "english_text": "Smart snakes smile softly, sniffing sweet summer strawberries.",
-    "chinese_text": "聪明的蛇儿温柔地微笑着，嗅着香甜的夏日草莓。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/s/",
-      "/ʃ/",
-      "/sm/"
-    ],
-    "phonetic_tips": "本卡片核心训练 /s/ 与 /ʃ/ 的舌位切换与摩擦控制。发 /s/ 时，舌尖靠近牙龈，气流从齿间挤出，声带不振动；发 /ʃ/ 时，舌身抬高并略微后缩，唇形向前微嘟成圆形。注意 /sm/ 组合音中，/s/ 要轻而短，紧接着滑向双唇闭合的 /m/，避免中间加入多余的元音。",
-    "linking_tips": "本句节奏明快，采用“双词重音”律。Smart snakes 与 sweet summer 为主要重音对。注意 smile softly 和 sniffing sweet 之间的词尾辅音与词首辅音可以做顺滑的辅音延长过渡（Gemination），如 smile_softly 中的 /l/ 与 /s/ 需自然衔接，语速由慢到快，保持气息平稳。",
-    "cross_proofread_score": 98.5,
-    "id": "tw_1790832207_smarts",
-    "created_at": "2026-10-01 13:23:27",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832207_smarts_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832207_smarts_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832207_smarts_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832207_smarts_1.0.mp3"
-  },
-  {
-    "title": "Laura's Leather Ribbons",
-    "english_text": "Little Laura rarely rolls red leather ribbons around real large logs.",
-    "chinese_text": "小劳拉极少把红色的皮革丝带缠绕在真正巨大的原木上。",
-    "level": "Intermediate",
-    "level_cn": "中级",
-    "target_sounds": [
-      "/l/",
-      "/r/"
-    ],
-    "phonetic_tips": "【/l/ 与 /r/ 的精细互调】：/l/ 为清晰/黑暗边音，发音时舌尖必须抵住上齿龈，气流从舌头两侧流出（如 Little, leather）；/r/ 为卷舌/后缩音，舌尖向后卷或舌身向后缩，绝不接触上腭，唇形微圆（如 rarely, red）。在切换频繁的词组（如 rarely, rolls）中，需特别注意舌尖从齿龈抵触到向后撤卷的快速转换，避免把 /r/ 发成 /l/ 或反之。",
-    "linking_tips": "① 连读与同化：'rolls_red' 中的末尾辅音 /z/ 与 'red' 的首音 /r/ 要平滑过渡，不卡顿；'ribbons_around' 可实现末尾 /z/ 与元音 /ə/ 的自然连读（/zə/）。② 节奏与重音：重读实词 Laura, rarely, rolls, red, leather, ribbons, real, large, logs，介词 around 弱读，保持整句轻重交替的强节奏感。",
-    "cross_proofread_score": 98.8,
-    "id": "tw_1790832074_lauras",
-    "created_at": "2026-10-01 13:21:14",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832074_lauras_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832074_lauras_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832074_lauras_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832074_lauras_1.0.mp3"
-  },
-  {
-    "title": "The Lazy Rover",
-    "english_text": "The lazy red rover reliably rolls round the really rusty rail.",
-    "chinese_text": "那只懒惰的红色漫游车可靠地绕着那根真正生锈的铁轨滚动。",
-    "level": "Intermediate",
-    "level_cn": "中级",
-    "target_sounds": [
-      "/l/",
-      "/r/"
-    ],
-    "phonetic_tips": "本卡片核心难点在于 /l/ 与 /r/ 的连续转换。发 /l/（如 lazy, reliably）时，舌尖必须抵住上齿龈，气流从舌头两侧释出；而发 /r/（如 red, rover, really, rusty）时，舌尖必须向后卷起，离开上齿龈，且唇部微圆，绝不能让舌尖触碰口腔任何部位。在朗读 'really rusty' 时，需注意两个音的快速交替，避免舌头僵硬打结。",
-    "linking_tips": "句子节奏呈四拍子韵律：The **la**zy **red** **ro**ver re**lia**bly **rolls** round the **rea**lly **rus**ty **rail**。注意 'rolls round' 之间有自然的轻微连读，'the' 在辅音前发弱读 /ðə/。",
-    "cross_proofread_score": 98.5,
-    "id": "tw_1790832039_thelaz",
-    "created_at": "2026-10-01 13:20:39",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790832039_thelaz_0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790832039_thelaz_0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790832039_thelaz_1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790832039_thelaz_1.0.mp3"
-  },
-  {
-    "title": "Three Thick Thistles",
-    "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
-    "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
-    "level": "Intermediate",
-    "level_cn": "中级",
-    "target_sounds": [
-      "/θ/",
-      "/s/"
-    ],
-    "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
-    "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
-    "cross_proofread_score": 97.5,
-    "id": "tw_1790831180_three ",
-    "created_at": "2026-10-01 13:06:20",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790831180_three _0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790831180_three _0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790831180_three _1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790831180_three _1.0.mp3"
-  },
-  {
-    "title": "Three Thick Thistles",
-    "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
-    "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
-    "level": "Intermediate",
-    "level_cn": "中级",
-    "target_sounds": [
-      "/θ/",
-      "/s/"
-    ],
-    "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
-    "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
-    "cross_proofread_score": 97.5,
-    "id": "tw_1790830979_three ",
-    "created_at": "2026-10-01 13:02:59",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790830979_three _0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790830979_three _0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790830979_three _1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790830979_three _1.0.mp3"
-  },
-  {
-    "title": "Brave Blue Bugs",
-    "english_text": "Brave blue bugs bite big black bears.",
-    "chinese_text": "勇敢的蓝色小虫叮咬大黑熊。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/b/",
-      "/p/"
-    ],
-    "phonetic_tips": "注意 /b/ 爆破浊辅音与双唇张合节奏",
-    "linking_tips": "blue_bugs 自然连读，bite_big 快速过渡",
-    "cross_proofread_score": 96.0,
-    "id": "tw_1790830307_brave ",
-    "created_at": "2026-10-01 12:51:47",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790830307_brave _0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790830307_brave _0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790830307_brave _1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790830307_brave _1.0.mp3"
-  },
-  {
-    "title": "Brave Blue Bugs",
-    "english_text": "Brave blue bugs bite big black bears.",
-    "chinese_text": "勇敢的蓝色小虫叮咬大黑熊。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/b/",
-      "/p/"
-    ],
-    "phonetic_tips": "注意 /b/ 爆破浊辅音与双唇张合节奏",
-    "linking_tips": "blue_bugs 自然连读，bite_big 快速过渡",
-    "cross_proofread_score": 96.0,
-    "id": "tw_1790830292_brave ",
-    "created_at": "2026-10-01 12:51:32",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790830292_brave _0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790830292_brave _0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790830292_brave _1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790830292_brave _1.0.mp3"
-  },
-  {
-    "title": "Three Thick Thistles",
-    "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
-    "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
-    "level": "Intermediate",
-    "level_cn": "中级",
-    "target_sounds": [
-      "/θ/",
-      "/s/"
-    ],
-    "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
-    "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
-    "cross_proofread_score": 97.5,
-    "id": "tw_1790830015_three ",
-    "created_at": "2026-10-01 12:46:55",
-    "audio_urls": {
-      "0.4": "/audio/tonguetwisters/tw_1790830015_three _0.4.mp3",
-      "0.8": "/audio/tonguetwisters/tw_1790830015_three _0.8.mp3",
-      "1.0": "/audio/tonguetwisters/tw_1790830015_three _1.0.mp3"
-    },
-    "audio_url": "/audio/tonguetwisters/tw_1790830015_three _1.0.mp3"
-  },
-  {
-    "title": "Fresh Fried Fish",
-    "english_text": "Fresh fried fish, fish fresh fried, fried fish fresh.",
-    "chinese_text": "新鲜的炸鱼，鱼新鲜地炸，炸鱼真新鲜。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/f/",
-      "/r/",
-      "/ʃ/"
-    ],
-    "phonetic_tips": "注意 /f/ 上齿咬下唇，与 /ʃ/ 翘舌音区分",
-    "linking_tips": "Fresh_fried 连读，fish_fresh 保持清晰",
-    "suggested_speed": 0.9,
-    "id": "tt-1790827328979",
-    "created_at": "2026-10-01 12:02:08",
-    "audio_url": "/audio/tonguetwisters/tt-1790827328979.mp3"
-  },
-  {
-    "title": "Fresh Fried Fish",
-    "english_text": "Fresh fried fish, fish fresh fried, fried fish fresh.",
-    "chinese_text": "新鲜的炸鱼，鱼新鲜地炸，炸鱼真新鲜。",
-    "level": "Beginner",
-    "level_cn": "初级",
-    "target_sounds": [
-      "/f/",
-      "/r/",
-      "/ʃ/"
-    ],
-    "phonetic_tips": "注意 /f/ 上齿咬下唇，与 /ʃ/ 翘舌音区分",
-    "linking_tips": "Fresh_fried 连读，fish_fresh 保持清晰",
-    "suggested_speed": 0.9,
-    "id": "tt-1790826350221",
-    "created_at": "2026-10-01 11:45:50",
-    "audio_url": "/audio/tonguetwisters/tt-1790826350221.mp3"
   }
 ]
