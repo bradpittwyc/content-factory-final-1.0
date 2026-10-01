@@ -1343,6 +1343,15 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
                 view_str = f"{view_cnt:,}" if view_cnt else "--"
                 upload_d = item.get("upload_date") or datetime.now().strftime("%Y%m%d")
 
+                thumb_url = item.get("thumbnail")
+                if not thumb_url or not str(thumb_url).startswith("http"):
+                    thumbs = item.get("thumbnails")
+                    if thumbs and isinstance(thumbs, list) and len(thumbs) > 0:
+                        last = thumbs[-1]
+                        thumb_url = last.get("url") if isinstance(last, dict) else None
+                if not thumb_url or not str(thumb_url).startswith("http"):
+                    thumb_url = f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" if vid else "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300"
+
                 parsed.append({
                     "id": vid,
                     "title": item.get("title") or "YouTube 视频",
@@ -1351,7 +1360,7 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
                     "duration": dur_str,
                     "view_count": view_str,
                     "like_count": "--",
-                    "thumbnail": item.get("thumbnail") or "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300",
+                    "thumbnail": thumb_url,
                     "category": cat,
                     "category_label": cat_lbl
                 })
@@ -6000,6 +6009,7 @@ HTML_CONTENT = """<!DOCTYPE html>
           catBadge = `<span class="px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30 text-[10px] font-medium mr-1.5 shrink-0">🎙️ 播客</span>`;
         }
 
+        const thumbUrl = video.thumbnail || (video.id ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300');
         return `
           <tr class="hover:bg-slate-800/40 transition-colors ${isChecked ? 'bg-red-950/15' : ''}">
             <td class="px-4 py-2.5 text-center">
@@ -6007,7 +6017,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             </td>
             <td class="px-3 py-2.5">
               <div class="w-14 h-9 rounded bg-slate-900 border border-slate-800 overflow-hidden relative group">
-                <img src="${video.thumbnail}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300'">
+                <img src="${thumbUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='https://i.ytimg.com/vi/${video.id}/hqdefault.jpg';}else{this.src='https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300';}">
                 <a href="${video.url}" target="_blank" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
                   <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </a>
