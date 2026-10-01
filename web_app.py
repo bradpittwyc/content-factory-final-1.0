@@ -28,7 +28,7 @@ if sys.platform == "win32":
         pass
 
 from fastapi import FastAPI, BackgroundTasks, Query
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
@@ -199,6 +199,14 @@ def _create_demo_dataset():
 
 MOCK_DEMO_VIDEOS = _create_demo_dataset()
 
+
+@app.get("/app-debug.apk")
+@app.get("/api/download_apk")
+def download_app_apk():
+    apk_path = r"C:\Users\Administrator\.gemini\antigravity\scratch\tony-frontend-demo\android\app\build\outputs\apk\debug\app-debug.apk"
+    if os.path.exists(apk_path):
+        return FileResponse(apk_path, filename="TonyEnglish_v1.0.apk", media_type="application/vnd.android.package-archive")
+    return JSONResponse({"error": "APK File Not Found"}, status_code=404)
 
 @app.get("/", response_class=HTMLResponse)
 def index_page():

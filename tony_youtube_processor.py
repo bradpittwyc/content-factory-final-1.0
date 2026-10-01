@@ -63,8 +63,8 @@ def sync_to_frontend_and_cos(lessons: List[Dict[str, Any]]):
             "durationSec": dur_sec,
             "views": l.get("views", "120.5k"),
             "publishedAt": l.get("created_at", "最近"),
-            "category": l.get("category", "前沿AI与Agent"),
-            "thumbnail": l.get("cover_cos_url", ""),
+            "category": l.get("category") or "前沿AI与Agent",
+            "thumbnail": l.get("cover_cos_url") or (f"https://i.ytimg.com/vi/{l.get('video_id')}/hqdefault.jpg" if l.get('video_id') else "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300"),
             "videoUrl": l.get("video_cos_url", ""),
             "description": l.get("title", ""),
             "subtitles": [
