@@ -5372,49 +5372,92 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
 
       grid.innerHTML = items.map(item => {
-        const levelBadgeClass = item.level === 'Beginner' ? 'bg-emerald-950 text-emerald-300 border-emerald-800/80' : (item.level === 'Intermediate' ? 'bg-amber-950 text-amber-300 border-amber-800/80' : 'bg-rose-950 text-rose-300 border-rose-800/80');
-        const targetSoundsHtml = (item.target_sounds || []).map(s => `<span class="px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-purple-300 text-[10px] font-mono">${escapeHtml(s)}</span>`).join(' ');
+        const levelColor = item.level === 'Beginner' ? 'bg-amber-600 text-white' : (item.level === 'Intermediate' ? 'bg-amber-500 text-slate-950' : 'bg-rose-600 text-white');
+        const mainSoundStr = item.main_sound || (item.target_sounds && item.target_sounds[0]) || '音标';
         const urlsJson = escapeHtml(JSON.stringify(item.audio_urls || { "1.0": item.audio_url || '' }));
         const defaultAudio = item.audio_url || (item.audio_urls ? (item.audio_urls['1.0'] || item.audio_urls['0.8']) : '');
 
+        // 逐词音标 (Word-by-word IPA)
+        let wordsList = item.words || [];
+        if (!wordsList || wordsList.length === 0) {
+          wordsList = (item.english_text || '').split(/\s+/).map(w => ({ word: w, ipa: '' }));
+        }
+
+        const wordsHtml = wordsList.map(w => `
+          <div class="flex flex-col mb-1">
+            <span class="text-amber-500 font-extrabold text-base tracking-tight leading-snug">${escapeHtml(w.word)}</span>
+            <span class="text-slate-400 font-mono text-[11px] leading-none pt-0.5">${escapeHtml(w.ipa || '')}</span>
+          </div>
+        `).join('');
+
+        // 画面 Prompt 与 图片占位符 Banner
+        const imgUrl = item.image_url || "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop";
+        const imgPrompt = item.image_prompt || "AI 绘画画面占位符 (场景图描述)";
+
+        // 标签列表 (Sound Badges)
+        const soundTagsHtml = (item.sound_tags || item.target_sounds || []).map(tag => `
+          <span class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-slate-300 text-[11px] font-mono">${escapeHtml(tag)}</span>
+        `).join('');
+
         return `
-          <div class="bg-slate-900/80 border border-slate-800/90 hover:border-purple-500/50 rounded-2xl p-5 space-y-3 shadow-lg transition-all group flex flex-col justify-between">
-            <div class="space-y-2.5">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${levelBadgeClass}">${escapeHtml(item.level_cn || item.level)}</span>
-                  ${item.cross_proofread_score ? `<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800/60 font-mono">V1.7 精校得分: ${item.cross_proofread_score}</span>` : ''}
-                </div>
-                <span class="text-[10px] font-mono text-slate-500">${escapeHtml(item.created_at || '')}</span>
-              </div>
-              <h4 class="text-sm font-extrabold text-purple-300 group-hover:text-purple-200 transition-colors">${escapeHtml(item.title || 'Tongue Twister')}</h4>
+          <div class="bg-[#0f172a] border border-slate-800/90 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl space-y-0 transition-all flex flex-col justify-between group">
+            <!-- 顶部 AI 画面占位符 / 场景图片 Banner -->
+            <div class="relative w-full h-48 bg-slate-950 overflow-hidden group">
+              <img src="${escapeHtml(imgUrl)}" alt="Scene" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-85">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-black/30"></div>
               
-              <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                <p class="text-xs font-semibold text-slate-100 leading-relaxed">${escapeHtml(item.english_text)}</p>
-                <p class="text-[11px] text-slate-400">${escapeHtml(item.chinese_text)}</p>
+              <div class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-[10px] text-amber-300 font-mono font-bold flex items-center space-x-1">
+                <i data-lucide="image" class="w-3 h-3 text-amber-400"></i>
+                <span>画面占位符 (AI Prompt)</span>
               </div>
 
-              <div class="space-y-1.5 pt-1">
-                <div class="flex items-center space-x-1.5">
-                  <span class="text-[10px] font-semibold text-slate-400">难音点拨:</span>
-                  ${targetSoundsHtml}
-                </div>
-                <p class="text-[11px] text-purple-300/90 leading-snug">💡 ${escapeHtml(item.phonetic_tips)}</p>
-                <p class="text-[11px] text-slate-400 leading-snug">🔗 连读/节奏: ${escapeHtml(item.linking_tips)}</p>
+              <!-- Prompt 浮层与复制按钮 -->
+              <div class="absolute bottom-2 left-2 right-2 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-800/80 flex items-center justify-between text-[11px] text-slate-300">
+                <span class="truncate mr-2 text-slate-300"><strong class="text-amber-400">Prompt:</strong> ${escapeHtml(imgPrompt)}</span>
+                <button onclick="navigator.clipboard.writeText('${escapeHtml(imgPrompt)}'); showToast('已复制 AI 画面 Prompt 提示词！', 'success')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] shrink-0 font-medium transition-colors">复制 Prompt</button>
               </div>
             </div>
 
-            <!-- V1.7 三档语速音频播放控制器 -->
-            <div class="pt-3 border-t border-slate-800/80 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">示范语速切档:</span>
-                <div class="flex items-center space-x-1">
-                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.4', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-950 text-slate-400 hover:text-white transition-colors">0.4x 逐音</button>
-                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.8', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-950 text-slate-400 hover:text-white transition-colors">0.8x 慢速</button>
-                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '1.0', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-purple-500/80 bg-purple-950 text-purple-200 font-bold transition-colors">1.0x 常速</button>
+            <!-- 卡片主体区 -->
+            <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+              <div class="space-y-4">
+                <!-- 标头难度与主音标 -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-black px-3 py-1 rounded-lg ${levelColor}">${escapeHtml(item.level_cn || item.level)}</span>
+                    <span class="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-slate-800/90 text-slate-200 border border-slate-700">主音 ${escapeHtml(mainSoundStr)}</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <button title="${escapeHtml(item.phonetic_tips || '')}" class="w-7 h-7 rounded-full bg-slate-800/90 text-slate-400 hover:text-amber-300 flex items-center justify-center text-xs font-bold border border-slate-700/60 transition-colors">?</button>
+                    <button class="w-7 h-7 rounded-full bg-slate-800/90 text-amber-400 hover:text-amber-300 flex items-center justify-center text-xs border border-slate-700/60 transition-colors">⭐</button>
+                  </div>
+                </div>
+
+                <!-- 逐词英文 + IPA 音标网格 (与截图一致) -->
+                <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1 font-sans">
+                  ${wordsHtml}
+                </div>
+
+                <!-- 中文译文框 -->
+                <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/50 text-xs text-slate-200 leading-relaxed font-normal">
+                  ${escapeHtml(item.chinese_text || '')}
+                </div>
+
+                <!-- 底部语音/难点 Badges -->
+                <div class="flex flex-wrap gap-2 pt-1">
+                  ${soundTagsHtml}
                 </div>
               </div>
-              <audio id="audio_${item.id}" controls src="${escapeHtml(defaultAudio)}" class="w-full h-8 rounded-lg accent-purple-500 bg-slate-950"></audio>
+
+              <!-- 三档语速播放控制栏 (练习 / 常速 / 挑战) -->
+              <div class="pt-3 border-t border-slate-800/80 space-y-2">
+                <div class="bg-slate-800/80 rounded-xl p-1.5 flex items-center justify-around text-xs font-medium">
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.8', this)" class="px-3 py-1 rounded-lg text-slate-300 hover:text-white font-bold transition-colors flex items-center space-x-1"><span>练习</span> <i data-lucide="play" class="w-3 h-3 text-amber-400 inline"></i></button>
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '1.0', this)" class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-black transition-colors flex items-center space-x-1 shadow"><span>常速</span> <i data-lucide="play" class="w-3 h-3 inline"></i></button>
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.4', this)" class="px-3 py-1 rounded-lg text-slate-300 hover:text-white font-bold transition-colors flex items-center space-x-1"><span>挑战 (0.4x)</span> <i data-lucide="play" class="w-3 h-3 text-amber-400 inline"></i></button>
+                </div>
+                <audio id="audio_${item.id}" controls src="${escapeHtml(defaultAudio)}" class="w-full h-8 rounded-lg accent-amber-500 bg-slate-950"></audio>
+              </div>
             </div>
           </div>
         `;
@@ -5422,6 +5465,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       lucide.createIcons();
     }
+
 
     async function submitTongueTwisterGenerate() {
       const level = document.getElementById('ttSelectLevel').value;

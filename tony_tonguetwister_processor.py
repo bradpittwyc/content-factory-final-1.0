@@ -188,16 +188,26 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
 1. 难度梯度: {normalized_level} ({level_cn}) - 目标词数范围必须在 {limits['min']} ~ {limits['max']} 词之间。
 2. 目标音标/难点: {target_sound}
 3. 拒绝老梗: 严禁生成 "Peter Piper", "She sells seashells", "Woodchuck" 等旧老梗，必须保证英文句子生动、原创、有画面感。
-4. 主谓宾完整: 拒绝纯名词堆砌，句子必须符合语法且表达通顺。
+4. 主谓宾完整: 句子必须符合语法且有丰富画面感。
+5. 必须包含画面 Prompt (image_prompt): 描述符合句子语境的高清 AI 绘画提示词 (英文描述, 例如: "Two cheerful bakers in blue aprons mixing berry batter at a wooden outdoor bakery counter, high detail, photorealistic style")。
+6. 必须提供逐词音标 (words): 将英文原句逐词拆解，并标注每一个单词的标准 IPA 国际音标。
 
 请直接返回合法的 JSON 格式（不要添加代码块标记以外的任何说明）：
 {{
   "title": "绕口令标题 (英文短名)",
+  "image_prompt": "AI 画面生成提示词 (英文描述)",
+  "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop",
   "english_text": "英文原文绕口令",
   "chinese_text": "地道中文翻译与语境释义",
   "level": "{normalized_level}",
   "level_cn": "{level_cn}",
+  "main_sound": "主发音字母/音标 (例如: b 或 /b/)",
   "target_sounds": ["音标1", "音标2"],
+  "words": [
+    {{"word": "Brisk", "ipa": "/brɪsk/"}},
+    {{"word": "blue", "ipa": "/bluː/"}}
+  ],
+  "sound_tags": ["/b/ 连续爆破", "双唇紧闭突发", "声带振动清浊对比"],
   "phonetic_tips": "易错发音要点剖析（发音部位、舌位技巧）",
   "linking_tips": "连读/弱读/重音节奏提示",
   "cross_proofread_score": 98.5
@@ -255,24 +265,56 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
         print("⚠️ 使用保底 V1.7 原创模版...")
         if normalized_level == "Beginner":
             raw_response = json.dumps({
-                "title": "Brave Blue Bugs",
-                "english_text": "Brave blue bugs bite big black bears.",
-                "chinese_text": "勇敢的蓝色小虫叮咬大黑熊。",
+                "title": "Brisk Blue Bakers",
+                "image_prompt": "Two cheerful bakers in blue aprons mixing berry batter at a wooden outdoor bakery counter, warm lighting, photorealistic style",
+                "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop",
+                "english_text": "Brisk blue bakers blended bitter berry batter beside the buzzing bakery.",
+                "chinese_text": "灵巧的蓝衣面包师在嗡嗡作响的面包坊旁，搅拌苦味浆果面糊。",
                 "level": "Beginner",
                 "level_cn": "初级",
-                "target_sounds": ["/b/", "/p/"],
+                "main_sound": "b",
+                "target_sounds": ["/b/"],
+                "words": [
+                    {"word": "Brisk", "ipa": "/brɪsk/"},
+                    {"word": "blue", "ipa": "/bluː/"},
+                    {"word": "bakers", "ipa": "/'beɪkərz/"},
+                    {"word": "blended", "ipa": "/'blendɪd/"},
+                    {"word": "bitter", "ipa": "/'bɪtər/"},
+                    {"word": "berry", "ipa": "/'beri/"},
+                    {"word": "batter", "ipa": "/'bætər/"},
+                    {"word": "beside", "ipa": "/bi'saɪd/"},
+                    {"word": "the", "ipa": "/ðə/"},
+                    {"word": "buzzing", "ipa": "/'bʌzɪŋ/"},
+                    {"word": "bakery.", "ipa": "/'beɪkəri/"}
+                ],
+                "sound_tags": ["/b/ 连续爆破", "双唇紧闭突发", "声带振动清浊对比"],
                 "phonetic_tips": "注意 /b/ 爆破浊辅音与双唇张合节奏",
-                "linking_tips": "blue_bugs 自然连读，bite_big 快速过渡",
+                "linking_tips": "blue_bakers 自然连读，berry_batter 快速过渡",
                 "cross_proofread_score": 96.0
             })
         elif normalized_level == "Intermediate":
             raw_response = json.dumps({
                 "title": "Three Thick Thistles",
+                "image_prompt": "Three thick wild thistle plants blooming near a steaming natural hot spring, cinematic photo style",
+                "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop",
                 "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
                 "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",
                 "level": "Intermediate",
                 "level_cn": "中级",
+                "main_sound": "th",
                 "target_sounds": ["/θ/", "/s/"],
+                "words": [
+                    {"word": "Three", "ipa": "/θriː/"},
+                    {"word": "thick", "ipa": "/θɪk/"},
+                    {"word": "thistles", "ipa": "/'θɪslz/"},
+                    {"word": "thrive", "ipa": "/θraɪv/"},
+                    {"word": "thoughtfully", "ipa": "/'θɔːtfəli/"},
+                    {"word": "in", "ipa": "/ɪn/"},
+                    {"word": "the", "ipa": "/ðə/"},
+                    {"word": "thermal", "ipa": "/'θɜːrml/"},
+                    {"word": "spring.", "ipa": "/sprɪŋ/"}
+                ],
+                "sound_tags": ["/θ/ 咬舌清辅音", "舌尖齿间摩擦", "避免发成 /s/ 或 /f/"],
                 "phonetic_tips": "重点突破 /θ/ 咬舌音与 /s/ 齿龈擦音的频繁交替",
                 "linking_tips": "thick_thistles 连读，thrive_thoughtfully 保持吐字清晰",
                 "cross_proofread_score": 97.5
@@ -280,15 +322,34 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
         else:
             raw_response = json.dumps({
                 "title": "Clever Crafty Chefs",
+                "image_prompt": "Master chefs in white hats cooking crispy fried chicken in a modern restaurant kitchen in Chicago, 8k resolution",
+                "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop",
                 "english_text": "Clever crafty chefs cooked crunchy crispy chicken for cheerful children in Chicago.",
                 "chinese_text": "聪明的厨师在芝加哥为快乐的孩子们烹饪香脆的炸鸡。",
                 "level": "Advanced",
                 "level_cn": "高级",
+                "main_sound": "ch",
                 "target_sounds": ["/k/", "/tʃ/", "/ʃ/"],
+                "words": [
+                    {"word": "Clever", "ipa": "/'klevər/"},
+                    {"word": "crafty", "ipa": "/'kræfti/"},
+                    {"word": "chefs", "ipa": "/ʃefs/"},
+                    {"word": "cooked", "ipa": "/kʊkt/"},
+                    {"word": "crunchy", "ipa": "/'krʌntʃi/"},
+                    {"word": "crispy", "ipa": "/'krɪspi/"},
+                    {"word": "chicken", "ipa": "/'tʃɪkɪn/"},
+                    {"word": "for", "ipa": "/fər/"},
+                    {"word": "cheerful", "ipa": "/'tʃɪrfl/"},
+                    {"word": "children", "ipa": "/'tʃɪldrən/"},
+                    {"word": "in", "ipa": "/ɪn/"},
+                    {"word": "Chicago.", "ipa": "/ʃɪ'kɑːɡoʊ/"}
+                ],
+                "sound_tags": ["/k/ 舌后爆破", "/tʃ/ 破擦音切音", "连读爆破速吐"],
                 "phonetic_tips": "极致挑战！/k/ 舌后爆破音与 /tʃ/ /ʃ/ 破擦音的高速切换",
                 "linking_tips": "crafty_chefs 极速衔接，crunchy_crispy_chicken 快速顺畅连读",
                 "cross_proofread_score": 99.0
             })
+
 
     cleaned = re.sub(r'```json|```', '', raw_response).strip()
     data = json.loads(cleaned)

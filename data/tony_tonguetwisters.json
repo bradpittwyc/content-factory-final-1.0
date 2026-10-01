@@ -1,5 +1,151 @@
 [
   {
+    "title": "Big Brown Bears",
+    "image_prompt": "Three big brown bears balancing blue berries on their big broad backs in a bright sunny forest, vibrant colors, cinematic lighting, photorealistic style, high detail",
+    "image_url": "https://images.unsplash.com/photo-1534188352434-c0205e4fb56d?w=800&auto=format&fit=crop",
+    "english_text": "Big brown bears balance blue berries.",
+    "chinese_text": "大棕熊平衡着蓝莓。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "main_sound": "/b/",
+    "target_sounds": [
+      "/b/",
+      "/æ/",
+      "/əʊ/"
+    ],
+    "words": [
+      {
+        "word": "Big",
+        "ipa": "/bɪɡ/"
+      },
+      {
+        "word": "brown",
+        "ipa": "/braʊn/"
+      },
+      {
+        "word": "bears",
+        "ipa": "/beəz/"
+      },
+      {
+        "word": "balance",
+        "ipa": "/ˈbæləns/"
+      },
+      {
+        "word": "blue",
+        "ipa": "/bluː/"
+      },
+      {
+        "word": "berries",
+        "ipa": "/ˈberiz/"
+      }
+    ],
+    "sound_tags": [
+      "/b/ 双唇爆破",
+      "清浊对比",
+      "连续辅音群"
+    ],
+    "phonetic_tips": "发 /b/ 时，双唇紧闭，憋住气流，然后突然冲开，声带振动。注意在词首和词中保持爆发力，避免发成汉语拼音的 b（不送气）或 p（清音）。",
+    "linking_tips": "句子节奏为重读实词（Big, brown, bears, balance, blue, berries），每一个单词的词首 /b/ 都需要清晰、有力地爆破出来，形成鲜明的节拍感。",
+    "cross_proofread_score": 99.1,
+    "id": "tw_1790833281_bigbro",
+    "created_at": "2026-10-01 13:41:21",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790833281_bigbro_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790833281_bigbro_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790833281_bigbro_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790833281_bigbro_1.0.mp3"
+  },
+  {
+    "title": "Victor's Wild Waves",
+    "english_text": "Victor weaves wide velvet waves.",
+    "chinese_text": "维克托编织着宽阔的丝绒波浪。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/v/",
+      "/w/"
+    ],
+    "phonetic_tips": "/v/ 是齿唇音：上齿轻轻咬住下唇，声带振动，气流从齿缝摩擦而出；/w/ 是双唇软腭音：双唇收圆成小孔，向前突出，然后迅速滑向后元音，发音时声带振动，注意上下齿不能接触，切忌将 /v/ 读成 /w/ 或将 /w/ 读成 /v/。",
+    "linking_tips": "句子节奏为重音节拍（Stress-timed）：Victor (重) weaves (重) wide (重) velvet (重) waves (重)。每个实词都要清晰饱满，注意 weaves 和 wide 之间的元音过渡，保持气息平稳。",
+    "cross_proofread_score": 99.0,
+    "id": "tw_1790832278_victor",
+    "created_at": "2026-10-01 13:24:38",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832278_victor_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832278_victor_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832278_victor_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832278_victor_1.0.mp3"
+  },
+  {
+    "title": "Red Lollipops",
+    "english_text": "Red rabbits love large lollipops.",
+    "chinese_text": "红兔子喜欢大棒棒糖。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/r/",
+      "/l/"
+    ],
+    "phonetic_tips": "/r/ 音要求舌尖上卷，不触碰口腔任何部位，唇形微圆；/l/ 音则需要舌尖紧贴上齿龈，气流从舌头两侧通过。在交替发 /r/ 和 /l/ 时，切记舌头要瞬间完成“卷起”与“顶上”的切换，避免混淆。",
+    "linking_tips": "这句话节奏明快，采用“重-轻-重”的主谓宾结构。Red 和 rabbits 之间无需停顿，love 要适当加重以突显句意，large lollipops 连读时注意 l 的顺畅过渡。",
+    "cross_proofread_score": 99.0,
+    "id": "tw_1790832261_redlol",
+    "created_at": "2026-10-01 13:24:21",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832261_redlol_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832261_redlol_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832261_redlol_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832261_redlol_1.0.mp3"
+  },
+  {
+    "title": "Thief’s Thick Thief",
+    "english_text": "Three thieves thought the thin thief fought.",
+    "chinese_text": "三个小偷以为那个瘦小偷打架了。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/θ/",
+      "/f/"
+    ],
+    "phonetic_tips": "本卡片核心难点在于 /θ/ 与 /f/ 的极易混淆。发 /θ/（如 three, thieves, thought, thin）时，舌尖必须轻轻咬在上下齿之间，气流从齿缝摩擦而出，声带不震动；而发 /f/（如 fought）时，上齿要轻轻咬住下唇内侧，吹出气流。练习时切忌将 /θ/ 读成 /f/（把 three 读成 free）或 /s/。",
+    "linking_tips": "句中动词与代词可适度弱化：'Three thieves' 连读为 /θriː θiːvz/，'thought the' 中的 'ght' 与 'the' 可以平滑过渡。整体节奏遵循强读实词（Three, thieves, thought, thin, thief, fought），保持短小精悍的爆破感。",
+    "cross_proofread_score": 99.0,
+    "id": "tw_1790832220_thiefs",
+    "created_at": "2026-10-01 13:23:40",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832220_thiefs_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832220_thiefs_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832220_thiefs_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832220_thiefs_1.0.mp3"
+  },
+  {
+    "title": "Smart Snakes",
+    "english_text": "Smart snakes smile softly, sniffing sweet summer strawberries.",
+    "chinese_text": "聪明的蛇儿温柔地微笑着，嗅着香甜的夏日草莓。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/s/",
+      "/ʃ/",
+      "/sm/"
+    ],
+    "phonetic_tips": "本卡片核心训练 /s/ 与 /ʃ/ 的舌位切换与摩擦控制。发 /s/ 时，舌尖靠近牙龈，气流从齿间挤出，声带不振动；发 /ʃ/ 时，舌身抬高并略微后缩，唇形向前微嘟成圆形。注意 /sm/ 组合音中，/s/ 要轻而短，紧接着滑向双唇闭合的 /m/，避免中间加入多余的元音。",
+    "linking_tips": "本句节奏明快，采用“双词重音”律。Smart snakes 与 sweet summer 为主要重音对。注意 smile softly 和 sniffing sweet 之间的词尾辅音与词首辅音可以做顺滑的辅音延长过渡（Gemination），如 smile_softly 中的 /l/ 与 /s/ 需自然衔接，语速由慢到快，保持气息平稳。",
+    "cross_proofread_score": 98.5,
+    "id": "tw_1790832207_smarts",
+    "created_at": "2026-10-01 13:23:27",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832207_smarts_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832207_smarts_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832207_smarts_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832207_smarts_1.0.mp3"
+  },
+  {
     "title": "Laura's Leather Ribbons",
     "english_text": "Little Laura rarely rolls red leather ribbons around real large logs.",
     "chinese_text": "小劳拉极少把红色的皮革丝带缠绕在真正巨大的原木上。",
