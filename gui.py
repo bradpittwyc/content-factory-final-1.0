@@ -561,10 +561,21 @@ class TikTokDownloaderGUI(ctk.CTk):
         combo_level.pack(fill="x", padx=25, pady=(0, 10))
 
         # 目标音标
-        lbl_sound = ctk.CTkLabel(dialog, text="目标发音/难音标 (可选):", anchor="w")
+        lbl_sound = ctk.CTkLabel(dialog, text="目标发音/难音标选择:", anchor="w")
         lbl_sound.pack(fill="x", padx=25, pady=(5, 2))
-        entry_sound = ctk.CTkEntry(dialog, placeholder_text="例如: /s/ vs /ʃ/ 或 /θ/ vs /s/")
-        entry_sound.pack(fill="x", padx=25, pady=(0, 10))
+        combo_sound = ctk.CTkComboBox(dialog, values=[
+            "自由发音/常见易混淆音标",
+            "/s/ vs /ʃ/",
+            "/θ/ vs /s/",
+            "/θ/ vs /f/",
+            "/r/ vs /l/",
+            "/v/ vs /w/",
+            "/p/ vs /b/",
+            "/tʃ/ vs /dʒ/",
+            "/n/ vs /ŋ/"
+        ])
+        combo_sound.set("自由发音/常见易混淆音标")
+        combo_sound.pack(fill="x", padx=25, pady=(0, 10))
 
         # 场景主题
         lbl_topic = ctk.CTkLabel(dialog, text="场景主题 (可选):", anchor="w")
@@ -574,7 +585,7 @@ class TikTokDownloaderGUI(ctk.CTk):
 
         def start_generate():
             level = combo_level.get()
-            sound = entry_sound.get().strip() or "自由发音"
+            sound = combo_sound.get().strip() or "自由发音"
             topic = entry_topic.get().strip() or "日常口语"
             dialog.destroy()
 

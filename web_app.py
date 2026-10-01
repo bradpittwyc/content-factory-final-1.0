@@ -3456,7 +3456,17 @@ HTML_CONTENT = """<!DOCTYPE html>
         <!-- 目标音标 -->
         <div class="space-y-1.5">
           <label class="text-xs font-medium text-slate-300">目标音标 / 难音点拨 (Target Sound)</label>
-          <input id="ttInputSound" type="text" placeholder="例如: /s/ vs /ʃ/ 或 /θ/ vs /s/" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors">
+          <select id="ttSelectSound" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500 transition-colors">
+            <option value="自由发音/常见易混淆音标">✨ 自由智能推荐 (Auto Select)</option>
+            <option value="/s/ vs /ʃ/">/s/ vs /ʃ/ (Sea vs She - 齿龈音/翘舌音)</option>
+            <option value="/θ/ vs /s/">/θ/ vs /s/ (Think vs Sink - 咬舌音/清音)</option>
+            <option value="/θ/ vs /f/">/θ/ vs /f/ (Three vs Free - 咬舌音/唇齿音)</option>
+            <option value="/r/ vs /l/">/r/ vs /l/ (Red vs Led - 卷舌音/舌边音)</option>
+            <option value="/v/ vs /w/">/v/ vs /w/ (Vine vs Wine - 唇齿/双唇音)</option>
+            <option value="/p/ vs /b/">/p/ vs /b/ (Pat vs Bat - 爆破清/浊音)</option>
+            <option value="/tʃ/ vs /dʒ/">/tʃ/ vs /dʒ/ (Chin vs Gin - 破擦音对比)</option>
+            <option value="/n/ vs /ŋ/">/n/ vs /ŋ/ (Thin vs Thing - 前后鼻音)</option>
+          </select>
         </div>
 
         <!-- 场景主题 -->
@@ -5384,7 +5394,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     async function submitTongueTwisterGenerate() {
       const level = document.getElementById('ttSelectLevel').value;
-      const target_sound = document.getElementById('ttInputSound').value.trim();
+      const target_sound = document.getElementById('ttSelectSound').value;
       const topic = document.getElementById('ttInputTopic').value.trim();
       const btn = document.getElementById('btnGenerateTT');
 
