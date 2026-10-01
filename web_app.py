@@ -1260,15 +1260,18 @@ def stop_youtube_task():
     return {"success": False, "message": "当前没有运行中的任务"}
 
 def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cookie_text: str = ""):
-    clean_name = channel_input.strip().lstrip("@")
-    if clean_name.startswith("http"):
+    clean_name = channel_input.strip()
+    if clean_name.startswith("http://") or clean_name.startswith("https://"):
         target_url = clean_name
-    elif clean_name.startswith("playlist?list="):
+    elif clean_name.startswith("playlist?list=") or clean_name.startswith("watch?v="):
+        target_url = f"https://www.youtube.com/{clean_name}"
+    elif clean_name.startswith("shorts/"):
         target_url = f"https://www.youtube.com/{clean_name}"
     else:
-        target_url = f"https://www.youtube.com/@{clean_name}/videos"
+        username = clean_name.lstrip("@")
+        target_url = f"https://www.youtube.com/@{username}/videos"
 
-    yt_manager.add_log(f"YouTube 目标主页/播放列表: {target_url}", "info")
+    yt_manager.add_log(f"YouTube 解析目标网址: {target_url}", "info")
     if proxy:
         yt_manager.add_log(f"配置代理: {proxy}", "info")
 
@@ -1288,13 +1291,21 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             res = ydl.extract_info(target_url, download=False)
-            entries = res.get("entries") or []
+            if not res:
+                raise Exception("无法提取链接元数据")
+
+            entries = res.get("entries")
+            if entries is not None and isinstance(entries, (list, tuple)):
+                items_to_process = [item for item in entries if item]
+            else:
+                items_to_process = [res]
+
             parsed = []
-            for item in entries:
+            for item in items_to_process:
                 if not item:
                     continue
                 vid = item.get("id") or ""
-                url = item.get("url") or f"https://www.youtube.com/watch?v={vid}"
+                url = item.get("webpage_url") or item.get("url") or f"https://www.youtube.com/watch?v={vid}"
                 if not url.startswith("http"):
                     url = f"https://www.youtube.com/watch?v={vid}"
                 duration_sec = item.get("duration")
@@ -1305,7 +1316,6 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
                 else:
                     dur_str = "--:--"
                 
-                # 智能识别视频所属分类 (Videos / Shorts / Live / Podcasts)
                 cat = "videos"
                 cat_lbl = "🎬 长视频"
                 if (duration_sec and duration_sec <= 65) or "/shorts/" in url:
@@ -1318,25 +1328,34 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
                     cat = "podcasts"
                     cat_lbl = "🎙️ 播客专栏"
 
+                view_cnt = item.get("view_count")
+                view_str = f"{view_cnt:,}" if view_cnt else "--"
+                upload_d = item.get("upload_date") or datetime.now().strftime("%Y%m%d")
+
                 parsed.append({
                     "id": vid,
                     "title": item.get("title") or "YouTube 视频",
                     "url": url,
-                    "upload_date": item.get("upload_date") or datetime.now().strftime("%Y%m%d"),
+                    "upload_date": upload_d,
                     "duration": dur_str,
-                    "view_count": f"{item.get('view_count', 0):,}" if item.get('view_count') else "--",
+                    "view_count": view_str,
                     "like_count": "--",
                     "thumbnail": item.get("thumbnail") or "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300",
                     "category": cat,
                     "category_label": cat_lbl
                 })
+
             yt_manager.videos = parsed
             yt_manager.progress = 1.0
             
-            # 自动进行智能领域分类
             domain = classify_channel_by_titles([v["title"] for v in parsed])
-            channels_store.bump_youtube_channel(clean_name, title=clean_name, cat=domain.get("id"), cat_name=domain.get("name"), video_count=len(parsed))
-            yt_manager.finish_state(True, f"解析成功！共获取到 {len(parsed)} 个 YouTube 视频，归属分类: {domain['icon']} {domain['name']}")
+            uploader_name = res.get("uploader") or res.get("channel") or res.get("uploader_id") or clean_name
+            channels_store.bump_youtube_channel(uploader_name, title=uploader_name, cat=domain.get("id"), cat_name=domain.get("name"), video_count=len(parsed))
+
+            if len(parsed) == 1:
+                yt_manager.finish_state(True, f"单视频解析成功！《{parsed[0]['title']}》 ({parsed[0]['duration']})")
+            else:
+                yt_manager.finish_state(True, f"频道解析成功！共获取到 {len(parsed)} 个 YouTube 视频，归属分类: {domain['icon']} {domain['name']}")
     except Exception as e:
         yt_manager.finish_state(False, f"解析失败: {str(e)}")
 
@@ -2200,7 +2219,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <span>YouTube 频道主页 / 播放列表 / 视频网址</span>
           </label>
           <div class="relative">
-            <input type="text" id="inputYtUrl" placeholder="例如: https://www.youtube.com/@mkbhd/videos 或播放列表"
+            <input type="text" id="inputYtUrl" placeholder="支持: 单个视频网址(watch?v=...) / Shorts / 频道主页 / 播放列表"
                    value="https://www.youtube.com/@mkbhd/videos"
                    class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all pl-10">
             <i data-lucide="youtube" class="w-4 h-4 text-red-400 absolute left-3.5 top-3"></i>
