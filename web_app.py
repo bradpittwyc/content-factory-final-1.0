@@ -2186,14 +2186,14 @@ HTML_CONTENT = """<!DOCTYPE html>
 
   </main>
 
-  <!-- 页面 2: YouTube 视频下载器 (原样复制卡片 2) -->
+  <!-- 页面 2: YouTube 视频下载器 (全套 TikTok 同款 UI 结构) -->
   <main id="pageYouTube" class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6 flex-1 hidden">
     
     <!-- 抓取配置面板 -->
     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl youtube-border-glow space-y-4">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
         
-        <!-- YouTube 频道/播放列表/视频链接 -->
+        <!-- YouTube 频道主页 / 播放列表 / 视频网址 -->
         <div class="md:col-span-5 space-y-1.5">
           <label class="text-xs font-semibold text-slate-300 flex items-center space-x-1">
             <i data-lucide="play" class="w-3.5 h-3.5 text-red-500 fill-red-500"></i>
@@ -2216,8 +2216,11 @@ HTML_CONTENT = """<!DOCTYPE html>
             </span>
             <span class="text-[10px] text-slate-400">国内访问必填</span>
           </label>
-          <input type="text" id="inputYtProxy" placeholder="例如: http://127.0.0.1:7890" value=""
-                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all">
+          <div class="relative">
+            <input type="text" id="inputYtProxy" placeholder="例如: http://127.0.0.1:7890" value=""
+                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all pl-10">
+            <i data-lucide="shield-check" class="w-4 h-4 text-slate-500 absolute left-3.5 top-3"></i>
+          </div>
         </div>
 
         <!-- 限制数量 -->
@@ -2234,7 +2237,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="md:col-span-2 flex items-center space-x-2">
           <button id="btnYtScan" onclick="startYtScan()" class="flex-1 py-2.5 text-sm font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/30 transition-all flex items-center justify-center space-x-1.5 active:scale-95 cursor-pointer">
             <i data-lucide="search" class="w-4 h-4"></i>
-            <span>开始解析</span>
+            <span>解析频道</span>
           </button>
           <button id="btnYtStop" onclick="stopYtTask()" disabled class="px-3 py-2.5 text-sm font-semibold bg-slate-800 text-slate-500 rounded-xl transition-all flex items-center justify-center disabled:opacity-50 cursor-pointer" title="停止任务">
             <i data-lucide="square" class="w-4 h-4"></i>
@@ -2247,7 +2250,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       <div class="pt-3 border-t border-slate-800/80 flex items-center space-x-4">
         <div class="flex items-center space-x-2 text-xs">
           <span id="ytStatusPulse" class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
-          <span id="ytStatusText" class="font-medium text-slate-300">空闲待命就绪</span>
+          <span id="ytStatusText" class="font-medium text-slate-300">就绪</span>
         </div>
         <div class="flex-1 bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
           <div id="ytProgressBar" class="h-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-400 transition-all duration-300 w-0"></div>
@@ -2257,89 +2260,72 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     </div>
 
-    <!-- 核心两栏联动布局 (左侧：视频列表与分页；右侧：下载队列与控制台日志) -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+    <!-- 视频预览卡片、队列与 AI COS 中枢三栏分栏 (完全对标 TikTok 三栏结构) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
       
-      <!-- 左栏：视频解析结果展示列表 (占 8 列) -->
-      <div class="md:col-span-8 flex flex-col space-y-4">
-        
-        <!-- 表格工具栏 (带博主领域归类徽章 + 四维分类 Tab 切换) -->
-        <div class="flex flex-col space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
-              <h2 class="text-base font-bold text-slate-100 flex items-center space-x-2">
-                <i data-lucide="play-square" class="w-5 h-5 text-red-500"></i>
-                <span>YouTube 频道与视频列表</span>
-              </h2>
-              <span id="ytChannelCategoryBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/80 font-semibold inline-flex items-center space-x-1 shadow-sm">
-                <span>🤖 科技 & AI</span>
-              </span>
-              <span id="ytVideoCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-900/60 font-mono">0 个视频</span>
-              <span id="ytSelectedCountBadge" class="text-xs text-slate-400">已选 <strong class="text-red-400 font-mono">0</strong> 项</span>
-            </div>
-            
-            <div class="flex items-center space-x-2">
-              <button id="btnYtSelectPage" onclick="selectYtCurrentPage()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg border border-slate-700 transition-colors">
-                全选本页
-              </button>
-              <button id="btnYtSelectAll" onclick="selectAllYtVideos()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg border border-slate-700 transition-colors">
-                全选全部
-              </button>
-              <button id="btnYtDownloadSelected" onclick="startYtDownloadSelected()" class="px-3.5 py-1.5 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-lg shadow-md shadow-red-600/25 transition-all flex items-center space-x-1.5 active:scale-95">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                <span id="btnYtDownloadSelectedText">下载选中项 (0)</span>
-              </button>
-              <button id="btnYtProcessTony" onclick="processYtTonyLessons()" class="px-3.5 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg shadow-md shadow-purple-600/25 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
-                <span>⚡ 提炼教案上云 (COS)</span>
-              </button>
-            </div>
+      <!-- 视频列表展示 (占 6 列) -->
+      <div class="lg:col-span-6 space-y-3">
+        <!-- 列表顶部操作栏 (高度固定 h-12 与右侧 Tab 栏完全一致) -->
+        <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-3 shrink-0">
+          <div class="flex items-center space-x-1.5 min-w-0">
+            <i data-lucide="play-square" class="w-4 h-4 text-red-500 shrink-0"></i>
+            <span class="text-sm font-bold text-slate-200 truncate">视频素材列表</span>
+            <span id="ytChannelCategoryBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/80 font-semibold truncate hidden">🤖 科技 & AI</span>
+            <span id="ytVideoCountBadge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-red-300 border border-slate-700 font-mono shrink-0">0 个视频</span>
           </div>
-
-          <!-- 🌟 四维分类标签页 (Videos / Shorts / Live / Podcasts) -->
-          <div class="flex items-center space-x-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 text-xs overflow-x-auto custom-scroll">
-            <button id="btnCatAll" onclick="filterYtCategory('all')" class="px-3 py-1.5 rounded-lg font-semibold bg-red-600 text-white shadow-sm transition-all whitespace-nowrap">
-              全部 (<span id="catCountAll">0</span>)
-            </button>
-            <button id="btnCatVideos" onclick="filterYtCategory('videos')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
-              🎬 长视频 (<span id="catCountVideos">0</span>)
-            </button>
-            <button id="btnCatShorts" onclick="filterYtCategory('shorts')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
-              ⚡ 短视频 Shorts (<span id="catCountShorts">0</span>)
-            </button>
-            <button id="btnCatLive" onclick="filterYtCategory('live')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
-              🔴 直播回放 Live (<span id="catCountLive">0</span>)
-            </button>
-            <button id="btnCatPodcasts" onclick="filterYtCategory('podcasts')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
-              🎙️ 播客专栏 Podcasts (<span id="catCountPodcasts">0</span>)
-            </button>
+          
+          <div class="flex items-center space-x-2 text-xs shrink-0">
+            <button onclick="selectYtCurrentPage()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors">全选本页</button>
+            <button onclick="selectAllYtVideos()" class="px-2.5 py-1 rounded-lg bg-red-950/60 border border-red-800/50 hover:bg-red-900 text-red-300 transition-colors">全选所有</button>
+            <button onclick="deselectAllYtVideos()" class="px-2 py-1 text-slate-400 hover:text-white transition-colors">取消全选</button>
+            <span class="text-slate-700">|</span>
+            <span id="ytSelectedCountText" class="text-red-400 font-mono">已选 0 项</span>
           </div>
         </div>
 
+        <!-- 🌟 四维分类标签页 (Videos / Shorts / Live / Podcasts) -->
+        <div class="flex items-center space-x-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 text-xs overflow-x-auto custom-scroll">
+          <button id="btnCatAll" onclick="filterYtCategory('all')" class="px-3 py-1 rounded-lg font-semibold bg-red-600 text-white shadow-sm transition-all whitespace-nowrap">
+            全部 (<span id="catCountAll">0</span>)
+          </button>
+          <button id="btnCatVideos" onclick="filterYtCategory('videos')" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
+            🎬 长视频 (<span id="catCountVideos">0</span>)
+          </button>
+          <button id="btnCatShorts" onclick="filterYtCategory('shorts')" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
+            ⚡ Shorts (<span id="catCountShorts">0</span>)
+          </button>
+          <button id="btnCatLive" onclick="filterYtCategory('live')" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
+            🔴 Live (<span id="catCountLive">0</span>)
+          </button>
+          <button id="btnCatPodcasts" onclick="filterYtCategory('podcasts')" class="px-3 py-1 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all whitespace-nowrap">
+            🎙️ 播客 (<span id="catCountPodcasts">0</span>)
+          </button>
+        </div>
 
-        <!-- 视频数据表格容器 -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex-1 flex flex-col">
-          <div class="overflow-x-auto custom-scroll flex-1">
+        <!-- 框内列表容器 -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+          
+          <!-- 表头 -->
+          <div class="grid grid-cols-12 gap-2 px-3 py-2 bg-slate-950/80 border-b border-slate-800 text-[11px] font-semibold text-slate-400 select-none items-center">
+            <div class="col-span-1 flex items-center space-x-1">
+              <input type="checkbox" id="selectAllYtPageCheckbox" onclick="toggleSelectAllYtPage(this)" class="w-3.5 h-3.5 rounded border-slate-700 bg-slate-900 text-red-500 focus:ring-0 cursor-pointer">
+              <span>#</span>
+            </div>
+            <div class="col-span-2">封面</div>
+            <div class="col-span-5">视频标题与频道</div>
+            <div class="col-span-2 text-center">时长 / 播放</div>
+            <div class="col-span-2 text-right">操作</div>
+          </div>
+
+          <!-- 视频项渲染区 (带独立滚动条) -->
+          <div class="min-h-[380px] max-h-[500px] overflow-y-auto custom-scroll">
             <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="h-12 border-b border-slate-800 bg-slate-950/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider select-none">
-                  <th class="px-4 py-0 w-10 text-center align-middle">
-                    <input type="checkbox" id="selectAllYtPageCheckbox" onclick="toggleSelectAllYtPage(this)" class="rounded border-slate-700 bg-slate-900 text-red-500 focus:ring-0 cursor-pointer">
-                  </th>
-                  <th class="px-3 py-0 w-16 align-middle">封面</th>
-                  <th class="px-3 py-0 min-w-[200px] align-middle">视频标题与频道</th>
-                  <th class="px-3 py-0 w-20 align-middle">时长</th>
-                  <th class="px-3 py-0 w-28 align-middle">播放 / 点赞</th>
-                  <th class="px-3 py-0 w-24 align-middle">发布时间</th>
-                  <th class="px-4 py-0 w-24 text-right align-middle">操作</th>
-                </tr>
-              </thead>
               <tbody id="ytVideoTableBody" class="divide-y divide-slate-800/80 text-xs">
                 <tr>
                   <td colspan="7" class="py-20 text-center text-slate-500">
                     <div class="flex flex-col items-center justify-center space-y-2">
                       <i data-lucide="film" class="w-8 h-8 text-slate-600"></i>
-                      <span>暂无解析数据，请在上方输入 YouTube 频道并点击【开始解析抓取】或【载入 YouTube Demo】</span>
+                      <span>暂无解析数据，请在上方输入 YouTube 频道并点击【解析频道】或右上角【载入 Demo 体验】</span>
                     </div>
                   </td>
                 </tr>
@@ -2347,106 +2333,148 @@ HTML_CONTENT = """<!DOCTYPE html>
             </table>
           </div>
 
-          <!-- 分页控制器底栏 (每页 20 项) -->
-          <div class="p-3 border-t border-slate-800/80 bg-slate-950/70 flex items-center justify-between text-xs">
-            <div id="ytPageInfo" class="text-slate-400">
-              显示第 0 - 0 项，共 0 项 (每页 20 项)
+          <!-- 翻页控制底栏 -->
+          <div class="px-4 py-2.5 bg-slate-950/90 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="text-slate-400 flex items-center space-x-2">
+              <span id="ytPageInfo" class="font-mono text-[11px]">显示第 0 - 0 项，共 0 项 (每页 20 项)</span>
             </div>
+
+            <!-- 翻页按钮 -->
             <div class="flex items-center space-x-1.5">
-              <button id="ytPrevBtn" onclick="changeYtPage(-1)" disabled class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 transition-colors flex items-center space-x-1">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              <button id="ytPrevBtn" onclick="changeYtPage(-1)" disabled class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center space-x-1">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
                 <span>上一页</span>
               </button>
-              <div id="ytPageNumbers" class="flex items-center space-x-1 px-1">
-              </div>
-              <button id="ytNextBtn" onclick="changeYtPage(1)" disabled class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 transition-colors flex items-center space-x-1">
+              
+              <div id="ytPageNumbers" class="flex items-center space-x-1"></div>
+
+              <button id="ytNextBtn" onclick="changeYtPage(1)" disabled class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center space-x-1">
                 <span>下一页</span>
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
 
         </div>
-
       </div>
 
-      <!-- 右栏：下载队列与控制台日志 (占 4 列，与左侧表格绝对对齐) -->
-      <div class="md:col-span-4 flex flex-col space-y-4">
-        
-        <!-- Tab 切换头部 (h-12 高度与左侧表头一致) -->
-        <div class="h-12 flex items-center justify-between px-1">
-          <div class="flex items-center space-x-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-            <!-- Tab 1: 下载队列 (默认激活) -->
-            <button id="btnYtTabQueue" onclick="switchYtRightTab('queue')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 text-white shadow-md transition-all flex items-center space-x-1.5 whitespace-nowrap">
-              <i data-lucide="list-ordered" class="w-3.5 h-3.5"></i>
-              <span>下载队列</span>
-              <span id="ytQueueCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-red-950 text-red-200">0</span>
+      <!-- 下载队列与日志分栏 (占 3 列) -->
+      <div class="lg:col-span-3 space-y-3 flex flex-col h-[580px]">
+        <!-- 选项卡顶部切换栏 (高度固定 h-12 与左侧 Tab 栏完全一致) -->
+        <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-3 shrink-0">
+          <div class="flex items-center space-x-1 bg-slate-950/70 p-1 rounded-lg border border-slate-800/80">
+            <!-- 1. 下载队列 Tab -->
+            <button id="btnYtTabQueue" onclick="switchYtRightTab('queue')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all flex items-center space-x-1 whitespace-nowrap bg-red-600 text-white shadow-sm">
+              <i data-lucide="list-ordered" class="w-3 h-3"></i>
+              <span>队列</span>
+              <span id="ytQueueCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-900 text-[10px] text-red-200 font-mono">0</span>
             </button>
-            
-            <!-- Tab 2: 控制台日志 -->
-            <button id="btnYtTabLog" onclick="switchYtRightTab('log')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all flex items-center space-x-1.5 whitespace-nowrap">
-              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-              <span>控制台日志</span>
-              <span id="ytLogCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400">0</span>
+            <!-- 2. 控制台日志 Tab -->
+            <button id="btnYtTabLog" onclick="switchYtRightTab('log')" class="px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center space-x-1 whitespace-nowrap text-slate-400 hover:text-white hover:bg-slate-800/50">
+              <i data-lucide="terminal" class="w-3 h-3"></i>
+              <span>日志</span>
+              <span id="ytLogCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-slate-400 font-mono">0</span>
             </button>
           </div>
-
-          <!-- 右侧常驻简约清空按钮 -->
           <div>
-            <button id="btnYtRightHeaderAction" onclick="handleYtRightHeaderAction()" class="text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1 px-2.5 py-1 rounded-lg hover:bg-slate-800 whitespace-nowrap" title="清空内容">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <button id="btnYtRightHeaderAction" onclick="handleYtRightHeaderAction()" class="text-[11px] text-slate-400 hover:text-slate-200 transition-colors flex items-center space-x-1 px-1.5 py-1 rounded hover:bg-slate-800 whitespace-nowrap" title="清空内容">
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
               <span id="textYtRightHeaderAction">清除已完成</span>
             </button>
           </div>
         </div>
 
-        <!-- 面板 1: 下载队列 (默认激活) -->
-        <div id="panelYtQueue" class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 overflow-hidden">
-          
-          <!-- 统计指标状态栏 -->
-          <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-800/80 text-[11px] text-slate-400 font-medium">
-            <span>进行中 <strong id="ytQActiveCount" class="text-red-400 font-mono">0</strong></span>
-            <span>等待 <strong id="ytQWaitingCount" class="text-amber-400 font-mono">0</strong></span>
-            <span>完成 <strong id="ytQDoneCount" class="text-emerald-400 font-mono">0</strong></span>
-            <span>失败 <strong id="ytQFailedCount" class="text-rose-400 font-mono">0</strong></span>
+        <!-- 面板 1: 下载队列 -->
+        <div id="panelYtQueue" class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3 overflow-hidden">
+          <div class="grid grid-cols-2 gap-1 pb-2 mb-2 border-b border-slate-800/80 text-[10px] text-slate-400 font-medium">
+            <span>进行: <strong id="ytQActiveCount" class="text-red-400 font-mono">0</strong></span>
+            <span>等待: <strong id="ytQWaitingCount" class="text-amber-400 font-mono">0</strong></span>
+            <span>完成: <strong id="ytQDoneCount" class="text-emerald-400 font-mono">0</strong></span>
+            <span>失败: <strong id="ytQFailedCount" class="text-rose-400 font-mono">0</strong></span>
           </div>
 
-          <!-- 队列卡片滚动列表容器 -->
-          <div id="ytQueueItemsList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll pr-1">
-            <!-- 空状态 -->
+          <div id="ytQueueItemsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll pr-1">
             <div class="h-full flex flex-col items-center justify-center text-slate-500 py-16 text-center">
-              <i data-lucide="layers" class="w-8 h-8 text-slate-600 mb-2"></i>
-              <p class="text-xs">勾选 YouTube 视频并点击“批量下载”后，任务将显示在这里</p>
+              <i data-lucide="layers" class="w-6 h-6 text-slate-600 mb-1.5"></i>
+              <p class="text-[11px]">等待下载任务...</p>
             </div>
           </div>
 
-          <!-- 队列底栏 -->
-          <div class="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-            <button onclick="openCurrentOutputDir()" class="text-[11px] text-slate-400 hover:text-red-300 flex items-center space-x-1 transition-colors">
-              <i data-lucide="folder-open" class="w-3.5 h-3.5 text-red-400"></i>
-              <span>打开频道存储目录</span>
+          <div class="pt-2 mt-1 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+            <button onclick="openCurrentOutputDir()" class="text-slate-400 hover:text-red-300 flex items-center space-x-1">
+              <i data-lucide="folder-open" class="w-3 h-3 text-red-400"></i>
+              <span>目录</span>
             </button>
-            <div class="flex items-center space-x-2 text-xs">
-              <button onclick="cancelYtAllQueue()" class="text-[11px] text-rose-400 hover:text-rose-300 px-2 py-0.5 rounded bg-rose-950/40 border border-rose-900/50 hover:bg-rose-900/50 transition-colors">全部取消</button>
-              <span class="text-slate-700">|</span>
-              <span id="ytQueuePageText" class="text-slate-400 font-mono text-[11px]">队列总计 0 项</span>
-            </div>
+            <button onclick="cancelYtAllQueue()" class="text-rose-400 hover:text-rose-300 px-1.5 py-0.5 rounded bg-rose-950/40 border border-rose-900/50">取消全部</button>
           </div>
-
         </div>
 
         <!-- 面板 2: 控制台日志 -->
         <div id="panelYtLog" class="hidden flex-1 min-h-0 flex flex-col">
-          <div id="ytLogConsole" class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-3.5 overflow-y-auto font-mono text-xs text-slate-300 space-y-1.5 custom-scroll">
-            <div class="text-slate-500">// 欢迎使用 YouTube 视频批量抓取引擎</div>
-            <div class="text-slate-500">// 本地环境连接已建立</div>
+          <div id="ytLogConsole" class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-3 overflow-y-auto font-mono text-[11px] text-slate-300 space-y-1 custom-scroll">
+            <div class="text-slate-500">// YouTube 抓取引擎准备就绪</div>
           </div>
+        </div>
+      </div>
+
+      <!-- 🌟 Tony English 教案提炼与 COS 上云中枢 (占 3 列 - YouTube 专属) -->
+      <div class="lg:col-span-3 space-y-3 flex flex-col h-[580px]">
+        <!-- 顶部标题栏 (高度固定 h-12 与左侧平齐) -->
+        <div class="h-12 flex items-center justify-between gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-3 shrink-0">
+          <div class="flex items-center space-x-1.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+            <span class="text-xs font-bold text-slate-200">YouTube 教案与 COS</span>
+          </div>
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono">AI 全自动</span>
+        </div>
+
+        <!-- 中枢功能卡片区 -->
+        <div class="flex-1 min-h-0 flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 space-y-3 justify-between">
+          
+          <div class="space-y-3">
+            <div class="text-[11px] font-medium text-slate-400 border-b border-slate-800/80 pb-2 flex items-center justify-between">
+              <span>教案提炼与上传选项</span>
+              <span class="text-[10px] text-emerald-400 font-mono">ap-hongkong</span>
+            </div>
+
+            <div class="space-y-2 text-xs text-slate-300">
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkYtAiCcSubtitles" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>原生 CC 字幕提取与解析</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkYtAiProofread" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>DeepSeek/Gemini 意群校对与翻译</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkYtCosUpload" checked class="rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0">
+                <span>自动推送到腾讯云 COS</span>
+              </label>
+
+              <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 hover:border-slate-700">
+                <input type="checkbox" id="chkYtLiveSync" checked class="rounded border-slate-700 bg-slate-950 text-purple-500 focus:ring-0">
+                <span>0秒即时呈现于 Web/App</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 一键触发教案提炼按钮 -->
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <button id="btnYtProcessTonyCenter" onclick="processYtTonyLessons()" class="w-full py-2.5 px-3 text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl shadow-lg shadow-purple-600/20 transition-all flex items-center justify-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-4 h-4 text-yellow-300"></i>
+              <span>⚡ 提炼教案上云 (COS)</span>
+            </button>
+            <p class="text-[10px] text-slate-500 text-center leading-tight">选取勾选视频，自动完成双语教案提炼并极速同步云端</p>
+          </div>
+
         </div>
       </div>
 
     </div>
 
-    <!-- ============ 🌟 底部下载配置与操作条 (对标 bradpittwyc/Youtube-Downloader ActionBar) ============ -->
+    <!-- ============ 🌟 底部下载配置与操作条 (TikTok 同款吸底条) ============ -->
     <div id="ytActionBar" class="sticky bottom-3 z-30 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex flex-wrap items-center gap-2.5 text-slate-300">
@@ -2515,13 +2543,13 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         <!-- 底部下载操作按钮 -->
         <div class="flex items-center space-x-2.5 shrink-0">
-          <button id="btnYtDownloadSelectedBottom" onclick="startYtDownloadSelected()" class="px-5 py-2.5 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/30 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+          <button id="btnYtDownloadSelectedBottom" onclick="startYtDownloadSelected()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-xl shadow-lg shadow-red-600/30 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
             <i data-lucide="download" class="w-4 h-4"></i>
             <span id="btnYtDownloadSelectedBottomText">下载选中项 (0)</span>
           </button>
-          <button id="btnYtDownloadAll" onclick="startYtDownloadAll()" class="px-4 py-2.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
-            <i data-lucide="download-cloud" class="w-4 h-4 text-red-400"></i>
-            <span>批量下载全部</span>
+          <button id="btnYtProcessTonyBottom" onclick="processYtTonyLessons()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl shadow-lg shadow-purple-600/25 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="zap" class="w-4 h-4 text-yellow-300"></i>
+            <span>⚡ 提炼教案上云 (COS)</span>
           </button>
         </div>
       </div>
@@ -6005,6 +6033,13 @@ HTML_CONTENT = """<!DOCTYPE html>
       renderYtCurrentPage();
       const label = ytActiveCategory === 'all' ? '全部' : '当前分类';
       showToast(`已勾选${label} ${filteredVideos.length} 个 YouTube 视频`, "info");
+    }
+
+    function deselectAllYtVideos() {
+      ytSelectedUrls.clear();
+      updateYtSelectedCount();
+      renderYtCurrentPage();
+      showToast("已取消所有勾选", "info");
     }
 
     function toggleSelectAllYtPage(chk) {
