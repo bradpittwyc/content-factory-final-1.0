@@ -4509,20 +4509,24 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     async function processYtTonyLessons() {
-      const selected = Array.from(selectedYtVideos);
+      const selected = Array.from(ytSelectedUrls);
       if (selected.length === 0) {
-        showToast("请先在列表中勾选要提炼为教案的 YouTube 视频项！", "warning");
+        showToast("请先在列表中勾选要提炼为跟读教案的 YouTube 视频项！", "warn");
         return;
       }
 
-      const btn = document.getElementById('btnYtProcessTony');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在 AI 提炼并同步 COS...</span>`;
-        if (window.lucide) lucide.createIcons();
-      }
+      const btnIds = ['btnYtProcessTonyCenter', 'btnYtProcessTonyBottom', 'btnYtProcessTony'];
+      btnIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在 AI 提炼并同步 COS...</span>`;
+        }
+      });
+      if (window.lucide) lucide.createIcons();
 
-      showToast(`🚀 开始提炼 ${selected.length} 个 YouTube 视频为 Tony English 教案并推送至 COS (ap-hongkong)...`, "info");
+      switchYtRightTab('log');
+      showToast(`⚡ 开始提炼 ${selected.length} 个 YouTube 视频为跟读教案并极速推送腾讯云 COS...`, "info");
 
       try {
         const res = await fetch('/api/tony/process_youtube_lessons', {
@@ -4532,18 +4536,21 @@ HTML_CONTENT = """<!DOCTYPE html>
         });
         const data = await res.json();
         if (data.success) {
-          showToast(`🎉 YouTube 教案提炼与 COS 上云完成！共处理 ${data.count || selected.length} 项！`, "success");
+          showToast(`✨ YouTube 教案提炼与 COS 上云完成！共成功处理 ${data.count || selected.length} 项！`, "success");
         } else {
-          showToast(data.message || "提炼处理失败", "error");
+          showToast("提炼处理告警: " + (data.message || "未知原因"), "error");
         }
       } catch (e) {
         showToast("请求处理异常: " + e, "error");
       } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-yellow-300"></i><span>⚡ 提炼教案上云 (COS)</span>`;
-          if (window.lucide) lucide.createIcons();
-        }
+        btnIds.forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-yellow-300"></i><span>⚡ 提炼教案上云 (COS)</span>`;
+          }
+        });
+        if (window.lucide) lucide.createIcons();
       }
     }
 
