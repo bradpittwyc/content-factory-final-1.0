@@ -5,6 +5,8 @@ import time
 import asyncio
 import urllib.request
 import sys
+import base64
+
 from typing import List, Dict, Any, Optional
 
 if sys.platform == "win32":
@@ -177,7 +179,77 @@ def get_network_opener():
         return urllib.request.build_opener(urllib.request.ProxyHandler({'http': proxy, 'https': proxy}))
     return urllib.request.build_opener()
 
+def generate_tonguetwister_image(image_prompt: str, item_id: str) -> Optional[str]:
+    """
+    根据绕口令场景 Prompt，调用 Gemini 生图 API 生成卡片配图 (Gemini Image Model)
+    中转地址: https://api.uiuihao.com/v1
+    Key: GEMINI_IMAGE_API_KEY
+    """
+
+    image_api_key = os.environ.get("GEMINI_IMAGE_API_KEY")
+    if not image_api_key:
+        print("⚠️ 未检测到 GEMINI_IMAGE_API_KEY，跳过 AI 生图...")
+        return None
+
+    base_url = os.environ.get("GEMINI_IMAGE_BASE_URL", "https://api.uiuihao.com/v1").rstrip('/')
+    model = os.environ.get("GEMINI_IMAGE_MODEL", "gemini-2.5-flash-image")
+
+    print(f"🎨 [Gemini 生图中] 正在为 {item_id} 调用 [{model}] 绘制画面...")
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+    full_prompt = f"Generate a high quality, detailed photorealistic scene image for this tongue twister: {image_prompt}"
+    req_data = json.dumps({
+        "model": model,
+        "messages": [{"role": "user", "content": full_prompt}]
+    }).encode('utf-8')
+
+    try:
+        req = urllib.request.Request(
+            f"{base_url}/chat/completions",
+            data=req_data,
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {image_api_key}'
+            }
+        )
+        with opener.open(req, timeout=45) as resp:
+            res_json = json.loads(resp.read().decode('utf-8'))
+            content = res_json['choices'][0]['message']['content']
+
+            # 解析 base64 图片
+            match = re.search(r'data:image/(png|jpg|jpeg|webp);base64,([A-Za-z0-9+/=]+)', content)
+            if match:
+                b64_str = match.group(2)
+                img_data = base64.b64decode(b64_str)
+                filename = f"{item_id}_cover.png"
+                filepath = os.path.join(AUDIO_DIR, filename)
+                with open(filepath, "wb") as f:
+                    f.write(img_data)
+                print(f"  🖼️ Gemini 生图成功保存至本地: {filename}")
+
+                if upload_file_to_cos:
+                    try:
+                        cos_key = f"audio/tonguetwisters/{filename}"
+                        cos_url = upload_file_to_cos(filepath, cos_key)
+                        return cos_url
+                    except Exception:
+                        pass
+                return f"/audio/tonguetwisters/{filename}"
+
+            # 匹配 http/https 网络图片 URL
+            url_match = re.search(r'https?://[^\s\)]+\.(?:png|jpg|jpeg|webp)', content)
+            if url_match:
+                img_url = url_match.group(0)
+                print(f"  🖼️ Gemini 生图成功返回网络 URL: {img_url}")
+                return img_url
+
+    except Exception as e:
+        print(f"❌ Gemini AI 生图失败: {e}")
+
+    return None
+
 def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自由发音/常见易混淆音标", topic: str = "日常口语") -> Dict[str, Any]:
+
     normalized_level = LEVEL_MAP.get(level, "Beginner")
     level_cn = "初级" if normalized_level == "Beginner" else ("中级" if normalized_level == "Intermediate" else "高级")
     limits = LEVEL_WORD_LIMITS[normalized_level]
@@ -365,7 +437,13 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
     data["audio_urls"] = audio_urls
     data["audio_url"] = audio_urls.get("1.0") or audio_urls.get("0.8") or ""
 
+    # V1.7: Gemini AI 画面生成 (根据绕口令内容生成画面)
+    ai_img_url = generate_tonguetwister_image(data.get("image_prompt", data.get("english_text", "")), item_id)
+    if ai_img_url:
+        data["image_url"] = ai_img_url
+
     return data
+
 
 def process_and_add_tonguetwister(level: str = "初级", target_sound: str = "自由发音/常见易混淆音标", topic: str = "日常口语") -> Dict[str, Any]:
     print(f"\n🚀 [V1.7 绕口令流水线] 开始生成【{level}】发音训练卡片...")

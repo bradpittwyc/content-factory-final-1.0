@@ -1,5 +1,65 @@
 [
   {
+    "title": "Baking Bears",
+    "image_prompt": "A cozy rustic kitchen inside a sunlit forest cabin, two cute brown bears wearing white aprons baking fresh big berry biscuits on a wooden table, vibrant blackberries and raspberries around, soft golden morning light, cinematic, photorealistic, 8k high detail",
+    "image_url": "/audio/tonguetwisters/tw_1790833871_baking_cover.png",
+    "english_text": "Brave brown bears bake big berry biscuits.",
+    "chinese_text": "勇敢的棕熊们烘焙着大颗浆果饼干。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "main_sound": "/b/",
+    "target_sounds": [
+      "/b/",
+      "/br/"
+    ],
+    "words": [
+      {
+        "word": "Brave",
+        "ipa": "/breɪv/"
+      },
+      {
+        "word": "brown",
+        "ipa": "/braʊn/"
+      },
+      {
+        "word": "bears",
+        "ipa": "/beəz/"
+      },
+      {
+        "word": "bake",
+        "ipa": "/beɪk/"
+      },
+      {
+        "word": "big",
+        "ipa": "/bɪɡ/"
+      },
+      {
+        "word": "berry",
+        "ipa": "/ˈberi/"
+      },
+      {
+        "word": "biscuits",
+        "ipa": "/ˈbɪskɪts/"
+      }
+    ],
+    "sound_tags": [
+      "双唇浊爆破音 /b/",
+      "辅音连缀 /br/",
+      "声带强制震动"
+    ],
+    "phonetic_tips": "发 /b/ 音时，双唇必须紧密闭合堵住气流，随后瞬间弹开释放发音，同时声带必须强有力地震动。请注意不要发成清辅音 /p/（/p/ 气流强且声带不震动）。发 Brave 和 brown 中的 /br/ 复辅音时，双唇爆破的同时舌尖迅速向后卷起，流畅过渡到 /r/ 音。",
+    "linking_tips": "整句为标准跳跃节奏。重音分布在 Brave、brown、bears、bake、big、berry、biscuits 上。在 'big berry' 连读时，big 词尾的浊辅音 /ɡ/ 可采用失去爆破处理（舌根抵住上颚但不发出 /ɡ/ 的爆破声），直接无缝衔接下一个 berry 的 /b/ 音，使发音更地道流畅。",
+    "cross_proofread_score": 99.2,
+    "id": "tw_1790833871_baking",
+    "created_at": "2026-10-01 13:51:11",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790833871_baking_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790833871_baking_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790833871_baking_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790833871_baking_1.0.mp3"
+  },
+  {
     "title": "Big Brown Bears",
     "image_prompt": "Three big brown bears balancing blue berries on their big broad backs in a bright sunny forest, vibrant colors, cinematic lighting, photorealistic style, high detail",
     "image_url": "https://images.unsplash.com/photo-1534188352434-c0205e4fb56d?w=800&auto=format&fit=crop",
