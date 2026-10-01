@@ -1,0 +1,238 @@
+[
+  {
+    "id": "yt-sKltfHvsDQM",
+    "video_id": "sKltfHvsDQM",
+    "title": "Build faster with Ultrafast",
+    "author": "OpenAI",
+    "source_url": "https://www.youtube.com/watch?v=sKltfHvsDQM",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/youtube/sKltfHvsDQM.mp4",
+    "cover_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/youtube/sKltfHvsDQM.webp",
+    "duration": 45,
+    "subtitles": [
+      {
+        "start": 0.44,
+        "end": 2.83,
+        "en": "Ultrafast is now available for GPT-6",
+        "cn": "Ultrafast 现已支持 GPT-6"
+      },
+      {
+        "start": 2.83,
+        "end": 2.84,
+        "en": "Ultrafast is now available for GPT-6",
+        "cn": "Ultrafast 现已支持 GPT-6"
+      },
+      {
+        "start": 2.84,
+        "end": 5.83,
+        "en": "Ultrafast is now available for GPT-6 Astra in the API, ChatGPT Work, and",
+        "cn": "Ultrafast 现已在 API、ChatGPT Work 和"
+      },
+      {
+        "start": 5.83,
+        "end": 5.84,
+        "en": "Astra in the API, ChatGPT Work, and",
+        "cn": "Astra 中支持 GPT-6。在 API、ChatGPT Work 和"
+      },
+      {
+        "start": 5.84,
+        "end": 6.83,
+        "en": "Astra in the API, ChatGPT Work, and Codex. [music]",
+        "cn": "Codex 中均可使用。[音乐]"
+      },
+      {
+        "start": 6.83,
+        "end": 6.84,
+        "en": "Codex. [music]",
+        "cn": "Codex。[音乐]"
+      },
+      {
+        "start": 6.84,
+        "end": 9.07,
+        "en": "Codex. [music] How fast is ultrafast? For my racing",
+        "cn": "Codex。[音乐] Ultrafast 到底有多快？为了我的赛车"
+      },
+      {
+        "start": 9.07,
+        "end": 9.08,
+        "en": "How fast is ultrafast? For my racing",
+        "cn": "Ultrafast 到底有多快？为了我的赛车"
+      },
+      {
+        "start": 9.08,
+        "end": 10.79,
+        "en": "How fast is ultrafast? For my racing game, I want to generate sprites on the",
+        "cn": "Ultrafast 到底有多快？为了我的赛车游戏，我想实时生成精灵图。"
+      },
+      {
+        "start": 10.79,
+        "end": 10.8,
+        "en": "game, I want to generate sprites on the",
+        "cn": "游戏，我想实时生成精灵图。"
+      },
+      {
+        "start": 10.8,
+        "end": 12.55,
+        "en": "game, I want to generate sprites on the fly.",
+        "cn": "游戏，我想实时生成精灵图。"
+      },
+      {
+        "start": 12.55,
+        "end": 12.56,
+        "en": "fly.",
+        "cn": "实时。"
+      },
+      {
+        "start": 12.56,
+        "end": 16.79,
+        "en": "fly. Generate a pelican on a bike.",
+        "cn": "实时。生成一只骑自行车的鹈鹕。"
+      },
+      {
+        "start": 16.8,
+        "end": 18.35,
+        "en": "While the regular generation is still",
+        "cn": "当常规生成还在"
+      },
+      {
+        "start": 18.35,
+        "end": 18.36,
+        "en": "While the regular generation is still",
+        "cn": "当常规生成还在"
+      },
+      {
+        "start": 18.36,
+        "end": 20.15,
+        "en": "While the regular generation is still running, I'm off to the races with",
+        "cn": "当常规生成还在运行时，我已经用"
+      },
+      {
+        "start": 20.15,
+        "end": 20.16,
+        "en": "running, I'm off to the races with",
+        "cn": "运行时，我已经用"
+      },
+      {
+        "start": 20.16,
+        "end": 23.55,
+        "en": "running, I'm off to the races with ultrafast.",
+        "cn": "运行时，我已经用 Ultrafast 冲出去了。"
+      },
+      {
+        "start": 23.56,
+        "end": 26.11,
+        "en": "That was fast. In the API, ultrafast",
+        "cn": "真快。在 API 中，Ultrafast"
+      },
+      {
+        "start": 26.11,
+        "end": 26.12,
+        "en": "That was fast. In the API, ultrafast",
+        "cn": "真快。在 API 中，Ultrafast"
+      },
+      {
+        "start": 26.12,
+        "end": 28.19,
+        "en": "That was fast. In the API, ultrafast generates tokens over seven times faster",
+        "cn": "真快。在 API 中，Ultrafast 生成 token 的速度是"
+      },
+      {
+        "start": 28.19,
+        "end": 28.2,
+        "en": "generates tokens over seven times faster",
+        "cn": "生成 token 的速度是"
+      },
+      {
+        "start": 28.2,
+        "end": 30.23,
+        "en": "generates tokens over seven times faster than standard tier and over four times",
+        "cn": "标准层级七倍多，比快速层级"
+      },
+      {
+        "start": 30.23,
+        "end": 30.24,
+        "en": "than standard tier and over four times",
+        "cn": "标准层级七倍多，比快速层级"
+      },
+      {
+        "start": 30.24,
+        "end": 32.71,
+        "en": "than standard tier and over four times faster than fast tier. In the past, you",
+        "cn": "还要快四倍多。过去，你"
+      },
+      {
+        "start": 32.71,
+        "end": 32.72,
+        "en": "faster than fast tier. In the past, you",
+        "cn": "还要快四倍多。过去，你"
+      },
+      {
+        "start": 32.72,
+        "end": 34.55,
+        "en": "faster than fast tier. In the past, you often had to trade off between speed and",
+        "cn": "往往不得不在速度和"
+      },
+      {
+        "start": 34.55,
+        "end": 34.56,
+        "en": "often had to trade off between speed and",
+        "cn": "往往不得不在速度和"
+      },
+      {
+        "start": 34.56,
+        "end": 37.03,
+        "en": "often had to trade off between speed and intelligence. Now, with ultrafast, you",
+        "cn": "智能之间做权衡。现在，有了 Ultrafast，你"
+      },
+      {
+        "start": 37.03,
+        "end": 37.04,
+        "en": "intelligence. Now, with ultrafast, you",
+        "cn": "智能之间做权衡。现在，有了 Ultrafast，你"
+      },
+      {
+        "start": 37.04,
+        "end": 37.98,
+        "en": "intelligence. Now, with ultrafast, you can have both.",
+        "cn": "可以两者兼得。"
+      },
+      {
+        "start": 37.98,
+        "end": 37.99,
+        "en": "can have both.",
+        "cn": "可以两者兼得。"
+      },
+      {
+        "start": 37.99,
+        "end": 38.15,
+        "en": "can have both. >> [music]",
+        "cn": "可以两者兼得。>> [音乐]"
+      },
+      {
+        "start": 38.15,
+        "end": 38.16,
+        "en": ">> [music]",
+        "cn": ">> [音乐]"
+      },
+      {
+        "start": 38.16,
+        "end": 39.63,
+        "en": ">> [music] >> I hope to see you building faster than",
+        "cn": ">> [音乐] >> 我期待看到你以更快的速度构建"
+      },
+      {
+        "start": 39.63,
+        "end": 39.64,
+        "en": ">> I hope to see you building faster than",
+        "cn": ">> 我期待看到你以更快的速度构建"
+      },
+      {
+        "start": 39.64,
+        "end": 42.04,
+        "en": ">> I hope to see you building faster than ever.",
+        "cn": ">> 我期待看到你以更快的速度构建。"
+      }
+    ],
+    "subtitle_count": 37,
+    "created_at": "2026-10-01 07:59:16"
+  }
+]

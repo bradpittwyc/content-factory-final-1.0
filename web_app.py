@@ -540,6 +540,7 @@ def batch_import_economist_endpoint(req: EconomistBatchImportRequest):
     }
 
 import tony_lesson_processor
+import tony_youtube_processor
 
 class TonyLessonProcessRequest(BaseModel):
     video_urls: List[str] = []
@@ -562,6 +563,21 @@ def process_tony_lessons_endpoint(req: TonyLessonProcessRequest):
         }
     except Exception as e:
         return {"success": False, "message": f"教案处理失败: {str(e)}"}
+
+@app.post("/api/tony/process_youtube_lessons")
+def process_tony_youtube_lessons_endpoint(req: TonyLessonProcessRequest):
+    if not req.video_urls:
+        return {"success": False, "message": "未勾选任何 YouTube 视频 URL"}
+    try:
+        processed = tony_youtube_processor.process_batch_youtube_lessons(req.video_urls)
+        return {
+            "success": True,
+            "message": f"成功解构并提炼 {len(processed)} 个 YouTube 视频为 Tony English 教案（已同步上传至 COS videos/youtube 目录）",
+            "count": len(processed),
+            "lessons": processed
+        }
+    except Exception as e:
+        return {"success": False, "message": f"YouTube 教案处理失败: {str(e)}"}
 
 @app.post("/api/economist/paste_import")
 def paste_import_economist_endpoint(req: EconomistPasteImportRequest):
@@ -1555,7 +1571,15 @@ def run_youtube_download_task(channel_name: str, urls: List[str], req: DownloadR
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             yt_manager.current_ydl = ydl
             ydl.download(urls)
-        yt_manager.finish_state(True, f"YouTube 批量下载完毕！所有素材已存入: {abs_out_dir}")
+        
+        yt_manager.add_log("⚡ 开始自动提炼 YouTube AI 双语教案并上传至腾讯云 COS...", "info")
+        try:
+            processed = tony_youtube_processor.process_batch_youtube_lessons(urls)
+            yt_manager.add_log(f"✨ 成功自动将 {len(processed)} 个 YouTube 视频提炼为跟读教案并上传 COS！", "success")
+        except Exception as pe:
+            yt_manager.add_log(f"⚠️ 自动提炼 YouTube 教案上云告警: {pe}", "warn")
+
+        yt_manager.finish_state(True, f"YouTube 批量下载、AI 提炼及 COS 上云完成！保存路径: {abs_out_dir}")
     except Exception as e:
         yt_manager.finish_state(False, f"下载错误: {str(e)}")
     finally:
@@ -2264,6 +2288,10 @@ HTML_CONTENT = """<!DOCTYPE html>
               <button id="btnYtDownloadSelected" onclick="startYtDownloadSelected()" class="px-3.5 py-1.5 text-xs font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-lg shadow-md shadow-red-600/25 transition-all flex items-center space-x-1.5 active:scale-95">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span id="btnYtDownloadSelectedText">下载选中项 (0)</span>
+              </button>
+              <button id="btnYtProcessTony" onclick="processYtTonyLessons()" class="px-3.5 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg shadow-md shadow-purple-600/25 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-300"></i>
+                <span>⚡ 提炼教案上云 (COS)</span>
               </button>
             </div>
           </div>
@@ -4415,6 +4443,45 @@ HTML_CONTENT = """<!DOCTYPE html>
         btn.disabled = false;
         btn.innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i><span>一键提炼教案并上云 (COS)</span>`;
         if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    async function processYtTonyLessons() {
+      const selected = Array.from(selectedYtVideos);
+      if (selected.length === 0) {
+        showToast("请先在列表中勾选要提炼为教案的 YouTube 视频项！", "warning");
+        return;
+      }
+
+      const btn = document.getElementById('btnYtProcessTony');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在 AI 提炼并同步 COS...</span>`;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      showToast(`🚀 开始提炼 ${selected.length} 个 YouTube 视频为 Tony English 教案并推送至 COS (ap-hongkong)...`, "info");
+
+      try {
+        const res = await fetch('/api/tony/process_youtube_lessons', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ video_urls: selected })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 YouTube 教案提炼与 COS 上云完成！共处理 ${data.count || selected.length} 项！`, "success");
+        } else {
+          showToast(data.message || "提炼处理失败", "error");
+        }
+      } catch (e) {
+        showToast("请求处理异常: " + e, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-yellow-300"></i><span>⚡ 提炼教案上云 (COS)</span>`;
+          if (window.lucide) lucide.createIcons();
+        }
       }
     }
 

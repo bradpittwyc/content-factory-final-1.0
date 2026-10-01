@@ -1,5 +1,557 @@
 [
   {
+    "id": "tk-7691320052167085342",
+    "video_id": "7691320052167085342",
+    "title": "Mark Zuckerberg and Elon Musk responded to questions after signing an...",
+    "author": "@usatoday",
+    "source_url": "https://www.tiktok.com/@usatoday/video/7691320052167085342",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/tiktok/7691320052167085342.mp4",
+    "cover_cos_url": "",
+    "duration": 32,
+    "subtitles": [
+      {
+        "start": 0.06,
+        "end": 3.02,
+        "en": "The idea isn't that this is the only thing that we will ever do.",
+        "cn": "这个想法并不是说这将是我们唯一会做的事情。"
+      },
+      {
+        "start": 3.02,
+        "end": 4.3,
+        "en": "It is that this is a start",
+        "cn": "而是说这是一个开始"
+      },
+      {
+        "start": 4.3,
+        "end": 7.18,
+        "en": "and an accord that the whole industry could come to.",
+        "cn": "并且是整个行业可以达成的一项协议。"
+      },
+      {
+        "start": 7.18,
+        "end": 9.68,
+        "en": "And I was very proud, uh,",
+        "cn": "而且我非常自豪，呃，"
+      },
+      {
+        "start": 9.7,
+        "end": 13.3,
+        "en": "to have that discussion with a number of our colleagues",
+        "cn": "能与我们的许多同事进行那次讨论"
+      },
+      {
+        "start": 13.3,
+        "end": 15.0,
+        "en": "who I think are running great companies.",
+        "cn": "我认为他们经营着很棒的公司。"
+      },
+      {
+        "start": 15.14,
+        "end": 17.18,
+        "en": "Well, I think it is worth highlighting the positive.",
+        "cn": "嗯，我认为值得强调积极的一面。"
+      },
+      {
+        "start": 17.18,
+        "end": 18.92,
+        "en": "The positive benefits of AI,",
+        "cn": "人工智能的积极益处，"
+      },
+      {
+        "start": 19.14,
+        "end": 22.04,
+        "en": "which will si upon me. Thank you.",
+        "cn": "这将会降临到我身上。谢谢。"
+      },
+      {
+        "start": 23.26,
+        "end": 24.28,
+        "en": "Super intelligence.",
+        "cn": "超级智能。"
+      },
+      {
+        "start": 24.82,
+        "end": 25.46,
+        "en": "Um, I.",
+        "cn": "嗯，我。"
+      },
+      {
+        "start": 25.46,
+        "end": 28.5,
+        "en": "I think by far the most likely outcome is an age of abundance, uh,",
+        "cn": "我认为最有可能的结果是一个富足的时代，呃，"
+      },
+      {
+        "start": 28.5,
+        "end": 31.02,
+        "en": "where we don't have just a universal basic income,",
+        "cn": "在那里我们不仅仅有普遍基本收入，"
+      },
+      {
+        "start": 31.02,
+        "end": 32.6,
+        "en": "we have universal high income.",
+        "cn": "我们还有普遍高收入。"
+      }
+    ],
+    "subtitle_count": 14,
+    "created_at": "2026-10-01 00:45:38"
+  },
+  {
+    "id": "tk-7647247430546672909",
+    "video_id": "7647247430546672909",
+    "title": "It’s time to fly.",
+    "author": "@openai",
+    "source_url": "https://www.tiktok.com/@openai/video/7647247430546672909",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/tiktok/7647247430546672909.mp4",
+    "cover_cos_url": "",
+    "duration": 90,
+    "subtitles": [
+      {
+        "start": 2.02,
+        "end": 3.34,
+        "en": "You gonna come out with us?",
+        "cn": "你要跟我们出去吗？"
+      },
+      {
+        "start": 3.34,
+        "end": 4.28,
+        "en": "No, I'm staying.",
+        "cn": "不，我留下来。"
+      },
+      {
+        "start": 4.62,
+        "end": 5.8,
+        "en": "Alright. Have a good night.",
+        "cn": "好吧。晚安。"
+      },
+      {
+        "start": 10.3,
+        "end": 12.56,
+        "en": "It's past bedtime. Off you go.",
+        "cn": "已经过了睡觉时间。去吧。"
+      },
+      {
+        "start": 12.7,
+        "end": 14.24,
+        "en": "This is mission control.",
+        "cn": "这里是任务控制中心。"
+      },
+      {
+        "start": 14.82,
+        "end": 17.08,
+        "en": "Actually, it's a good idea.",
+        "cn": "其实，这是个好主意。"
+      },
+      {
+        "start": 17.14,
+        "end": 18.76,
+        "en": "You are cleared for launch.",
+        "cn": "你可以发射了。"
+      },
+      {
+        "start": 19.14,
+        "end": 20.06,
+        "en": "G C, go.",
+        "cn": "G C，出发。"
+      },
+      {
+        "start": 20.06,
+        "end": 21.06,
+        "en": "Guidance, go.",
+        "cn": "制导，出发。"
+      },
+      {
+        "start": 21.06,
+        "end": 22.82,
+        "en": "I do go. Prop, go.",
+        "cn": "我出发。推进器，出发。"
+      },
+      {
+        "start": 22.82,
+        "end": 23.58,
+        "en": "GMC, go.",
+        "cn": "GMC，出发。"
+      },
+      {
+        "start": 23.58,
+        "end": 26.12,
+        "en": "Sleep tight. Ignition sequence started.",
+        "cn": "睡个好觉。点火程序启动。"
+      },
+      {
+        "start": 26.38,
+        "end": 28.28,
+        "en": "Let's build a companion app.",
+        "cn": "我们来构建一个伴侣应用。"
+      },
+      {
+        "start": 31.26,
+        "end": 32.46,
+        "en": "The code awaits your command.",
+        "cn": "代码等待你的指令。"
+      },
+      {
+        "start": 32.46,
+        "end": 35.04,
+        "en": "3, 2, 1.",
+        "cn": "3，2，1。"
+      },
+      {
+        "start": 38.9,
+        "end": 40.24,
+        "en": "Engines full power.",
+        "cn": "引擎全功率。"
+      },
+      {
+        "start": 40.62,
+        "end": 41.72,
+        "en": "Lift off. Confirmed.",
+        "cn": "升空。确认。"
+      },
+      {
+        "start": 43.18,
+        "end": 46.28,
+        "en": "You are about to enter the edge of all possibility.",
+        "cn": "你即将进入一切可能性的边缘。"
+      },
+      {
+        "start": 47.42,
+        "end": 49.08,
+        "en": "Initiate second stage.",
+        "cn": "启动第二阶段。"
+      },
+      {
+        "start": 55.26,
+        "end": 57.48,
+        "en": "We'll be listening for signals from the other side.",
+        "cn": "我们将倾听来自另一边的信号。"
+      },
+      {
+        "start": 62.54,
+        "end": 64.64,
+        "en": "From the limitless world you awaken.",
+        "cn": "你从无限的世界中醒来。"
+      },
+      {
+        "start": 69.54,
+        "end": 72.0,
+        "en": "We wish you courage on your journey.",
+        "cn": "我们祝你旅途勇敢。"
+      }
+    ],
+    "subtitle_count": 22,
+    "created_at": "2026-10-01 00:40:25"
+  },
+  {
+    "id": "tk-7659483939714714893",
+    "video_id": "7659483939714714893",
+    "title": "How does ChatGPT remember important details about you? Through a proc...",
+    "author": "@openai",
+    "source_url": "https://www.tiktok.com/@openai/video/7659483939714714893",
+    "video_cos_url": "https://tony-rc-1-1381711719.cos.ap-hongkong.myqcloud.com/videos/tiktok/7659483939714714893.mp4",
+    "cover_cos_url": "",
+    "duration": 132,
+    "subtitles": [
+      {
+        "start": 0.86,
+        "end": 3.54,
+        "en": "Hey guys, this is Joey from Open Eye Research,",
+        "cn": "嘿，大家好，我是Open Eye Research的Joey，"
+      },
+      {
+        "start": 3.54,
+        "end": 6.54,
+        "en": "and I'm hopping on here to briefly talk about the new memory system",
+        "cn": "我在这里简单谈谈新的记忆系统"
+      },
+      {
+        "start": 6.54,
+        "end": 7.8,
+        "en": "in ChatGPT.",
+        "cn": "在ChatGPT中。"
+      },
+      {
+        "start": 8.42,
+        "end": 9.42,
+        "en": "Over the past year,",
+        "cn": "在过去的一年里，"
+      },
+      {
+        "start": 9.42,
+        "end": 13.14,
+        "en": "we've been working on a new way to manage CHAT GPT's memory",
+        "cn": "我们一直在研究一种管理ChatGPT记忆的新方法，"
+      },
+      {
+        "start": 13.14,
+        "end": 15.46,
+        "en": "called dreaming. And",
+        "cn": "叫做dreaming。而且"
+      },
+      {
+        "start": 15.46,
+        "end": 16.34,
+        "en": "the goal of dreaming",
+        "cn": "dreaming的目标"
+      },
+      {
+        "start": 16.34,
+        "end": 19.66,
+        "en": "was to solve several of the challenges we had in the previous",
+        "cn": "是解决我们在之前的"
+      },
+      {
+        "start": 19.66,
+        "end": 22.08,
+        "en": "save memory system. Namely,",
+        "cn": "保存记忆系统中遇到的几个挑战。也就是说，"
+      },
+      {
+        "start": 22.14,
+        "end": 25.26,
+        "en": "in the past, you had to tell CHAT G P T.",
+        "cn": "在过去，你必须告诉ChatGPT"
+      },
+      {
+        "start": 25.26,
+        "end": 27.44,
+        "en": "Very directly what to remember,",
+        "cn": "非常直接地要记住什么，"
+      },
+      {
+        "start": 27.66,
+        "end": 29.6,
+        "en": "otherwise it would forget it.",
+        "cn": "否则它就会忘记。"
+      },
+      {
+        "start": 29.66,
+        "end": 32.18,
+        "en": "Save memories also had a tendency to grow stale over time.",
+        "cn": "保存的记忆也容易随着时间的推移而过时。"
+      },
+      {
+        "start": 32.18,
+        "end": 37.64,
+        "en": "So I personally have a save memory from back in 2024.",
+        "cn": "所以我个人有一条2024年的保存记忆。"
+      },
+      {
+        "start": 37.74,
+        "end": 41.24,
+        "en": "It says that I'm interviewing at Open A I. Tomorrow.",
+        "cn": "上面写着我明天要在OpenAI面试。"
+      },
+      {
+        "start": 41.54,
+        "end": 45.26,
+        "en": "And although that was true at one point in time,",
+        "cn": "虽然这在某个时间点是真的，"
+      },
+      {
+        "start": 45.26,
+        "end": 47.02,
+        "en": "it hasn't been true in quite a while.",
+        "cn": "但已经很久不是这样了。"
+      },
+      {
+        "start": 47.02,
+        "end": 50.32,
+        "en": "And that stale saved memory has been living in context",
+        "cn": "而那条过时的保存记忆一直存在于上下文中，"
+      },
+      {
+        "start": 50.42,
+        "end": 52.96,
+        "en": "in every conversation I've had with ChatGPT",
+        "cn": "在我与ChatGPT的每次对话中，"
+      },
+      {
+        "start": 52.98,
+        "end": 54.18,
+        "en": "over the last couple years.",
+        "cn": "在过去几年里。"
+      },
+      {
+        "start": 54.18,
+        "end": 57.24,
+        "en": "And then finally, if you're someone who use saved memories quite a bit,",
+        "cn": "最后，如果你经常使用保存的记忆，"
+      },
+      {
+        "start": 57.38,
+        "end": 60.56,
+        "en": "your memory state would eventually fill up,",
+        "cn": "你的记忆状态最终会填满，"
+      },
+      {
+        "start": 60.68,
+        "end": 62.34,
+        "en": "at which point you had to go in",
+        "cn": "那时你就必须进入"
+      },
+      {
+        "start": 62.34,
+        "end": 66.22,
+        "en": "and you had to manually prune some memories before CHAT G P T.",
+        "cn": "在ChatGPT之前手动修剪一些记忆。"
+      },
+      {
+        "start": 66.22,
+        "end": 68.12,
+        "en": "Would start remembering things again.",
+        "cn": "才会再次开始记住事情。"
+      },
+      {
+        "start": 68.98,
+        "end": 69.96,
+        "en": "So",
+        "cn": "所以"
+      },
+      {
+        "start": 69.98,
+        "end": 73.4,
+        "en": "these are some of the issues that we solved with the dreaming system.",
+        "cn": "这些就是我们在dreaming系统中解决的一些问题。"
+      },
+      {
+        "start": 73.62,
+        "end": 75.74,
+        "en": "And the way that dreaming does this",
+        "cn": "dreaming做到这一点的方式"
+      },
+      {
+        "start": 75.74,
+        "end": 78.36,
+        "en": "is by processing your past conversations",
+        "cn": "是处理你过去的对话，"
+      },
+      {
+        "start": 78.66,
+        "end": 83.06,
+        "en": "and automatically managing chat GPT's memory state such that",
+        "cn": "并自动管理ChatGPT的记忆状态，使得"
+      },
+      {
+        "start": 83.06,
+        "end": 84.8,
+        "en": "at any given point in time,",
+        "cn": "在任何给定时间点，"
+      },
+      {
+        "start": 84.82,
+        "end": 88.66,
+        "en": "CHAT G P T. Has the Most relevant top of mind information available.",
+        "cn": "ChatGPT拥有最相关的、最紧要的信息。"
+      },
+      {
+        "start": 88.66,
+        "end": 92.74,
+        "en": "In context, you can think of dreaming as CHAT G P T.",
+        "cn": "在上下文中，你可以把dreaming看作是ChatGPT"
+      },
+      {
+        "start": 92.74,
+        "end": 96.16,
+        "en": "Is continuously curating its memory state,",
+        "cn": "在持续整理其记忆状态，"
+      },
+      {
+        "start": 96.46,
+        "end": 99.66,
+        "en": "rather than just writing out a memory at some point in time",
+        "cn": "而不是只在某个时间点写出一条记忆"
+      },
+      {
+        "start": 99.66,
+        "end": 101.06,
+        "en": "and forgetting about it.",
+        "cn": "然后就忘了。"
+      },
+      {
+        "start": 101.06,
+        "end": 104.86,
+        "en": "If you're wondering how to interact with a new memory system,",
+        "cn": "如果你想知道如何与新的记忆系统互动，"
+      },
+      {
+        "start": 104.86,
+        "end": 105.7,
+        "en": "it's, uh,",
+        "cn": "呃，"
+      },
+      {
+        "start": 105.7,
+        "end": 108.16,
+        "en": "pretty straightforward. You just chat with the model.",
+        "cn": "非常简单。你只需与模型聊天。"
+      },
+      {
+        "start": 108.42,
+        "end": 112.82,
+        "en": "So you can open up a chat and ask what chat G P T.",
+        "cn": "你可以打开一个聊天，问ChatGPT"
+      },
+      {
+        "start": 112.82,
+        "end": 116.02,
+        "en": "Knows about you. You can tell Chat G P T.",
+        "cn": "对你了解多少。你可以告诉ChatGPT"
+      },
+      {
+        "start": 116.02,
+        "end": 118.6,
+        "en": "What's important to you to help steer the memory system.",
+        "cn": "什么对你重要，以帮助引导记忆系统。"
+      },
+      {
+        "start": 118.78,
+        "end": 119.42,
+        "en": "And, of course,",
+        "cn": "当然，"
+      },
+      {
+        "start": 119.42,
+        "end": 121.26,
+        "en": "you can still tell Chat G P T.",
+        "cn": "你仍然可以告诉ChatGPT"
+      },
+      {
+        "start": 121.26,
+        "end": 122.48,
+        "en": "To remember something.",
+        "cn": "记住某事。"
+      },
+      {
+        "start": 123.38,
+        "end": 126.82,
+        "en": "I'm really happy that we're finally able to bring dreaming",
+        "cn": "我真的很高兴我们终于能够将dreaming"
+      },
+      {
+        "start": 126.82,
+        "end": 128.8,
+        "en": "to all chat GPT tiers,",
+        "cn": "带给所有ChatGPT用户，"
+      },
+      {
+        "start": 128.86,
+        "end": 131.24,
+        "en": "and I'm super excited for you to try it out.",
+        "cn": "我非常期待你们尝试。"
+      },
+      {
+        "start": 131.46,
+        "end": 132.4,
+        "en": "Thanks, guys!",
+        "cn": "谢谢大家！"
+      }
+    ],
+    "subtitle_count": 49,
+    "created_at": "2026-10-01 00:40:13"
+  },
+  {
     "id": "tk-7665507950982647054",
     "video_id": "7665507950982647054",
     "title": "Getting your 2000s digital closet has never been easier Give Codex th...",
