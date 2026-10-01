@@ -5218,10 +5218,12 @@ HTML_CONTENT = """<!DOCTYPE html>
       const pageYouTube = document.getElementById('pageYouTube');
       const pageChannels = document.getElementById('pageChannels');
       const pageFT = document.getElementById('pageFT');
+      const pageTT = document.getElementById('pageTongueTwister');
       const cardTikTok = document.getElementById('sidebarCardTikTok');
       const cardYouTube = document.getElementById('sidebarCardYouTube');
       const cardChannels = document.getElementById('sidebarCardChannels');
       const cardFT = document.getElementById('sidebarCardFT');
+      const cardTT = document.getElementById('sidebarCardTongueTwister');
       const headerTitle = document.getElementById('headerAppTitle');
       const headerSubtitle = document.getElementById('headerAppSubtitle');
       const headerIcon = document.getElementById('headerAppIcon');
@@ -5233,12 +5235,14 @@ HTML_CONTENT = """<!DOCTYPE html>
       if (pageYouTube) pageYouTube.classList.add('hidden');
       if (pageChannels) pageChannels.classList.add('hidden');
       if (pageFT) pageFT.classList.add('hidden');
+      if (pageTT) pageTT.classList.add('hidden');
 
       const inactiveCardClass = "bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 p-3 rounded-2xl transition-all cursor-pointer space-y-1.5 select-none group hover:border-slate-700";
       if (cardTikTok) cardTikTok.className = inactiveCardClass;
       if (cardYouTube) cardYouTube.className = inactiveCardClass;
       if (cardChannels) cardChannels.className = inactiveCardClass;
       if (cardFT) cardFT.className = inactiveCardClass;
+      if (cardTT) cardTT.className = inactiveCardClass;
 
       if (btnDemo) btnDemo.classList.remove('hidden');
 
