@@ -1,5 +1,49 @@
 [
   {
+    "title": "Laura's Leather Ribbons",
+    "english_text": "Little Laura rarely rolls red leather ribbons around real large logs.",
+    "chinese_text": "小劳拉极少把红色的皮革丝带缠绕在真正巨大的原木上。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "target_sounds": [
+      "/l/",
+      "/r/"
+    ],
+    "phonetic_tips": "【/l/ 与 /r/ 的精细互调】：/l/ 为清晰/黑暗边音，发音时舌尖必须抵住上齿龈，气流从舌头两侧流出（如 Little, leather）；/r/ 为卷舌/后缩音，舌尖向后卷或舌身向后缩，绝不接触上腭，唇形微圆（如 rarely, red）。在切换频繁的词组（如 rarely, rolls）中，需特别注意舌尖从齿龈抵触到向后撤卷的快速转换，避免把 /r/ 发成 /l/ 或反之。",
+    "linking_tips": "① 连读与同化：'rolls_red' 中的末尾辅音 /z/ 与 'red' 的首音 /r/ 要平滑过渡，不卡顿；'ribbons_around' 可实现末尾 /z/ 与元音 /ə/ 的自然连读（/zə/）。② 节奏与重音：重读实词 Laura, rarely, rolls, red, leather, ribbons, real, large, logs，介词 around 弱读，保持整句轻重交替的强节奏感。",
+    "cross_proofread_score": 98.8,
+    "id": "tw_1790832074_lauras",
+    "created_at": "2026-10-01 13:21:14",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832074_lauras_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832074_lauras_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832074_lauras_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832074_lauras_1.0.mp3"
+  },
+  {
+    "title": "The Lazy Rover",
+    "english_text": "The lazy red rover reliably rolls round the really rusty rail.",
+    "chinese_text": "那只懒惰的红色漫游车可靠地绕着那根真正生锈的铁轨滚动。",
+    "level": "Intermediate",
+    "level_cn": "中级",
+    "target_sounds": [
+      "/l/",
+      "/r/"
+    ],
+    "phonetic_tips": "本卡片核心难点在于 /l/ 与 /r/ 的连续转换。发 /l/（如 lazy, reliably）时，舌尖必须抵住上齿龈，气流从舌头两侧释出；而发 /r/（如 red, rover, really, rusty）时，舌尖必须向后卷起，离开上齿龈，且唇部微圆，绝不能让舌尖触碰口腔任何部位。在朗读 'really rusty' 时，需注意两个音的快速交替，避免舌头僵硬打结。",
+    "linking_tips": "句子节奏呈四拍子韵律：The **la**zy **red** **ro**ver re**lia**bly **rolls** round the **rea**lly **rus**ty **rail**。注意 'rolls round' 之间有自然的轻微连读，'the' 在辅音前发弱读 /ðə/。",
+    "cross_proofread_score": 98.5,
+    "id": "tw_1790832039_thelaz",
+    "created_at": "2026-10-01 13:20:39",
+    "audio_urls": {
+      "0.4": "/audio/tonguetwisters/tw_1790832039_thelaz_0.4.mp3",
+      "0.8": "/audio/tonguetwisters/tw_1790832039_thelaz_0.8.mp3",
+      "1.0": "/audio/tonguetwisters/tw_1790832039_thelaz_1.0.mp3"
+    },
+    "audio_url": "/audio/tonguetwisters/tw_1790832039_thelaz_1.0.mp3"
+  },
+  {
     "title": "Three Thick Thistles",
     "english_text": "Three thick thistles thrive thoughtfully in the thermal spring.",
     "chinese_text": "三株茂密的蓟草在温泉旁茁壮成长。",

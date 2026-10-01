@@ -211,17 +211,29 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
     raw_response = None
     opener = get_network_opener()
 
-    # 第一顺位: Gemini 2.5 Flash
+    # 第一顺位: Gemini API
     if gemini_key:
-        try:
-            req_data = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode('utf-8')
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}"
-            req = urllib.request.Request(url, data=req_data, headers={'Content-Type': 'application/json'})
-            with opener.open(req, timeout=20) as resp:
-                res_json = json.loads(resp.read().decode('utf-8'))
-                raw_response = res_json['candidates'][0]['content']['parts'][0]['text']
-        except Exception as e:
-            print(f"Gemini 生成失败: {e}")
+        gemini_models = [
+            "models/gemini-3.6-flash",
+            "models/gemini-3.5-flash-lite",
+            "models/gemini-3.1-flash-lite",
+            "models/gemini-flash-lite-latest",
+            "models/gemma-4-26b-a4b-it"
+        ]
+        for g_model in gemini_models:
+            try:
+                req_data = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode('utf-8')
+                url = f"https://generativelanguage.googleapis.com/v1beta/{g_model}:generateContent?key={gemini_key}"
+                req = urllib.request.Request(url, data=req_data, headers={'Content-Type': 'application/json'})
+                with opener.open(req, timeout=20) as resp:
+                    res_json = json.loads(resp.read().decode('utf-8'))
+                    raw_response = res_json['candidates'][0]['content']['parts'][0]['text']
+                    if raw_response:
+                        print(f"✅ Gemini API 模型 [{g_model}] 成功生成!")
+                        break
+            except Exception as e:
+                print(f"Gemini [{g_model}] 生成尝试失败: {e}")
+
 
     # 第二顺位: OpenAI / DeepSeek API
     if not raw_response and (openai_key or deepseek_key):
@@ -281,7 +293,8 @@ def generate_v17_tonguetwister(level: str = "初级", target_sound: str = "自�
     cleaned = re.sub(r'```json|```', '', raw_response).strip()
     data = json.loads(cleaned)
 
-    item_id = f"tw_{int(time.time())}_{data.get('title','tt')[:6].lower()}"
+    title_clean = re.sub(r'[^a-zA-Z0-9]', '', data.get('title', 'tt'))[:6].lower()
+    item_id = f"tw_{int(time.time())}_{title_clean or 'tt'}"
     data["id"] = item_id
     data["created_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
 
