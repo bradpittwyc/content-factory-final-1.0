@@ -42,6 +42,8 @@ def upload_file_to_cos(local_file_path: str, cos_target_path: str) -> str:
     Uploads a local file to Tencent COS, automatically sets public-read ACL,
     and returns the public CDN URL.
     """
+    if not client:
+        raise ValueError("COS secret key not configured")
     try:
         cos_target_path = cos_target_path.lstrip('/')
         

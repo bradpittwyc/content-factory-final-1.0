@@ -5345,23 +5345,46 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    function changeTtAudioSpeed(cardId, speed, btnEl) {
+      const audioEl = document.getElementById(`audio_${cardId}`);
+      if (!audioEl) return;
+      const urls = JSON.parse(btnEl.getAttribute('data-urls') || '{}');
+      const targetUrl = urls[speed] || urls['1.0'] || urls['0.8'] || '';
+      if (targetUrl) {
+        audioEl.src = targetUrl;
+        audioEl.play().catch(() => {});
+      }
+      const parent = btnEl.parentElement;
+      if (parent) {
+        parent.querySelectorAll('button').forEach(b => {
+          b.className = "px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-950 text-slate-400 hover:text-white transition-colors";
+        });
+      }
+      btnEl.className = "px-2 py-0.5 rounded text-[10px] font-mono border border-purple-500/80 bg-purple-950 text-purple-200 font-bold transition-colors";
+    }
+
     function renderTongueTwisterGrid(items) {
       const grid = document.getElementById('tongueTwisterGrid');
       if (!grid) return;
       if (!items || items.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-2xl">尚无生成的绕口令训练卡片，请点击上方「✨ 立即生产训练卡片」一键自动化流水线生产！</div>`;
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-2xl">尚无生成的 V1.7 绕口令训练卡片，请点击上方「✨ 立即生产训练卡片」一键自动化流水线生产！</div>`;
         return;
       }
 
       grid.innerHTML = items.map(item => {
         const levelBadgeClass = item.level === 'Beginner' ? 'bg-emerald-950 text-emerald-300 border-emerald-800/80' : (item.level === 'Intermediate' ? 'bg-amber-950 text-amber-300 border-amber-800/80' : 'bg-rose-950 text-rose-300 border-rose-800/80');
         const targetSoundsHtml = (item.target_sounds || []).map(s => `<span class="px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-purple-300 text-[10px] font-mono">${escapeHtml(s)}</span>`).join(' ');
+        const urlsJson = escapeHtml(JSON.stringify(item.audio_urls || { "1.0": item.audio_url || '' }));
+        const defaultAudio = item.audio_url || (item.audio_urls ? (item.audio_urls['1.0'] || item.audio_urls['0.8']) : '');
 
         return `
           <div class="bg-slate-900/80 border border-slate-800/90 hover:border-purple-500/50 rounded-2xl p-5 space-y-3 shadow-lg transition-all group flex flex-col justify-between">
             <div class="space-y-2.5">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${levelBadgeClass}">${escapeHtml(item.level_cn || item.level)}</span>
+                <div class="flex items-center space-x-2">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${levelBadgeClass}">${escapeHtml(item.level_cn || item.level)}</span>
+                  ${item.cross_proofread_score ? `<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800/60 font-mono">V1.7 精校得分: ${item.cross_proofread_score}</span>` : ''}
+                </div>
                 <span class="text-[10px] font-mono text-slate-500">${escapeHtml(item.created_at || '')}</span>
               </div>
               <h4 class="text-sm font-extrabold text-purple-300 group-hover:text-purple-200 transition-colors">${escapeHtml(item.title || 'Tongue Twister')}</h4>
@@ -5381,13 +5404,17 @@ HTML_CONTENT = """<!DOCTYPE html>
               </div>
             </div>
 
-            <!-- 音频播放控制器 -->
-            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
-              ${item.audio_url ? `
-                <audio controls src="${escapeHtml(item.audio_url)}" class="w-full h-8 rounded-lg accent-purple-500 bg-slate-950"></audio>
-              ` : `
-                <span class="text-[10px] text-slate-500 italic">示范音频暂未就绪</span>
-              `}
+            <!-- V1.7 三档语速音频播放控制器 -->
+            <div class="pt-3 border-t border-slate-800/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 font-medium">示范语速切档:</span>
+                <div class="flex items-center space-x-1">
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.4', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-950 text-slate-400 hover:text-white transition-colors">0.4x 逐音</button>
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '0.8', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-950 text-slate-400 hover:text-white transition-colors">0.8x 慢速</button>
+                  <button data-urls="${urlsJson}" onclick="changeTtAudioSpeed('${item.id}', '1.0', this)" class="px-2 py-0.5 rounded text-[10px] font-mono border border-purple-500/80 bg-purple-950 text-purple-200 font-bold transition-colors">1.0x 常速</button>
+                </div>
+              </div>
+              <audio id="audio_${item.id}" controls src="${escapeHtml(defaultAudio)}" class="w-full h-8 rounded-lg accent-purple-500 bg-slate-950"></audio>
             </div>
           </div>
         `;
