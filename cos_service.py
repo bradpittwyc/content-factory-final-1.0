@@ -19,8 +19,14 @@ SECRET_KEY = os.environ.get('COS_SECRET_KEY')
 REGION = os.environ.get('COS_REGION', 'ap-hongkong')
 BUCKET = os.environ.get('COS_BUCKET', 'tony-rc-1-1381711719')
 
-config = CosConfig(Region=REGION, SecretId=SECRET_ID, SecretKey=SECRET_KEY)
-client = CosS3Client(config)
+if SECRET_ID and SECRET_KEY:
+    try:
+        config = CosConfig(Region=REGION, SecretId=SECRET_ID, SecretKey=SECRET_KEY)
+        client = CosS3Client(config)
+    except Exception:
+        client = None
+else:
+    client = None
 
 def test_cos_connection():
     try:

@@ -6,7 +6,10 @@ import glob
 import urllib.request
 from typing import List, Dict, Any
 import yt_dlp
-from cos_service import upload_file_to_cos
+try:
+    from cos_service import upload_file_to_cos
+except Exception:
+    upload_file_to_cos = None
 
 LESSONS_FILE = os.path.join(os.path.dirname(__file__), "data", "tony_shadowing_lessons.json")
 FRONTEND_MOCK_VIDEOS_PATH = r"C:\Users\Administrator\.gemini\antigravity\scratch\tony-frontend-demo\src\data\mockVideos.ts"

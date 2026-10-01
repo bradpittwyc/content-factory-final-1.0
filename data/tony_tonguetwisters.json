@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Fresh Fried Fish",
+    "english_text": "Fresh fried fish, fish fresh fried, fried fish fresh.",
+    "chinese_text": "新鲜的炸鱼，鱼新鲜地炸，炸鱼真新鲜。",
+    "level": "Beginner",
+    "level_cn": "初级",
+    "target_sounds": [
+      "/f/",
+      "/r/",
+      "/ʃ/"
+    ],
+    "phonetic_tips": "注意 /f/ 上齿咬下唇，与 /ʃ/ 翘舌音区分",
+    "linking_tips": "Fresh_fried 连读，fish_fresh 保持清晰",
+    "suggested_speed": 0.9,
+    "id": "tt-1790826350221",
+    "created_at": "2026-10-01 11:45:50",
+    "audio_url": "/audio/tonguetwisters/tt-1790826350221.mp3"
+  }
+]

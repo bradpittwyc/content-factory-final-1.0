@@ -197,7 +197,18 @@ class TikTokDownloaderGUI(ctk.CTk):
             hover_color="#374151",
             command=self.open_output_folder
         )
-        self.btn_open_folder.pack(side="left")
+        self.btn_open_folder.pack(side="left", padx=(0, 10))
+
+        self.btn_tonguetwister = ctk.CTkButton(
+            self.action_frame,
+            text="🗣️ 绕口令生成卡片",
+            width=140,
+            height=38,
+            fg_color="#8B5CF6",
+            hover_color="#7C3AED",
+            command=self.open_tonguetwister_dialog
+        )
+        self.btn_tonguetwister.pack(side="left")
 
         self.lbl_status = ctk.CTkLabel(
             self.action_frame,
@@ -531,6 +542,72 @@ class TikTokDownloaderGUI(ctk.CTk):
         self.btn_list.configure(state="normal")
         self.btn_stop.configure(state="disabled")
         self.update_status("就绪 / 任务完成")
+
+    def open_tonguetwister_dialog(self):
+        """弹出 Tony 英语绕口令流水线生成窗口"""
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("🗣️ Tony 英语绕口令流水线卡片生成器")
+        dialog.geometry("450x380")
+        dialog.transient(self)
+
+        lbl_title = ctk.CTkLabel(dialog, text="🗣️ 生成 Tony 绕口令训练卡片", font=ctk.CTkFont(size=18, weight="bold"))
+        lbl_title.pack(pady=(15, 10))
+
+        # 难度选择
+        lbl_level = ctk.CTkLabel(dialog, text="选择难度等级 (初/中/高):", anchor="w")
+        lbl_level.pack(fill="x", padx=25, pady=(5, 2))
+        combo_level = ctk.CTkComboBox(dialog, values=["初级", "中级", "高级"])
+        combo_level.set("初级")
+        combo_level.pack(fill="x", padx=25, pady=(0, 10))
+
+        # 目标音标
+        lbl_sound = ctk.CTkLabel(dialog, text="目标发音/难音标 (可选):", anchor="w")
+        lbl_sound.pack(fill="x", padx=25, pady=(5, 2))
+        entry_sound = ctk.CTkEntry(dialog, placeholder_text="例如: /s/ vs /ʃ/ 或 /θ/ vs /s/")
+        entry_sound.pack(fill="x", padx=25, pady=(0, 10))
+
+        # 场景主题
+        lbl_topic = ctk.CTkLabel(dialog, text="场景主题 (可选):", anchor="w")
+        lbl_topic.pack(fill="x", padx=25, pady=(5, 2))
+        entry_topic = ctk.CTkEntry(dialog, placeholder_text="例如: 日常生活、科技、海述等")
+        entry_topic.pack(fill="x", padx=25, pady=(0, 15))
+
+        def start_generate():
+            level = combo_level.get()
+            sound = entry_sound.get().strip() or "自由发音"
+            topic = entry_topic.get().strip() or "日常口语"
+            dialog.destroy()
+
+            self.log(f"\n🚀 [绕口令流水线] 开始自动生成【{level}】发音卡片...")
+            self.update_status(f"正在生成【{level}】绕口令卡片...")
+
+            def worker():
+                try:
+                    import tony_tonguetwister_processor
+                    item = tony_tonguetwister_processor.process_and_add_tonguetwister(level=level, target_sound=sound, topic=topic)
+                    self.log(f"✅ 【{level}】绕口令卡片生成成功！")
+                    self.log(f"   英文: {item.get('english_text')}")
+                    self.log(f"   中文: {item.get('chinese_text')}")
+                    self.log(f"   难点解析: {item.get('phonetic_tips')}")
+                    if item.get("audio_url"):
+                        self.log(f"   🎙️ 音频生成完成: {item.get('audio_url')}")
+                except Exception as e:
+                    self.log(f"❌ 绕口令生成失败: {e}")
+                finally:
+                    self.update_status("就绪")
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        btn_run = ctk.CTkButton(
+            dialog,
+            text="✨ 立即生成并集成到内容工厂",
+            fg_color="#8B5CF6",
+            hover_color="#7C3AED",
+            height=36,
+            command=start_generate
+        )
+        btn_run.pack(fill="x", padx=25, pady=10)
+
 
 
 if __name__ == "__main__":

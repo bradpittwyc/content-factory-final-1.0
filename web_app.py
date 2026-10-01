@@ -50,6 +50,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+tt_audio_dir = os.path.join(os.path.dirname(__file__), "data", "tonguetwister_audio")
+os.makedirs(tt_audio_dir, exist_ok=True)
+app.mount("/audio/tonguetwisters", StaticFiles(directory=tt_audio_dir), name="tonguetwisters")
+
 # 全局任务状态管理器
 class TaskManager:
     def __init__(self):
@@ -439,6 +444,32 @@ def delete_ft_article_endpoint(req: FtDeleteArticleRequest):
     success = ft_store.delete_article(req.url)
     articles = ft_store.load_all_articles()
     return {"success": success, "articles": articles}
+
+# ==================== Tony 英语绕口令流水线 APIs ====================
+import tony_tonguetwister_processor
+
+class TongueTwisterGenerateRequest(BaseModel):
+    level: str = "初级"
+    target_sound: Optional[str] = "自由发音"
+    topic: Optional[str] = "日常口语"
+
+@app.get("/api/tonguetwister/list")
+def get_tonguetwister_list():
+    items = tony_tonguetwister_processor.load_tonguetwisters()
+    return {"success": True, "count": len(items), "items": items}
+
+@app.post("/api/tonguetwister/generate")
+def generate_tonguetwister_endpoint(req: TongueTwisterGenerateRequest):
+    try:
+        item = tony_tonguetwister_processor.process_and_add_tonguetwister(
+            level=req.level,
+            target_sound=req.target_sound or "自由发音",
+            topic=req.topic or "日常口语"
+        )
+        return {"success": True, "item": item, "message": f"成功生成【{req.level}】绕口令卡片！"}
+    except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)}, status_code=500)
+
 
 class FtSyncBatchRequest(BaseModel):
     articles: List[Dict[str, Any]]
@@ -1751,6 +1782,16 @@ HTML_CONTENT = """<!DOCTYPE html>
       color: #fef08a !important;
       font-weight: 600;
     }
+    .platform-card-active-tonguetwister {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(236, 72, 153, 0.22) 100%) !important;
+      border-color: rgba(168, 85, 247, 0.6) !important;
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.25) !important;
+    }
+    .tt-gradient-text {
+      background: linear-gradient(135deg, #c084fc 0%, #f472b6 50%, #fb7185 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col custom-scroll bg-slate-950 text-slate-100">
@@ -1881,6 +1922,26 @@ HTML_CONTENT = """<!DOCTYPE html>
                 </span>
               </div>
               <p class="text-[11px] text-slate-400 leading-snug pl-0.5">FT金融时报 · 彭博社 · 华尔街日报 · 经济学人</p>
+            </div>
+
+            <!-- 卡片 5: Tony 绕口令工厂 (初/中/高发音分级卡片流水线) -->
+            <div id="sidebarCardTongueTwister" onclick="switchPlatform('tonguetwister')" class="p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 cursor-pointer transition-all space-y-1.5 select-none group">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-rose-500 flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                    <i data-lucide="mic" class="w-4 h-4 text-white"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xs font-bold text-slate-200 group-hover:text-purple-300 transition-colors">Tony 绕口令工厂</h3>
+                    <p class="text-[10px] text-slate-400">Tongue Twister Pipeline</p>
+                  </div>
+                </div>
+                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800/80 font-medium flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse"></span>
+                  <span>初中高三级</span>
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-snug pl-0.5">易混发音与连读技巧智能生成与示范语音</p>
             </div>
           </div>
 
@@ -3337,6 +3398,95 @@ HTML_CONTENT = """<!DOCTYPE html>
       <!-- 经济学人文章卡片网格 -->
       <div id="economistArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
         <!-- 动态渲染经济学人文章卡片 -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 平台卡片 5: Tony 英语绕口令工厂 (Tongue Twister Factory Studio) -->
+  <!-- ========================================================================= -->
+  <main id="pageTongueTwister" class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6 flex-1 hidden">
+
+    <!-- 顶部 Banner 卡片 -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-950/70 via-slate-900 to-pink-950/60 border border-purple-800/40 p-6 md:p-8 shadow-2xl backdrop-blur-xl">
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-2">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Tony English 发音与连读训练工坊</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-extrabold tt-gradient-text">Tony 绕口令流水线卡片工厂</h1>
+          <p class="text-slate-300 text-xs md:text-sm max-w-2xl leading-relaxed">
+            智能生成包含 <strong class="text-purple-300">初级 (Beginner)</strong>、<strong class="text-pink-300">中级 (Intermediate)</strong>、<strong class="text-rose-300">高级 (Advanced)</strong> 梯度的英语绕口令训练卡片，自动剖析易混辨音与连读技巧，并由 Edge-TTS 免费微软发音引擎实时合成示范音频。
+          </p>
+        </div>
+
+        <!-- 操作按钮与快速启动 -->
+        <div class="flex items-center space-x-3 shrink-0">
+          <button onclick="fetchTongueTwisterList()" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-2 cursor-pointer shadow-lg active:scale-95">
+            <i data-lucide="refresh-cw" class="w-4 h-4 text-purple-400"></i>
+            <span>刷新卡片库</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 生成设置与控制面板 -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="wand2" class="w-5 h-5 text-purple-400"></i>
+          <h2 class="text-sm font-bold text-slate-200">一键流水线卡片生成设置</h2>
+        </div>
+        <span class="text-xs text-slate-400">第一优先级: Gemini AI | 第二优先级: Edge-TTS (微软免费高品质语音)</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 难度梯度 -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-medium text-slate-300">难度等级梯度 (Level)</label>
+          <select id="ttSelectLevel" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500 transition-colors">
+            <option value="初级">🟢 初级 (Beginner) - 基础音标与辨音</option>
+            <option value="中级">🟡 中级 (Intermediate) - 辅音丛与连读节奏</option>
+            <option value="高级">🔴 高级 (Advanced) - 高难混淆音标与长难句</option>
+          </select>
+        </div>
+
+        <!-- 目标音标 -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-medium text-slate-300">目标音标 / 难音点拨 (Target Sound)</label>
+          <input id="ttInputSound" type="text" placeholder="例如: /s/ vs /ʃ/ 或 /θ/ vs /s/" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+
+        <!-- 场景主题 -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-medium text-slate-300">场景主题 (Topic)</label>
+          <input id="ttInputTopic" type="text" placeholder="例如: 日常生活、动物、海述" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="submitTongueTwisterGenerate()" id="btnGenerateTT" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 transition-all flex items-center space-x-2 cursor-pointer active:scale-95">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>✨ 立即生产训练卡片并录入库</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 绕口令训练卡片矩阵展示 -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="layers" class="w-5 h-5 text-purple-400"></i>
+          <h3 class="text-sm font-bold text-slate-200">全量 Tony 绕口令训练卡片矩阵</h3>
+          <span id="ttCardCountBadge" class="text-xs px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-mono">0 张</span>
+        </div>
+      </div>
+
+      <!-- 网格加载区 -->
+      <div id="tongueTwisterGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pb-24">
+        <!-- 动态渲染绕口令卡片 -->
       </div>
     </div>
 
@@ -5138,8 +5288,136 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (btnDemo) btnDemo.classList.add('hidden');
 
         returnToPubMatrix();
+      } else if (platform === 'tonguetwister') {
+        const pageTT = document.getElementById('pageTongueTwister');
+        const cardTT = document.getElementById('sidebarCardTongueTwister');
+        if (pageTT) pageTT.classList.remove('hidden');
+        if (cardTT) cardTT.className = "platform-card-active-tonguetwister p-3 rounded-2xl border cursor-pointer transition-all space-y-1.5 select-none group";
+
+        if (headerTitle) {
+          headerTitle.className = "text-lg font-bold tt-gradient-text leading-tight";
+          headerTitle.innerText = "Tony 绕口令流水线工厂 · Tongue Twister Studio";
+        }
+        if (headerSubtitle) headerSubtitle.innerText = "初/中/高梯度英语发音训练卡片智能批量流水线";
+        if (headerIcon) headerIcon.className = "w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-rose-500 flex items-center justify-center shadow-lg shadow-purple-500/25";
+        if (headerIconLucide) headerIconLucide.setAttribute('data-lucide', 'mic');
+        if (btnDemo) btnDemo.classList.add('hidden');
+
+        fetchTongueTwisterList();
       }
       lucide.createIcons();
+    }
+
+    // =========================================================================
+    // Tony 绕口令训练卡片流水线前端交互方法
+    // =========================================================================
+    async function fetchTongueTwisterList() {
+      const grid = document.getElementById('tongueTwisterGrid');
+      const countBadge = document.getElementById('ttCardCountBadge');
+      if (grid) grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-xs flex items-center justify-center space-x-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin text-purple-400"></i><span>正在加载全量 Tony 绕口令卡片矩阵...</span></div>`;
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/tonguetwister/list');
+        const data = await res.json();
+        if (data.success) {
+          if (countBadge) countBadge.innerText = `${data.count} 张`;
+          renderTongueTwisterGrid(data.items);
+        } else {
+          if (grid) grid.innerHTML = `<div class="col-span-full py-12 text-center text-rose-400 text-xs">加载失败: ${data.error}</div>`;
+        }
+      } catch (e) {
+        if (grid) grid.innerHTML = `<div class="col-span-full py-12 text-center text-rose-400 text-xs">网络请求异常: ${e}</div>`;
+      }
+    }
+
+    function renderTongueTwisterGrid(items) {
+      const grid = document.getElementById('tongueTwisterGrid');
+      if (!grid) return;
+      if (!items || items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-2xl">尚无生成的绕口令训练卡片，请点击上方「✨ 立即生产训练卡片」一键自动化流水线生产！</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const levelBadgeClass = item.level === 'Beginner' ? 'bg-emerald-950 text-emerald-300 border-emerald-800/80' : (item.level === 'Intermediate' ? 'bg-amber-950 text-amber-300 border-amber-800/80' : 'bg-rose-950 text-rose-300 border-rose-800/80');
+        const targetSoundsHtml = (item.target_sounds || []).map(s => `<span class="px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-purple-300 text-[10px] font-mono">${escapeHtml(s)}</span>`).join(' ');
+
+        return `
+          <div class="bg-slate-900/80 border border-slate-800/90 hover:border-purple-500/50 rounded-2xl p-5 space-y-3 shadow-lg transition-all group flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${levelBadgeClass}">${escapeHtml(item.level_cn || item.level)}</span>
+                <span class="text-[10px] font-mono text-slate-500">${escapeHtml(item.created_at || '')}</span>
+              </div>
+              <h4 class="text-sm font-extrabold text-purple-300 group-hover:text-purple-200 transition-colors">${escapeHtml(item.title || 'Tongue Twister')}</h4>
+              
+              <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+                <p class="text-xs font-semibold text-slate-100 leading-relaxed">${escapeHtml(item.english_text)}</p>
+                <p class="text-[11px] text-slate-400">${escapeHtml(item.chinese_text)}</p>
+              </div>
+
+              <div class="space-y-1.5 pt-1">
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-[10px] font-semibold text-slate-400">难音点拨:</span>
+                  ${targetSoundsHtml}
+                </div>
+                <p class="text-[11px] text-purple-300/90 leading-snug">💡 ${escapeHtml(item.phonetic_tips)}</p>
+                <p class="text-[11px] text-slate-400 leading-snug">🔗 连读/节奏: ${escapeHtml(item.linking_tips)}</p>
+              </div>
+            </div>
+
+            <!-- 音频播放控制器 -->
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+              ${item.audio_url ? `
+                <audio controls src="${escapeHtml(item.audio_url)}" class="w-full h-8 rounded-lg accent-purple-500 bg-slate-950"></audio>
+              ` : `
+                <span class="text-[10px] text-slate-500 italic">示范音频暂未就绪</span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    async function submitTongueTwisterGenerate() {
+      const level = document.getElementById('ttSelectLevel').value;
+      const target_sound = document.getElementById('ttInputSound').value.trim();
+      const topic = document.getElementById('ttInputTopic').value.trim();
+      const btn = document.getElementById('btnGenerateTT');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在智能流水线加工卡片与生成语音...</span>`;
+        lucide.createIcons();
+      }
+
+      showToast(`正在流水线生产【${level}】绕口令卡片与 Edge-TTS 示范音频...`, "info");
+
+      try {
+        const res = await fetch('/api/tonguetwister/generate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ level, target_sound, topic })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`✅ ${data.message}`, "success");
+          fetchTongueTwisterList();
+        } else {
+          showToast(`生成失败: ${data.error}`, "error");
+        }
+      } catch (e) {
+        showToast(`请求超时或失败: ${e}`, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i><span>✨ 立即生产训练卡片并录入库</span>`;
+          lucide.createIcons();
+        }
+      }
     }
 
     function handlePlatformDemo() {
