@@ -1271,7 +1271,9 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
         username = clean_name.lstrip("@")
         target_url = f"https://www.youtube.com/@{username}/videos"
 
-    yt_manager.add_log(f"YouTube 解析目标网址: {target_url}", "info")
+    is_single_video = ("watch?v=" in target_url.lower() or "youtu.be/" in target_url.lower() or "/shorts/" in target_url.lower()) and ("playlist?list=" not in target_url.lower())
+
+    yt_manager.add_log(f"YouTube 解析目标网址: {target_url} (单视频模式: {is_single_video})", "info")
     if proxy:
         yt_manager.add_log(f"配置代理: {proxy}", "info")
 
@@ -1281,8 +1283,11 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
         "no_warnings": False,
         "retries": 4
     }
-    if max_videos and max_videos > 0:
+    if is_single_video:
+        ydl_opts["noplaylist"] = True
+    elif max_videos and max_videos > 0:
         ydl_opts["playlistend"] = max_videos
+
     if proxy:
         ydl_opts["proxy"] = proxy
     if cookie_text:
@@ -1295,10 +1300,16 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
                 raise Exception("无法提取链接元数据")
 
             entries = res.get("entries")
-            if entries is not None and isinstance(entries, (list, tuple)):
-                items_to_process = [item for item in entries if item]
+            if is_single_video:
+                if entries and isinstance(entries, (list, tuple)) and len(entries) > 0:
+                    items_to_process = [entries[0]]
+                else:
+                    items_to_process = [res]
             else:
-                items_to_process = [res]
+                if entries is not None and isinstance(entries, (list, tuple)):
+                    items_to_process = [item for item in entries if item]
+                else:
+                    items_to_process = [res]
 
             parsed = []
             for item in items_to_process:
