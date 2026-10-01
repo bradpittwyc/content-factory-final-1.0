@@ -1350,6 +1350,7 @@ def run_youtube_scan_task(channel_input: str, proxy: str, max_videos: int, cooki
             
             domain = classify_channel_by_titles([v["title"] for v in parsed])
             uploader_name = res.get("uploader") or res.get("channel") or res.get("uploader_id") or clean_name
+            uploader_name = re.sub(r'[\\/:*?"<>|]', '_', str(uploader_name)).strip() or "YouTube_Channel"
             channels_store.bump_youtube_channel(uploader_name, title=uploader_name, cat=domain.get("id"), cat_name=domain.get("name"), video_count=len(parsed))
 
             if len(parsed) == 1:
@@ -1396,15 +1397,20 @@ def run_youtube_download_task(channel_name: str, urls: List[str], req: DownloadR
     study_doc = req.study_doc if req.study_doc is not None else settings.get("study_doc", True)
     bilingual_subs = req.bilingual_subs if req.bilingual_subs is not None else settings.get("bilingual_subs", True)
 
-    clean_name = channel_name.strip().lstrip("@")
+    raw_input = channel_name.strip()
+    if raw_input.startswith("http://") or raw_input.startswith("https://"):
+        m = re.search(r"@([a-zA-Z0-9_.-]+)", raw_input)
+        if m:
+            clean_name = m.group(1)
+        else:
+            clean_name = "YouTube_Videos"
+    else:
+        clean_name = raw_input.lstrip("@")
+
+    clean_name = re.sub(r'[\\/:*?"<>|]', '_', clean_name).strip()
     if not clean_name or clean_name in ["single", "youtube_batch"]:
-        for u in urls:
-            m = re.search(r"@([a-zA-Z0-9_.-]+)", u)
-            if m:
-                clean_name = m.group(1)
-                break
-    if not clean_name:
-        clean_name = "YouTube_Channel"
+        clean_name = "YouTube_Videos"
+
     folder_name = f"@{clean_name}" if not clean_name.startswith("@") else clean_name
     channels_store.bump_youtube_channel(clean_name, downloads_inc=len(urls))
 
