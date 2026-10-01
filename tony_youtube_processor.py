@@ -209,7 +209,8 @@ def process_single_youtube_video(url: str, output_dir: str = "downloads") -> Dic
     
     ydl_opts = {
         "outtmpl": outtmpl,
-        "format": "bestvideo[height<=1080]+bestaudio/best",
+        "format": "bv*[ext=mp4][height<=1080]+ba[ext=m4a]/bv*[height<=1080]+ba/best",
+        "merge_output_format": "mp4",
         "writethumbnail": True,
         "writeinfojson": True,
         "writesubtitles": True,

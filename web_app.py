@@ -2543,15 +2543,15 @@ HTML_CONTENT = """<!DOCTYPE html>
           <!-- 画质选择 -->
           <div class="flex items-center space-x-1.5 bg-slate-950 px-2.5 py-1.5 rounded-xl border border-slate-800">
             <span class="text-slate-400 font-medium text-[11px] whitespace-nowrap">画质:</span>
-            <select id="selectYtQuality" class="bg-transparent text-xs text-white focus:outline-none cursor-pointer">
-              <option value="best" selected>最佳画质 (4K/1080p + AAC原声)</option>
-              <option value="2160">2160p (4K 超清)</option>
-              <option value="1440">1440p (2K 极清)</option>
-              <option value="1080">1080p (全高清 FHD)</option>
-              <option value="720">720p (高清 HD)</option>
-              <option value="480">480p (标清)</option>
-              <option value="360">360p (流畅)</option>
-              <option value="audio_only">仅下载音频 MP3</option>
+            <select id="selectYtQuality" class="bg-slate-900 text-xs text-slate-100 focus:outline-none cursor-pointer border border-slate-800 rounded-lg px-2 py-1">
+              <option value="best" class="bg-slate-900 text-slate-100 py-1.5" selected>最佳画质 (4K/1080p + AAC原声)</option>
+              <option value="2160" class="bg-slate-900 text-slate-100 py-1.5">2160p (4K 超清)</option>
+              <option value="1440" class="bg-slate-900 text-slate-100 py-1.5">1440p (2K 极清)</option>
+              <option value="1080" class="bg-slate-900 text-slate-100 py-1.5">1080p (全高清 FHD)</option>
+              <option value="720" class="bg-slate-900 text-slate-100 py-1.5">720p (高清 HD)</option>
+              <option value="480" class="bg-slate-900 text-slate-100 py-1.5">480p (标清)</option>
+              <option value="360" class="bg-slate-900 text-slate-100 py-1.5">360p (流畅)</option>
+              <option value="audio_only" class="bg-slate-900 text-slate-100 py-1.5">仅下载音频 MP3</option>
             </select>
           </div>
 
@@ -3680,9 +3680,9 @@ HTML_CONTENT = """<!DOCTYPE html>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label class="text-[11px] text-slate-300 block mb-1">视频编码策略 (防视频无声)</label>
-              <select id="settingVideoCodec" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
-                <option value="quality" selected>画质优先：最佳视频 + AAC (推荐，杜绝无声)</option>
-                <option value="compat">兼容优先：H.264 + AAC (老设备/剪辑专用)</option>
+              <select id="settingVideoCodec" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-red-500">
+                <option value="quality" class="bg-slate-900 text-slate-100" selected>画质优先：最佳视频 + AAC (推荐，杜绝无声)</option>
+                <option value="compat" class="bg-slate-900 text-slate-100">兼容优先：H.264 + AAC (老设备/剪辑专用)</option>
               </select>
             </div>
             <div>
