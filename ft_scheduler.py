@@ -65,19 +65,23 @@ def append_log(msg: str) -> None:
     state["logs"] = logs[:20]  # keep latest 20 logs
     state["last_status"] = msg
     save_state(state)
-    print(f"[FT-Scheduler] {log_entry}")
+    try:
+        print(f"[FT-Scheduler] {log_entry}")
+    except Exception:
+        pass
 
-def execute_single_drip_scrape() -> Dict[str, Any]:
+
+def execute_single_drip_scrape(ignore_cooldown: bool = False) -> Dict[str, Any]:
     """Execute a single article fetch safely."""
     state = load_state()
     
-    # Check cooldown
-    if state.get("cooldown_until"):
+    # Check cooldown (bypassed when ignore_cooldown=True for user manual trigger)
+    if not ignore_cooldown and state.get("cooldown_until"):
         try:
             cd_time = datetime.fromisoformat(state["cooldown_until"])
             if datetime.now() < cd_time:
                 remaining_mins = int((cd_time - datetime.now()).total_seconds() / 60)
-                msg = f"⏳ 处于安全熔断冷却保护中，还剩 {remaining_mins} 分钟，跳过本次执行"
+                msg = f"⏳ 处于安全熔断冷却保护中，还剩 {remaining_mins} 分钟，跳过本次自动调度"
                 append_log(msg)
                 return {"success": False, "reason": "in_cooldown", "message": msg}
             else:
@@ -87,6 +91,7 @@ def execute_single_drip_scrape() -> Dict[str, Any]:
         except Exception:
             state["cooldown_until"] = None
             save_state(state)
+
 
     # 1. Rotate section
     sec_idx = state.get("current_section_idx", 0) % len(SECTIONS_ROTATION)
@@ -210,11 +215,17 @@ def toggle_scheduler(enabled: Optional[bool] = None) -> Dict[str, Any]:
     append_log(f"计划任务已{'开启' if state['enabled'] else '暂停'}")
     return state
 
-def trigger_now() -> Dict[str, Any]:
-    """Force run 1 scrape immediately."""
-    append_log("⚡ 用户手动触发单篇立即采集...")
-    res = execute_single_drip_scrape()
+def trigger_now(ignore_cooldown: bool = True) -> Dict[str, Any]:
+    """Force run 1 scrape immediately (user manual trigger ignores circuit breaker cooldown)."""
+    state = load_state()
+    if ignore_cooldown and state.get("cooldown_until"):
+        state["cooldown_until"] = None
+        save_state(state)
+    append_log("⚡ 用户手动触发单篇立即试跑 (忽略熔断休眠限制)...")
+    res = execute_single_drip_scrape(ignore_cooldown=ignore_cooldown)
     return res
+
+
 
 if __name__ == "__main__":
     print("Testing FT scheduler status...")
