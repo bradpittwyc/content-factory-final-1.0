@@ -3169,9 +3169,14 @@ HTML_CONTENT = """<!DOCTYPE html>
         </button>
       </div>
 
-      <div class="flex items-center space-x-2 text-xs text-slate-400">
-        <span>当前展示: <strong id="ftFilteredCountText" class="text-amber-400">0</strong> 篇</span>
+      <div class="flex items-center space-x-3 text-xs text-slate-400">
+        <span>当前展示: <strong id="ftFilteredCountText" class="text-amber-400 font-bold">0</strong> 篇</span>
+        <button id="btnFtSortToggle" onclick="toggleFtSortMode()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all flex items-center space-x-1.5 cursor-pointer font-medium active:scale-95 shadow-sm" title="切换文章排列方式 (按时间 / 按头字幕首字母)">
+          <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span id="ftSortModeText">🕒 按时间排序</span>
+        </button>
       </div>
+
     </div>
 
     <!-- 文章卡片网格 -->
@@ -3395,7 +3400,26 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
       </div>
 
+      <!-- 经济学人文章列表搜索与排序工具条 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="inputEcoSearch" oninput="filterEcoArticles()" placeholder="搜索经济学人文章标题、摘要或正文..." class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-red-500 w-64 md:w-80">
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs text-slate-400">
+          <span>当前展示: <strong id="ecoFilteredCountText" class="text-red-400 font-bold">0</strong> 篇</span>
+          <button id="btnEcoSortToggle" onclick="toggleEcoSortMode()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all flex items-center space-x-1.5 cursor-pointer font-medium active:scale-95 shadow-sm" title="切换文章排列方式 (按时间 / 按头字幕首字母)">
+            <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-red-400"></i>
+            <span id="ecoSortModeText">🕒 按时间排序</span>
+          </button>
+        </div>
+      </div>
+
       <!-- 经济学人文章卡片网格 -->
+
       <div id="economistArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
         <!-- 动态渲染经济学人文章卡片 -->
       </div>
@@ -6494,7 +6518,10 @@ HTML_CONTENT = """<!DOCTYPE html>
     let ecoSelectedUrls = new Set();
     let ftSearchKeyword = '';
     let ecoSearchKeyword = '';
+    let ftSortMode = 'time'; // 'time' (按时间) or 'initial' (按头字幕/首字母)
+    let ecoSortMode = 'time';
     let currentViewingFtArticle = null;
+
 
     function returnToPubMatrix() {
       currentPubWorkstation = 'matrix';
@@ -6930,6 +6957,15 @@ HTML_CONTENT = """<!DOCTYPE html>
       renderFtArticlesGrid();
     }
 
+    function toggleFtSortMode() {
+      ftSortMode = (ftSortMode === 'time') ? 'initial' : 'time';
+      const btnText = document.getElementById('ftSortModeText');
+      if (btnText) {
+        btnText.innerText = (ftSortMode === 'time') ? '🕒 按时间排序' : '🔤 按头字幕排序';
+      }
+      renderFtArticlesGrid();
+    }
+
     function filterFtArticles() {
       const input = document.getElementById('inputFtSearch');
       ftSearchKeyword = input ? input.value.trim().toLowerCase() : '';
@@ -6937,7 +6973,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     }
 
     function getFilteredFtArticles() {
-      let list = ftArticles;
+      let list = [...ftArticles];
       // 1. 板块过滤
       if (currentFtSectionTab !== 'all') {
         const secObj = ftSections.find(s => s.id === currentFtSectionTab);
@@ -6954,8 +6990,23 @@ HTML_CONTENT = """<!DOCTYPE html>
           return t.includes(ftSearchKeyword) || s.includes(ftSearchKeyword) || f.includes(ftSearchKeyword) || auth.includes(ftSearchKeyword);
         });
       }
+      // 3. 排序 (按时间 vs 按头字幕/首字母 A-Z)
+      if (ftSortMode === 'initial') {
+        list.sort((a, b) => {
+          const titleA = (a.title || '').trim();
+          const titleB = (b.title || '').trim();
+          return titleA.localeCompare(titleB, 'en', { sensitivity: 'base' });
+        });
+      } else {
+        list.sort((a, b) => {
+          const timeA = a.scraped_at || a.published_at || '';
+          const timeB = b.scraped_at || b.published_at || '';
+          return timeB.localeCompare(timeA);
+        });
+      }
       return list;
     }
+
 
     function renderFtArticlesGrid() {
       const container = document.getElementById('ftArticlesGrid');
@@ -7678,8 +7729,23 @@ HTML_CONTENT = """<!DOCTYPE html>
       renderEconomistGrid();
     }
 
+    function toggleEcoSortMode() {
+      ecoSortMode = (ecoSortMode === 'time') ? 'initial' : 'time';
+      const btnText = document.getElementById('ecoSortModeText');
+      if (btnText) {
+        btnText.innerText = (ecoSortMode === 'time') ? '🕒 按时间排序' : '🔤 按头字幕排序';
+      }
+      renderEconomistGrid();
+    }
+
+    function filterEcoArticles() {
+      const input = document.getElementById('inputEcoSearch');
+      ecoSearchKeyword = input ? input.value.trim().toLowerCase() : '';
+      renderEconomistGrid();
+    }
+
     function getFilteredEcoArticles() {
-      let list = economistArticles;
+      let list = [...economistArticles];
       if (currentEcoSectionTab !== 'all') {
         const secObj = economistSections.find(s => s.id === currentEcoSectionTab);
         const secName = secObj ? secObj.name.split(' ')[0] : '';
@@ -7694,14 +7760,30 @@ HTML_CONTENT = """<!DOCTYPE html>
           return t.includes(ecoSearchKeyword) || s.includes(ecoSearchKeyword) || f.includes(ecoSearchKeyword) || auth.includes(ecoSearchKeyword);
         });
       }
+      if (ecoSortMode === 'initial') {
+        list.sort((a, b) => {
+          const titleA = (a.title || '').trim();
+          const titleB = (b.title || '').trim();
+          return titleA.localeCompare(titleB, 'en', { sensitivity: 'base' });
+        });
+      } else {
+        list.sort((a, b) => {
+          const timeA = a.scraped_at || a.published_at || '';
+          const timeB = b.scraped_at || b.published_at || '';
+          return timeB.localeCompare(timeA);
+        });
+      }
       return list;
     }
 
     function renderEconomistGrid() {
       const container = document.getElementById('economistArticlesGrid');
+      const filteredCountText = document.getElementById('ecoFilteredCountText');
       if (!container) return;
 
       const list = getFilteredEcoArticles();
+      if (filteredCountText) filteredCountText.innerText = list.length;
+
 
       if (list.length === 0) {
         container.innerHTML = `
