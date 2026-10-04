@@ -52,24 +52,24 @@ BLOOMBERG_MAIN_FILE = DATA_DIR / "bloomberg_main_articles.json"
 
 def load_bloomberg_articles() -> List[Dict[str, Any]]:
     articles = []
-    if BLOOMBERG_ARTICLES_FILE.exists():
-        try:
-            data = json.loads(BLOOMBERG_ARTICLES_FILE.read_text(encoding="utf-8"))
-            if isinstance(data, list):
-                articles.extend(data)
-        except Exception as e:
-            print(f"Error loading bloomberg articles: {e}")
-
     if BLOOMBERG_MAIN_FILE.exists():
         try:
             main_data = json.loads(BLOOMBERG_MAIN_FILE.read_text(encoding="utf-8"))
             if isinstance(main_data, list):
-                existing_urls = {a.get("url") for a in articles}
-                for ma in main_data:
-                    if ma.get("url") not in existing_urls:
-                        articles.append(ma)
+                articles.extend(main_data)
         except Exception as e:
             print(f"Error loading bloomberg main articles: {e}")
+
+    if BLOOMBERG_ARTICLES_FILE.exists():
+        try:
+            data = json.loads(BLOOMBERG_ARTICLES_FILE.read_text(encoding="utf-8"))
+            if isinstance(data, list):
+                existing_urls = {a.get("url") for a in articles}
+                for a in data:
+                    if a.get("url") not in existing_urls:
+                        articles.append(a)
+        except Exception as e:
+            print(f"Error loading bloomberg articles: {e}")
 
     cutoff = datetime.now() - timedelta(days=3)
     kept = []
