@@ -3267,10 +3267,27 @@ HTML_CONTENT = """<!DOCTYPE html>
             </button>
           </div>
         </div>
+      <!-- 彭博社文章列表搜索与排序工具条 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="inputBbSearch" oninput="filterBloombergArticles()" placeholder="搜索彭博社文章标题、摘要或正文..." class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 w-64 md:w-80">
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs text-slate-400">
+          <span>当前展示: <strong id="bbFilteredCountText" class="text-cyan-400 font-bold">0</strong> 篇</span>
+          <button id="btnBbSortToggle" onclick="toggleBbSortMode()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all flex items-center space-x-1.5 cursor-pointer font-medium active:scale-95 shadow-sm" title="切换文章排列方式 (按时间 / 按头字幕首字母)">
+            <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span id="bbSortModeText">🕒 按时间排序</span>
+          </button>
+        </div>
       </div>
 
       <!-- 彭博文章列表 -->
       <div id="bbArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
+
         <!-- 动态渲染彭博文章卡片 -->
       </div>
     </div>
@@ -6518,9 +6535,12 @@ HTML_CONTENT = """<!DOCTYPE html>
     let ecoSelectedUrls = new Set();
     let ftSearchKeyword = '';
     let ecoSearchKeyword = '';
+    let bbSearchKeyword = '';
     let ftSortMode = 'time'; // 'time' (按时间) or 'initial' (按头字幕/首字母)
     let ecoSortMode = 'time';
+    let bbSortMode = 'time';
     let currentViewingFtArticle = null;
+
 
 
     function returnToPubMatrix() {
@@ -6672,14 +6692,61 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    function toggleBbSortMode() {
+      bbSortMode = (bbSortMode === 'time') ? 'initial' : 'time';
+      const btnText = document.getElementById('bbSortModeText');
+      if (btnText) {
+        btnText.innerText = (bbSortMode === 'time') ? '🕒 按时间排序' : '🔤 按头字幕排序';
+      }
+      renderBloombergArticlesGrid();
+    }
+
+    function filterBloombergArticles() {
+      const input = document.getElementById('inputBbSearch');
+      bbSearchKeyword = input ? input.value.trim().toLowerCase() : '';
+      renderBloombergArticlesGrid();
+    }
+
+    function getFilteredBloombergArticles() {
+      let list = [...bloombergArticles];
+      if (bbSearchKeyword) {
+        list = list.filter(a => {
+          const t = (a.title || '').toLowerCase();
+          const s = (a.standfirst || '').toLowerCase();
+          const f = (a.full_text || (a.paragraphs ? a.paragraphs.join(' ') : '')).toLowerCase();
+          const auth = (a.authors || []).join(' ').toLowerCase();
+          return t.includes(bbSearchKeyword) || s.includes(bbSearchKeyword) || f.includes(bbSearchKeyword) || auth.includes(bbSearchKeyword);
+        });
+      }
+      if (bbSortMode === 'initial') {
+        list.sort((a, b) => {
+          const titleA = (a.title || '').trim();
+          const titleB = (b.title || '').trim();
+          return titleA.localeCompare(titleB, 'en', { sensitivity: 'base' });
+        });
+      } else {
+        list.sort((a, b) => {
+          const timeA = a.scraped_at || a.published_at || '';
+          const timeB = b.scraped_at || b.published_at || '';
+          return timeB.localeCompare(timeA);
+        });
+      }
+      return list;
+    }
+
     function renderBloombergArticlesGrid() {
       const badge = document.getElementById('bbArticlesCountBadge');
       if (badge) badge.innerText = `${bloombergArticles.length} 篇已收录`;
 
       const container = document.getElementById('bbArticlesGrid');
+      const filteredCountText = document.getElementById('bbFilteredCountText');
       if (!container) return;
 
-      container.innerHTML = bloombergArticles.map(a => {
+      const list = getFilteredBloombergArticles();
+      if (filteredCountText) filteredCountText.innerText = list.length;
+
+      container.innerHTML = list.map(a => {
+
         const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
