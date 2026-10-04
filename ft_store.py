@@ -128,9 +128,10 @@ def scrape_single_article(url: str, section: str = "General", cookie_str: Option
             "Security Verification" in title or 
             "Just a moment" in title or 
             "Verify you are human" in html_text or 
-            "help.ft.com" in html_text or 
-            res.status_code == 403
+            res.status_code == 403 or
+            res.status_code == 429
         )
+
         if is_security_blocked:
             return {
                 "id": f"ft_{int(time.time() * 1000)}",
@@ -226,12 +227,24 @@ async def fetch_section_rss_items(section_id: str, limit: int = 15) -> List[Dict
     sec = next((s for s in FT_SECTIONS if s["id"] == section_id), FT_SECTIONS[0])
     feed_url = sec["url"]
 
-    async with httpx.AsyncClient(timeout=15, follow_redirects=True, headers={"User-Agent": DEFAULT_UA}) as client:
-        res = await client.get(feed_url)
+    headers = build_headers()
+    try:
+        res = cffi_requests.get(feed_url, headers=headers, impersonate="chrome124", timeout=15)
+        if res.status_code == 429:
+            time.sleep(2)
+            res = cffi_requests.get("https://www.ft.com/rss/home/international", headers=headers, impersonate="chrome124", timeout=15)
         res.raise_for_status()
+    except Exception as e:
+        print(f"[FT Store] RSS fetch error for {feed_url}: {e}")
+        return []
 
-    root = ET.fromstring(res.text)
-    items = root.findall(".//item")
+    try:
+        root = ET.fromstring(res.text)
+        items = root.findall(".//item")
+    except Exception:
+        return []
+
+
     result = []
     for item in items[:limit]:
         title_el = item.find("title")
