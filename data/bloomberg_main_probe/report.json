@@ -1,0 +1,70 @@
+{
+  "candidate_count": 170,
+  "results": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/markets-brace-for-sharp-swings-no-matter-result-of-brazil-vote",
+      "status": 403,
+      "page_title": "Bloomberg - Are you a robot?"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/opec-has-deal-outline-for-steady-november-quotas-delegates-say",
+      "status": 403,
+      "page_title": "Bloomberg - Are you a robot?"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/flydubai-copilot-lost-earlier-job-for-engaging-with-extremism",
+      "status": 403,
+      "page_title": "Bloomberg - Are you a robot?"
+    }
+  ],
+  "browser_http_probe": {
+    "method": "browser-compatible HTTP client",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/markets-brace-for-sharp-swings-no-matter-result-of-brazil-vote",
+    "status": 403,
+    "page_title": "Bloomberg - Are you a robot?",
+    "h1": "Bloomberg",
+    "paragraph_count": 4
+  },
+  "chrome_probe": {
+    "method": "installed Chrome",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/markets-brace-for-sharp-swings-no-matter-result-of-brazil-vote",
+    "status": 403,
+    "page_title": "Bloomberg - Are you a robot?",
+    "h1": [
+      "Bloomberg"
+    ],
+    "paragraph_count": 4
+  },
+  "source": "Bloomberg main site (www.bloomberg.com)",
+  "article_count": 11,
+  "full_text_verified": false,
+  "summary": "Logged-in browser captured one article and then ten distinct articles. Main-site batch capture works; full-text extraction requires version-2 recapture to include lists and short paragraphs.",
+  "logged_in_cookie_probe": [
+    {
+      "browser": "chrome",
+      "error_type": "BrowserCookieError",
+      "error": "Unable to get key for cookie decryption"
+    },
+    {
+      "browser": "edge",
+      "bloomberg_cookie_count": 0,
+      "result": "No Bloomberg cookies found in default profile"
+    }
+  ],
+  "logged_in_dom_capture": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
+      "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
+      "published_at": "2026-10-03T17:12:02.801Z",
+      "authors": [
+        "María Paula Mijares Torres"
+      ],
+      "paragraph_count": 14,
+      "word_count": 547,
+      "body_quality_reviewed": true,
+      "full_text_reviewed": false,
+      "related_reading_removed": 2
+    }
+  ],
+  "batch_report": "batch_10_report.json"
+}

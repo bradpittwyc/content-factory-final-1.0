@@ -6692,6 +6692,26 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    function formatAppDateTime(isoStr) {
+      if (!isoStr) return '近期';
+      const str = String(isoStr).trim();
+      if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/.test(str)) {
+        return str.slice(0, 16);
+      }
+      try {
+        const d = new Date(str);
+        if (!isNaN(d.getTime())) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          const hh = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          return `${y}-${m}-${day} ${hh}:${mm}`;
+        }
+      } catch (e) {}
+      return str.replace('T', ' ').slice(0, 16);
+    }
+
     function toggleBbSortMode() {
       bbSortMode = (bbSortMode === 'time') ? 'initial' : 'time';
       const btnText = document.getElementById('bbSortModeText');
@@ -6726,9 +6746,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         });
       } else {
         list.sort((a, b) => {
-          const timeA = a.scraped_at || a.published_at || '';
-          const timeB = b.scraped_at || b.published_at || '';
-          return timeB.localeCompare(timeA);
+          const timeA = new Date(a.scraped_at || a.published_at || 0).getTime() || 0;
+          const timeB = new Date(b.scraped_at || b.published_at || 0).getTime() || 0;
+          return timeB - timeA;
         });
       }
       return list;
@@ -6747,7 +6767,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       container.innerHTML = list.map(a => {
 
-        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
+        const scrapedTimeStr = formatAppDateTime(a.scraped_at || a.published_at);
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
         return `
@@ -6769,7 +6789,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
 
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
@@ -7066,9 +7086,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         });
       } else {
         list.sort((a, b) => {
-          const timeA = a.scraped_at || a.published_at || '';
-          const timeB = b.scraped_at || b.published_at || '';
-          return timeB.localeCompare(timeA);
+          const timeA = new Date(a.scraped_at || a.published_at || 0).getTime() || 0;
+          const timeB = new Date(b.scraped_at || b.published_at || 0).getTime() || 0;
+          return timeB - timeA;
         });
       }
       return list;
@@ -7098,7 +7118,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       container.innerHTML = list.map(a => {
         const isSelected = ftSelectedUrls.has(a.url);
-        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
+        const scrapedTimeStr = formatAppDateTime(a.scraped_at || a.published_at);
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
         return `
@@ -7126,7 +7146,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
             <!-- 底栏入库时间与操作按钮 -->
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">
@@ -7292,8 +7312,8 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'Financial Times');
       document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : defaultAuthor;
-      document.getElementById('ftModalPublishedAt').innerText = article.published_at || '近期发布';
-      document.getElementById('ftModalScrapedAt').innerText = `入库: ${article.scraped_at || ''}`;
+      document.getElementById('ftModalPublishedAt').innerText = formatAppDateTime(article.published_at) || '近期发布';
+      document.getElementById('ftModalScrapedAt').innerText = `入库: ${formatAppDateTime(article.scraped_at) || ''}`;
       document.getElementById('ftModalOriginalLink').href = article.url;
 
       // 渲染段落
@@ -7835,9 +7855,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         });
       } else {
         list.sort((a, b) => {
-          const timeA = a.scraped_at || a.published_at || '';
-          const timeB = b.scraped_at || b.published_at || '';
-          return timeB.localeCompare(timeA);
+          const timeA = new Date(a.scraped_at || a.published_at || 0).getTime() || 0;
+          const timeB = new Date(b.scraped_at || b.published_at || 0).getTime() || 0;
+          return timeB - timeA;
         });
       }
       return list;
@@ -7869,7 +7889,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       container.innerHTML = list.map(a => {
         const isSelected = ecoSelectedUrls.has(a.url);
-        const scrapedTimeStr = a.scraped_at ? a.scraped_at.replace('T', ' ').slice(0, 16) : (a.published_at ? a.published_at.slice(0, 16) : '近期');
+        const scrapedTimeStr = formatAppDateTime(a.scraped_at || a.published_at);
         const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
 
         return `
@@ -7897,7 +7917,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
             <!-- 底栏入库时间与操作按钮 (符合规范：无时钟图标，干净排版) -->
             <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
-              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${a.scraped_at || scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
               
               <div class="flex items-center space-x-1.5 shrink-0">
                 <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown (供分发用户或知识库)">

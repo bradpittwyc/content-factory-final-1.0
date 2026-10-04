@@ -1,0 +1,1797 @@
+[
+  {
+    "id": "bloomberg_16d0940dc888fd22e3b8",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
+    "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
+    "published_at": "2026-10-03T17:12:02.801Z",
+    "authors": [
+      "María Paula Mijares Torres"
+    ],
+    "paragraphs": [
+      "US Treasury Secretary Scott Bessent criticized prominent artificial-intelligence figures’ warnings about existential risks posed by the technology as alarmist and unhelpful, calling on the industry to police itself and produce solutions.",
+      "“I believe that we have to be prepared for every occasion, but on the other side, this alarmism without solutions by some of the AI community, that’s not leadership,” Bessent told Axios in an interview published Saturday.",
+      "Anthropic PBC Chief Executive Officer Dario Amodei, OpenAI chief Sam Altman and xAI Corp.’s Elon Musk in September called for the industry to slow development of its most advanced models, citing growing risks for humanity. Microsoft co-founder Bill Gates also warned the technology is powerful enough to cause “a billion deaths” and called for government regulation.",
+      "President Donald Trump almost immediately rejected such calls, labeling the increasingly dire warnings about risk to humanity a “hoax” and insisting the US must push forward to maintain leadership over China — a sentiment that Bessent echoed in his remarks to Axios. “We cannot lose our lead to the Chinese,” he said.",
+      "“It is the people at the labs who have to accept responsibility, and I agree with that,” Bessent said. “I think the labs have come around to that way of thinking, too.”",
+      "No New Regulations",
+      "In a meeting with top industry executives including Musk, Microsoft CEO Satya Nadella, Meta Platforms Inc.’s Mark Zuckerberg, Palantir Technologies Inc. CEO Alex Karp and OpenAI President Greg Brockman. this week, the US president shot down the idea of new federal regulation.",
+      "“There’s a belief that there should be tremendous self-regulation, and we automatically have regulation with the Department of Justice, the FBI, all of that, but the self-regulation is very important,” Trump told reporters at the time. He instead endorsed using outside auditors to assess AI systems’ safety in a non-binding accord with Silicon Valley leaders.",
+      "Bessent told Axios the US will also seek to mitigate risks with a bilateral notification system with China that aims to reduce uncertainty, share warnings about serious incidents and help both governments respond before an AI problem escalates or spreads globally.",
+      "The treasury secretary and Chinese Vice Premier He Lifeng discussed artificial intelligence during talks in New York in September, saying the two countries agreed to create a “US-China AI dialogue” to try to develop a common understanding of the technology’s benefits and threats. The two met shortly before the summit between Presidents Donald Trump and Xi Jinping in Washington, where AI was among the topics.",
+      "Xi told Trump during his visit that China and the US can keep discussing AI, exchange views on its risks and benefits and work together to prevent its misuse, China’s Xinhua news agency reported.",
+      "Bessent told Axios they discussed risks such as uncontrolled AI agents and non-state actors using AI for cybersecurity or biological threats.",
+      "“A lot of these Chinese models are very powerful — not as powerful as the US models — but you get something that’s 80%, 90% as powerful, without guardrails that can be imported anywhere in the world,” Bessent told the outlet.",
+      "Asked about AI industry executives’ calls for regulation, however, Bessent replied: “Well, then they should slow down.”",
+      "“We want safe acceleration,” he said. “It is the people at the labs who have to accept responsibility, and I agree with that.”"
+    ],
+    "paragraph_count": 14,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "US Treasury Secretary Scott Bessent criticized prominent artificial-intelligence figures’ warnings about existential risks posed by the technology as alarmist and unhelpful, calling on the industry to police itself and produce solutions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“I believe that we have to be prepared for every occasion, but on the other side, this alarmism without solutions by some of the AI community, that’s not leadership,” Bessent told Axios in an interview published Saturday.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Anthropic PBC Chief Executive Officer Dario Amodei, OpenAI chief Sam Altman and xAI Corp.’s Elon Musk in September called for the industry to slow development of its most advanced models, citing growing risks for humanity. Microsoft co-founder Bill Gates also warned the technology is powerful enough to cause “a billion deaths” and called for government regulation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "President Donald Trump almost immediately rejected such calls, labeling the increasingly dire warnings about risk to humanity a “hoax” and insisting the US must push forward to maintain leadership over China — a sentiment that Bessent echoed in his remarks to Axios. “We cannot lose our lead to the Chinese,” he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“It is the people at the labs who have to accept responsibility, and I agree with that,” Bessent said. “I think the labs have come around to that way of thinking, too.”",
+        "is_related": false
+      },
+      {
+        "kind": "h3",
+        "text": "No New Regulations",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In a meeting with top industry executives including Musk, Microsoft CEO Satya Nadella, Meta Platforms Inc.’s Mark Zuckerberg, Palantir Technologies Inc. CEO Alex Karp and OpenAI President Greg Brockman. this week, the US president shot down the idea of new federal regulation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“There’s a belief that there should be tremendous self-regulation, and we automatically have regulation with the Department of Justice, the FBI, all of that, but the self-regulation is very important,” Trump told reporters at the time. He instead endorsed using outside auditors to assess AI systems’ safety in a non-binding accord with Silicon Valley leaders.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bessent told Axios the US will also seek to mitigate risks with a bilateral notification system with China that aims to reduce uncertainty, share warnings about serious incidents and help both governments respond before an AI problem escalates or spreads globally.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The treasury secretary and Chinese Vice Premier He Lifeng discussed artificial intelligence during talks in New York in September, saying the two countries agreed to create a “US-China AI dialogue” to try to develop a common understanding of the technology’s benefits and threats. The two met shortly before the summit between Presidents Donald Trump and Xi Jinping in Washington, where AI was among the topics.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Xi told Trump during his visit that China and the US can keep discussing AI, exchange views on its risks and benefits and work together to prevent its misuse, China’s Xinhua news agency reported.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bessent told Axios they discussed risks such as uncontrolled AI agents and non-state actors using AI for cybersecurity or biological threats.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“A lot of these Chinese models are very powerful — not as powerful as the US models — but you get something that’s 80%, 90% as powerful, without guardrails that can be imported anywhere in the world,” Bessent told the outlet.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Asked about AI industry executives’ calls for regulation, however, Bessent replied: “Well, then they should slow down.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“We want safe acceleration,” he said. “It is the people at the labs who have to accept responsibility, and I agree with that.”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 15,
+    "capture_version": 2,
+    "word_count": 550,
+    "scraped_at": "2026-10-05 07:27:45",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_1aee67d2a9d9b321c81f",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-03/us-ai-task-force-to-report-on-technology-s-risks-wsj-reports",
+    "title": "Trump Taps Clayton for AI Task Force in Response to Safety Fears",
+    "published_at": "2026-10-03T23:38:35.024Z",
+    "authors": [
+      "María Paula Mijares Torres"
+    ],
+    "paragraphs": [
+      "President Donald Trump said he appointed Jay Clayton, his director of national intelligence, to help lead a White House task force on artificial intelligence as the fast-moving technology raises concerns about its safety risks.",
+      "Clayton was the most prominent name cited by Trump in a social post announcing the creation of the group, which he said will coordinate the US government’s engagement on AI, including with consumers and the companies building it.",
+      "Trump was expected to name Clayton, a golfing buddy, as his next AI czar, people with knowledge of the matter said last week. His position atop the task force is effectively that role, the Wall Street Journal reported earlier.",
+      "Clayton has served as director of national intelligence since July, following his Senate confirmation to the position and now oversees the US’s sprawling spy bureaucracy.",
+      "Trump said the other task force leaders are Pentagon under secretary Andrew Ferguson, Chief Technology Officer Emil Michael and Scott Kupor, director of the Office of Personnel Management. They’ll report to Trump and White House Chief of Staff Susie Wiles.",
+      "Trump’s task for the group is to ensure “that we stay the leaders in superintelligence, and that the interests of the American people are put first,” the Journal cited Clayton as saying.",
+      "Trump has spurned calls for new government regulation as concern about AI’s security risks have increasingly spilled into public view. He says his priority is to keep the US ahead of China and has backed a voluntary framework involving outside safety audits and stronger internal controls.",
+      "“We have a very big lead, and we’re going to keep our lead, and it’s a very positive thing,” the president said during a meeting with industry executives last week.",
+      "Trump declared his intention to name an AI czar last month, after growing public concerns about potentially catastrophic threats from AI became too hard for the administration to ignore.",
+      "Last week, Trump hosted almost two-dozen Silicon Valley executives including Nvidia Corp. Chief Executive Officer Jensen Huang and Anthropic PBC CEO Dario Amodei at the White House to discuss the technology’s risks.",
+      "Trump’s name for the group is “Super Intelligence Force,” a nod to his preferred name for AI. It will have 120 days to prepare a report, the Journal said.",
+      "Treasury Secretary Scott Bessent criticized prominent AI leaders’ warnings about existential risks posed by the technology as alarmist and unhelpful, calling on the industry to police itself and produce solutions.",
+      "“It is the people at the labs who have to accept responsibility, and I agree with that,” Bessent said in an Axios interview published Saturday. “I think the labs have come around to that way of thinking, too.”"
+    ],
+    "paragraph_count": 13,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "President Donald Trump said he appointed Jay Clayton, his director of national intelligence, to help lead a White House task force on artificial intelligence as the fast-moving technology raises concerns about its safety risks.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Clayton was the most prominent name cited by Trump in a social post announcing the creation of the group, which he said will coordinate the US government’s engagement on AI, including with consumers and the companies building it.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump was expected to name Clayton, a golfing buddy, as his next AI czar, people with knowledge of the matter said last week. His position atop the task force is effectively that role, the Wall Street Journal reported earlier.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Clayton has served as director of national intelligence since July, following his Senate confirmation to the position and now oversees the US’s sprawling spy bureaucracy.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump said the other task force leaders are Pentagon under secretary Andrew Ferguson, Chief Technology Officer Emil Michael and Scott Kupor, director of the Office of Personnel Management. They’ll report to Trump and White House Chief of Staff Susie Wiles.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump’s task for the group is to ensure “that we stay the leaders in superintelligence, and that the interests of the American people are put first,” the Journal cited Clayton as saying.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump has spurned calls for new government regulation as concern about AI’s security risks have increasingly spilled into public view. He says his priority is to keep the US ahead of China and has backed a voluntary framework involving outside safety audits and stronger internal controls.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“We have a very big lead, and we’re going to keep our lead, and it’s a very positive thing,” the president said during a meeting with industry executives last week.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump declared his intention to name an AI czar last month, after growing public concerns about potentially catastrophic threats from AI became too hard for the administration to ignore.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Last week, Trump hosted almost two-dozen Silicon Valley executives including Nvidia Corp. Chief Executive Officer Jensen Huang and Anthropic PBC CEO Dario Amodei at the White House to discuss the technology’s risks.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Trump’s name for the group is “Super Intelligence Force,” a nod to his preferred name for AI. It will have 120 days to prepare a report, the Journal said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Treasury Secretary Scott Bessent criticized prominent AI leaders’ warnings about existential risks posed by the technology as alarmist and unhelpful, calling on the industry to police itself and produce solutions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“It is the people at the labs who have to accept responsibility, and I agree with that,” Bessent said in an Axios interview published Saturday. “I think the labs have come around to that way of thinking, too.”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 13,
+    "capture_version": 2,
+    "word_count": 442,
+    "scraped_at": "2026-10-05 07:27:35",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_bc8a1fee0cdb7e4e9674",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/britain-s-reliance-on-us-cloud-giants-alarms-its-politicians",
+    "title": "Britain’s Reliance on US Cloud Giants Alarms Its Politicians",
+    "published_at": "2026-10-04T07:00:00.000Z",
+    "authors": [
+      "Philip Aldrick",
+      "Jacob Reid"
+    ],
+    "paragraphs": [
+      "The UK’s dependence on big American cloud providers poses “a strategic and economic vulnerability” to the country, politicians warned, as US authorities have the power to switch off Britain’s public services or demand personal information under federal law.",
+      "Some of the UK’s most critical public services such as health, defense and tax administration are migrating to US clouds, raising concern among Members of Parliament. The unpredictable Trump administration makes the issue particularly urgent, they said.",
+      "Chi Onwurah, chair of the UK parliament’s science, innovation and technology committee, told Bloomberg that Washington effectively holds a legal “kill switch” in the form of the US CLOUD Act, which overrides UK privacy and data protection laws.",
+      "Under the legislation, US-headquartered providers can be made to disclose personal data on their servers if the government declares someone a threat, the committee was told by experts. The US can also order providers to withhold or withdraw services.",
+      "Earlier this year the committee warned that as a result British public services could be “derailed at any time by a decision taken outside our shores.”",
+      "Onwurah said recent White House decisions to block Anthropic and OpenAI from sharing tools with the UK revealed the potential threat. “The president could kill parts of critical national infrastructure by turning it off,” she said.",
+      "However, it’s “unlikely the UK could build a national competitor” to the services provided by US tech giants on its own, Onwurah added. “We should be working with France and Germany.”",
+      "Sovereignty is becoming an increasingly urgent issue as the UK tries to take advantage of AI, which requires access to the cloud for the computing power needed to process data. Kanishka Narayan, the AI minister, said last week that Britain needs around six times its current level of power just to cover basic requirements.",
+      "Only a massive data center roll-out could deliver that, but AI hyperscalers already face a backlash. Last month, the Scottish government voted to pause all new hyperscale data center developments, putting 24 projects on hold. Residents in other parts of the UK have also protested against data centers, mirroring the political fallout in the US.",
+      "Cloud security could be one way of changing the public mood. “The thing the British public really doesn’t like is their private sensitive data, particularly their healthcare data, going to foreign billionaires,” Narayan said.",
+      "Competition",
+      "The UK government spends about £1 billion ($1.3 billion) a year on cloud services, according to estimates from the committee, and is particularly dependent on AWS and Microsoft. Onwurah said those two providers alone account for as much as 80% of cloud services bought by the UK government but officials “don’t know the exact level of dependence.”",
+      "In the past year, HM Revenue & Customs awarded AWS a £473 million 10-year contract to manage UK tax data and the defense ministry struck a £400 million deal with Google Cloud to “strengthen secure communication links between the UK and US.” National Health Service trusts are migrating patient records from servers to US clouds.",
+      "Bloomberg may send me offers and promotions.",
+      "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+      "The dominance of the large US cloud providers is raising competition concerns, with some experts warning that sector poses a far greater monopoly risk in the UK than AI itself, where there is more plurality. “On this question of monopoly, the place where you can see more concentration is the cloud providers themselves,” James Benford, director general of economic statistics at the Office for National Statistics, told a recent conference in London.",
+      "Onwurah believes the government is “not getting value for money.”",
+      "A government spokesperson said officials were working “to strengthen resilience and improve the way the public sector procures and manages cloud services” and that departments must consider “risks associated with over-reliance on any individual supplier.” All three departments said their data was safeguarded in UK domiciled data centers, in response to queries from Bloomberg, but did not address the US CLOUD Act concerns directly.",
+      "Europe",
+      "Other European countries are taking a more forceful approach than the UK, prompted in part by testimony from Microsoft France’s legal director in 2025 in which he accepted the company would not be able to oppose a US injunction demanding access to French citizens’ personal information.",
+      "The European Commission is developing its own framework under the Cloud and AI Development Act to “strengthen Europe’s sovereignty and competitiveness in the cloud and AI ecosystem” by encouraging greater use of the continent’s infrastructure.",
+      "In April, France replaced Microsoft Azure with domestic cloud provider Scaleway for its national health data hub and has developed OVHcloud, a sovereign cloud service. The German state of Schleswig-Holstein has moved from Microsoft to open-source alternatives. However, even European alternatives are tiny compared with their US rivals. OVHcloud had just about €1 billion in revenue last year. AWS had $128 billion.",
+      "HMRC said its cloud contracts have to meet “strict government security, data protection and procurement requirements.” The MOD said contracts were subject to “strict data sovereignty and security controls.” DHSC said protecting patient data was “an absolute priority” and all NHS organizations “must comply with UK data protection law.”"
+    ],
+    "paragraph_count": 21,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "The UK’s dependence on big American cloud providers poses “a strategic and economic vulnerability” to the country, politicians warned, as US authorities have the power to switch off Britain’s public services or demand personal information under federal law.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Some of the UK’s most critical public services such as health, defense and tax administration are migrating to US clouds, raising concern among Members of Parliament. The unpredictable Trump administration makes the issue particularly urgent, they said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Chi Onwurah, chair of the UK parliament’s science, innovation and technology committee, told Bloomberg that Washington effectively holds a legal “kill switch” in the form of the US CLOUD Act, which overrides UK privacy and data protection laws.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Under the legislation, US-headquartered providers can be made to disclose personal data on their servers if the government declares someone a threat, the committee was told by experts. The US can also order providers to withhold or withdraw services.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Earlier this year the committee warned that as a result British public services could be “derailed at any time by a decision taken outside our shores.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Onwurah said recent White House decisions to block Anthropic and OpenAI from sharing tools with the UK revealed the potential threat. “The president could kill parts of critical national infrastructure by turning it off,” she said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "However, it’s “unlikely the UK could build a national competitor” to the services provided by US tech giants on its own, Onwurah added. “We should be working with France and Germany.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Sovereignty is becoming an increasingly urgent issue as the UK tries to take advantage of AI, which requires access to the cloud for the computing power needed to process data. Kanishka Narayan, the AI minister, said last week that Britain needs around six times its current level of power just to cover basic requirements.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Only a massive data center roll-out could deliver that, but AI hyperscalers already face a backlash. Last month, the Scottish government voted to pause all new hyperscale data center developments, putting 24 projects on hold. Residents in other parts of the UK have also protested against data centers, mirroring the political fallout in the US.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Cloud security could be one way of changing the public mood. “The thing the British public really doesn’t like is their private sensitive data, particularly their healthcare data, going to foreign billionaires,” Narayan said.",
+        "is_related": false
+      },
+      {
+        "kind": "h3",
+        "text": "Competition",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The UK government spends about £1 billion ($1.3 billion) a year on cloud services, according to estimates from the committee, and is particularly dependent on AWS and Microsoft. Onwurah said those two providers alone account for as much as 80% of cloud services bought by the UK government but officials “don’t know the exact level of dependence.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In the past year, HM Revenue & Customs awarded AWS a £473 million 10-year contract to manage UK tax data and the defense ministry struck a £400 million deal with Google Cloud to “strengthen secure communication links between the UK and US.” National Health Service trusts are migrating patient records from servers to US clouds.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bloomberg may send me offers and promotions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The dominance of the large US cloud providers is raising competition concerns, with some experts warning that sector poses a far greater monopoly risk in the UK than AI itself, where there is more plurality. “On this question of monopoly, the place where you can see more concentration is the cloud providers themselves,” James Benford, director general of economic statistics at the Office for National Statistics, told a recent conference in London.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Onwurah believes the government is “not getting value for money.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A government spokesperson said officials were working “to strengthen resilience and improve the way the public sector procures and manages cloud services” and that departments must consider “risks associated with over-reliance on any individual supplier.” All three departments said their data was safeguarded in UK domiciled data centers, in response to queries from Bloomberg, but did not address the US CLOUD Act concerns directly.",
+        "is_related": false
+      },
+      {
+        "kind": "h3",
+        "text": "Europe",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Other European countries are taking a more forceful approach than the UK, prompted in part by testimony from Microsoft France’s legal director in 2025 in which he accepted the company would not be able to oppose a US injunction demanding access to French citizens’ personal information.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The European Commission is developing its own framework under the Cloud and AI Development Act to “strengthen Europe’s sovereignty and competitiveness in the cloud and AI ecosystem” by encouraging greater use of the continent’s infrastructure.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In April, France replaced Microsoft Azure with domestic cloud provider Scaleway for its national health data hub and has developed OVHcloud, a sovereign cloud service. The German state of Schleswig-Holstein has moved from Microsoft to open-source alternatives. However, even European alternatives are tiny compared with their US rivals. OVHcloud had just about €1 billion in revenue last year. AWS had $128 billion.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "HMRC said its cloud contracts have to meet “strict government security, data protection and procurement requirements.” The MOD said contracts were subject to “strict data sovereignty and security controls.” DHSC said protecting patient data was “an absolute priority” and all NHS organizations “must comply with UK data protection law.”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 23,
+    "capture_version": 2,
+    "word_count": 861,
+    "scraped_at": "2026-10-05 07:27:26",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_2c1de2e1e8fb8c439a21",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/softbank-s-masayoshi-son-has-rare-cautionary-note-on-ai-safety",
+    "title": "SoftBank’s Masayoshi Son Has Rare Cautionary Note on AI Safety",
+    "published_at": "2026-10-04T09:32:29.371Z",
+    "authors": [
+      "Mayumi Negishi"
+    ],
+    "paragraphs": [
+      "SoftBank Group Corp. chief Masayoshi Son — one of AI’s fervent believers — said that even he’s worried about safety risks as machines quickly gain more abilities.",
+      "An exponential surge in AI capabilities makes it imperative for countries to build trust so that they can harness the technology together, Son said at an event on the sidelines of the Science and Technology in Society forum in Kyoto on Sunday. He was speaking alongside White House science and tech policy advisor Michael Kratsios.",
+      "“We don’t have any more luxury of having human fight against human,” Son said, adding that countries need to work together to control the far greater threat from powerful AI models. Superintelligence in the wrong hands can become “super dangerous,” he said.",
+      "It was an uncharacteristic note of caution from Son that reflects escalating concern in the wake of disturbing security breaches by AI models in recent months. The 69-year-old Japanese billionaire has directed SoftBank funds totalling nearly $65 billion into ChatGPT creator OpenAI, and has spoken for years about the ability of AI to deliver investment returns and help humanity.",
+      "Kratsios was in the Japanese city to announce a US-led 17-country push to better use AI to accelerate scientific research. Representatives of nations including Japan, South Korea, the UK, Germany, Singapore and the United Arab Emirates joined Kratsios on stage to mark the event. The list of countries that initially endorsed the White House statement did not include China.",
+      "“In automated cloud laboratories operating at industrial scale, robotic systems will conduct hundreds of parallel experiments, generating data that feeds back for real-time analysis and hypothesis refinement,” Kratsios said.",
+      "Machines are able to synthesize thousands of papers and compress years of research into “tens of hours of work by armies of digital agents assisting human researchers,” he added.",
+      "In the meantime, AI services’ capabilities will continue to grow exponentially, Son said. The technology behind chatbots is now helping AI services browse sites and write code, using rising amounts of general-purpose chips. Such programs will next move to a third phase and be ready to help robots and other machines interact with the physical world starting next year, he said.",
+      "Son reiterated his long-term projection that AI and machines with learning capabilities would account for at least 20% of global gross domestic product by 2040, or the equivalent of $46 trillion. “This is just the beginning.”",
+      "Masa Son’s Huge OpenAI Bet Sends SoftBank Debt Costs Soaring",
+      "SoftBank Founder’s Starstruck Bet on OpenAI Raises Concern"
+    ],
+    "paragraph_count": 11,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "SoftBank Group Corp. chief Masayoshi Son — one of AI’s fervent believers — said that even he’s worried about safety risks as machines quickly gain more abilities.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "An exponential surge in AI capabilities makes it imperative for countries to build trust so that they can harness the technology together, Son said at an event on the sidelines of the Science and Technology in Society forum in Kyoto on Sunday. He was speaking alongside White House science and tech policy advisor Michael Kratsios.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“We don’t have any more luxury of having human fight against human,” Son said, adding that countries need to work together to control the far greater threat from powerful AI models. Superintelligence in the wrong hands can become “super dangerous,” he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "It was an uncharacteristic note of caution from Son that reflects escalating concern in the wake of disturbing security breaches by AI models in recent months. The 69-year-old Japanese billionaire has directed SoftBank funds totalling nearly $65 billion into ChatGPT creator OpenAI, and has spoken for years about the ability of AI to deliver investment returns and help humanity.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Kratsios was in the Japanese city to announce a US-led 17-country push to better use AI to accelerate scientific research. Representatives of nations including Japan, South Korea, the UK, Germany, Singapore and the United Arab Emirates joined Kratsios on stage to mark the event. The list of countries that initially endorsed the White House statement did not include China.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“In automated cloud laboratories operating at industrial scale, robotic systems will conduct hundreds of parallel experiments, generating data that feeds back for real-time analysis and hypothesis refinement,” Kratsios said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Machines are able to synthesize thousands of papers and compress years of research into “tens of hours of work by armies of digital agents assisting human researchers,” he added.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In the meantime, AI services’ capabilities will continue to grow exponentially, Son said. The technology behind chatbots is now helping AI services browse sites and write code, using rising amounts of general-purpose chips. Such programs will next move to a third phase and be ready to help robots and other machines interact with the physical world starting next year, he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Son reiterated his long-term projection that AI and machines with learning capabilities would account for at least 20% of global gross domestic product by 2040, or the equivalent of $46 trillion. “This is just the beginning.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Masa Son’s Huge OpenAI Bet Sends SoftBank Debt Costs Soaring",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "SoftBank Founder’s Starstruck Bet on OpenAI Raises Concern",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 11,
+    "capture_version": 2,
+    "word_count": 415,
+    "scraped_at": "2026-10-05 07:27:18",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_a4f29ee6d816fa2e19d2",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/ai-whistleblowers-google-openai-meta-to-face-new-york-city-council",
+    "title": "Ex-Anthropic Researcher Coxon to Testify at NYC Hearing on AI",
+    "published_at": "2026-10-04T20:00:00.000Z",
+    "authors": [
+      "Nacha Cattan",
+      "Laura Nahmias"
+    ],
+    "paragraphs": [
+      "Former Anthropic researcher Jacob Coxon, who warned that artificial intelligence could become too powerful for humans to control, will testify Monday at a New York City Council hearing alongside representatives of some of the world’s biggest AI companies.",
+      "Coxon will appear at the request of Council Speaker Julie Menin, who has urged AI whistleblowers to testify as city lawmakers weigh a package of bills aimed at establishing safeguards around the technology, according to people familiar with the matter.",
+      "Coxon quit Anthropic last month and issued a stark warning about the race to develop increasingly powerful AI, accusing his former employer and OpenAI of “gambling with our lives.” He confirmed he plans to testify on Monday.",
+      "The hearing will put some of the industry’s most vocal critics in the same room as representatives of Anthropic, OpenAI, Alphabet Inc.’s Google and Meta Platforms Inc.",
+      "Former Google DeepMind researcher Alex Turner and Daniel Kokotajlo, executive director of the AI Futures Project and a former OpenAI researcher, are also expected to testify, according to one of the people. The four major AI companies will send policy and safety officials, the person said.",
+      "Turner confirmed he plans to attend the hearing. A spokesperson for Google declined to comment. Kokotajlo and representatives of the other companies didn’t respond to requests for comment.",
+      "The hearing is part of an effort by New York officials to play a larger role in regulating an industry that has expanded rapidly in the city even as much of AI regulation remains the province of federal and state governments.",
+      "One proposal before the council, sponsored by Menin, would give whistleblowers a portion of fines or penalties recovered from AI companies following reported violations. Other legislation under consideration would allow people harmed by AI systems to sue developers under certain circumstances and require third-party validation of some systems before they can be deployed in the city.",
+      "OpenAI, Anthropic and Google agreed to appear after Menin’s office warned that they could be subpoenaed, while Meta had committed to attending earlier, Bloomberg News previously reported. The Council subpoenaed SpaceX’s artificial intelligence unit after it failed to respond to requests to appear."
+    ],
+    "paragraph_count": 9,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Former Anthropic researcher Jacob Coxon, who warned that artificial intelligence could become too powerful for humans to control, will testify Monday at a New York City Council hearing alongside representatives of some of the world’s biggest AI companies.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Coxon will appear at the request of Council Speaker Julie Menin, who has urged AI whistleblowers to testify as city lawmakers weigh a package of bills aimed at establishing safeguards around the technology, according to people familiar with the matter.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Coxon quit Anthropic last month and issued a stark warning about the race to develop increasingly powerful AI, accusing his former employer and OpenAI of “gambling with our lives.” He confirmed he plans to testify on Monday.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The hearing will put some of the industry’s most vocal critics in the same room as representatives of Anthropic, OpenAI, Alphabet Inc.’s Google and Meta Platforms Inc.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Former Google DeepMind researcher Alex Turner and Daniel Kokotajlo, executive director of the AI Futures Project and a former OpenAI researcher, are also expected to testify, according to one of the people. The four major AI companies will send policy and safety officials, the person said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Turner confirmed he plans to attend the hearing. A spokesperson for Google declined to comment. Kokotajlo and representatives of the other companies didn’t respond to requests for comment.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The hearing is part of an effort by New York officials to play a larger role in regulating an industry that has expanded rapidly in the city even as much of AI regulation remains the province of federal and state governments.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "One proposal before the council, sponsored by Menin, would give whistleblowers a portion of fines or penalties recovered from AI companies following reported violations. Other legislation under consideration would allow people harmed by AI systems to sue developers under certain circumstances and require third-party validation of some systems before they can be deployed in the city.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "OpenAI, Anthropic and Google agreed to appear after Menin’s office warned that they could be subpoenaed, while Meta had committed to attending earlier, Bloomberg News previously reported. The Council subpoenaed SpaceX’s artificial intelligence unit after it failed to respond to requests to appear.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 9,
+    "capture_version": 2,
+    "word_count": 356,
+    "scraped_at": "2026-10-05 07:27:02",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_05b871463adb643ab7d2",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/schumer-demands-flock-delete-personal-data-disclose-its-use",
+    "title": "Schumer Demands Flock Delete Personal Data, Disclose Its Use",
+    "published_at": "2026-10-04T20:23:33.963Z",
+    "authors": [
+      "María Paula Mijares Torres"
+    ],
+    "paragraphs": [
+      "Senate Democratic leader Chuck Schumer is demanding that Flock Safety delete personal data not connected to crimes and disclose whether federal agencies have accessed the company’s nationwide license-plate database.",
+      "“A company can’t just come in and collect personal information about our entire lives and not answer any questions about it,” Schumer said in a statement on Sunday. “We have no insight into what contracts this company has here, or how much of this information law enforcement is using.”",
+      "Senators Bernie Sanders and Jeff Merkley as well as Representative Alexandria Ocasio-Cortez, all Democrats, introduced legislation on Oct. 2 that would restrict federal use of Flock’s cameras powered by artificial intelligence.",
+      "Schumer didn’t explicitly back that bill, the Ban Flock Act, in his statement.",
+      "Concerns about information collected by Flock’s camera networks are bound up in growing anxieties over the role of technology, particularly AI, in American life, and politicians in both parties have responded. Last week, Senator Josh Hawley, a Missouri Republican, announced that he would introduce legislation called the Stop Flock Abuse Act.",
+      "“AI-powered cameras produced by Flock and its competitors are tracking and creating digital footprints of everyday Americans — a nightmare for individual liberties unless Congress enacts meaningful rules and accountability,” Hawley said in a statement.",
+      "The company, an Atlanta startup founded in 2017, said in a statement on Sunday that it welcomed “the opportunity to provide Senator Schumer and other policymakers with additional information about our technology and how it is used by law enforcement agencies across the country.”",
+      "After a backlash prompted some communities to cancel contracts, Flock tightened data sharing and storage rules in August.",
+      "Schumer pressed Flock to explain what data it collects on Americans, how long it stores that information and who can access it. In a letter to Flock’s chief executive officer, Garrett Langley, he asked for details about the company’s National Lookup Tool, which allows law enforcement agencies to search camera data collected outside their jurisdictions.",
+      "He also asked whether federal agencies have accessed Flock data directly or through local police departments, and raised concerns about reports that the company can link license plates to names, telephone numbers and relatives of motorists.",
+      "Schumer cited recent security breaches involving Flock cameras and asked for a response by Oct. 16. His statement didn’t mention Flock’s use of artificial intelligence software.",
+      "The bill proposed Friday by Sanders would largely ban federal use of Flock’s AI-powered cameras and data, while tying some federal grants to similar state and local restrictions. Sanders compared the system to forcing Americans to wear ankle monitors and said the measure is meant to prevent a surveillance state.",
+      "The use of Flock’s surveillance tools has increased swiftly across more than 12,000 communities and lawenforcement agencies across 43 US states, as of 2025. The connected devices, such as sensors and automated license plate readers, have allowed law enforcement agencies to map vehicles’ travel over long distances, which, they say, bolsters their ability to fight crime.",
+      "“Going to the doctor? Flock knows. Dropping your kid off at school? Flock is tracking you,” Sanders said in a statement announcing his bill Friday."
+    ],
+    "paragraph_count": 14,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Senate Democratic leader Chuck Schumer is demanding that Flock Safety delete personal data not connected to crimes and disclose whether federal agencies have accessed the company’s nationwide license-plate database.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“A company can’t just come in and collect personal information about our entire lives and not answer any questions about it,” Schumer said in a statement on Sunday. “We have no insight into what contracts this company has here, or how much of this information law enforcement is using.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Senators Bernie Sanders and Jeff Merkley as well as Representative Alexandria Ocasio-Cortez, all Democrats, introduced legislation on Oct. 2 that would restrict federal use of Flock’s cameras powered by artificial intelligence.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Schumer didn’t explicitly back that bill, the Ban Flock Act, in his statement.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Concerns about information collected by Flock’s camera networks are bound up in growing anxieties over the role of technology, particularly AI, in American life, and politicians in both parties have responded. Last week, Senator Josh Hawley, a Missouri Republican, announced that he would introduce legislation called the Stop Flock Abuse Act.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“AI-powered cameras produced by Flock and its competitors are tracking and creating digital footprints of everyday Americans — a nightmare for individual liberties unless Congress enacts meaningful rules and accountability,” Hawley said in a statement.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The company, an Atlanta startup founded in 2017, said in a statement on Sunday that it welcomed “the opportunity to provide Senator Schumer and other policymakers with additional information about our technology and how it is used by law enforcement agencies across the country.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "After a backlash prompted some communities to cancel contracts, Flock tightened data sharing and storage rules in August.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Schumer pressed Flock to explain what data it collects on Americans, how long it stores that information and who can access it. In a letter to Flock’s chief executive officer, Garrett Langley, he asked for details about the company’s National Lookup Tool, which allows law enforcement agencies to search camera data collected outside their jurisdictions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "He also asked whether federal agencies have accessed Flock data directly or through local police departments, and raised concerns about reports that the company can link license plates to names, telephone numbers and relatives of motorists.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Schumer cited recent security breaches involving Flock cameras and asked for a response by Oct. 16. His statement didn’t mention Flock’s use of artificial intelligence software.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The bill proposed Friday by Sanders would largely ban federal use of Flock’s AI-powered cameras and data, while tying some federal grants to similar state and local restrictions. Sanders compared the system to forcing Americans to wear ankle monitors and said the measure is meant to prevent a surveillance state.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The use of Flock’s surveillance tools has increased swiftly across more than 12,000 communities and lawenforcement agencies across 43 US states, as of 2025. The connected devices, such as sensors and automated license plate readers, have allowed law enforcement agencies to map vehicles’ travel over long distances, which, they say, bolsters their ability to fight crime.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Going to the doctor? Flock knows. Dropping your kid off at school? Flock is tracking you,” Sanders said in a statement announcing his bill Friday.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 14,
+    "capture_version": 2,
+    "word_count": 518,
+    "scraped_at": "2026-10-05 07:26:52",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_2b39efe915cd05877266",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
+    "title": "US Lead in AI Over China Narrows After DeepSeek Gains, BI Says",
+    "published_at": "2026-10-04T21:03:00.000Z",
+    "authors": [
+      "Saritha Rai"
+    ],
+    "paragraphs": [
+      "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
+      "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
+      "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
+      "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
+      "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
+      "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
+      "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
+      "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
+      "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
+      "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
+      "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said."
+    ],
+    "paragraph_count": 11,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 11,
+    "capture_version": 2,
+    "word_count": 450,
+    "scraped_at": "2026-10-05 07:26:44",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    },
+    "needs_recapture": true
+  },
+  {
+    "id": "bloomberg_73f6f09efb4e71c30cdc",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/tories-eye-end-to-uk-inheritance-tax-and-childcare-cliff-edge",
+    "title": "Tories Eye End to UK Inheritance Tax and Childcare Cliff Edge",
+    "published_at": "2026-10-04T09:04:49.644Z",
+    "authors": [
+      "Alex Wickham"
+    ],
+    "paragraphs": [
+      "UK Conservative leader Kemi Badenoch is using her party’s annual convention to call for the end of inheritance tax and an expansion of childcare support to higher earners.",
+      "In a series of media interviews to mark the beginning of the conference, the opposition leader set out a pitch to Britain’s aspirational middle-class voters to reconsider her party, against a backdrop where Nigel Farage’s Reform UK has made inroads and Labour, under new Prime Minister Andy Burnham, is enjoying a bounce in polls.",
+      "“My principle is that inheritance taxes are unfair,” Badenoch told The Times newspaper. “The richest don’t pay them. It is just the middle class,” she argued, describing the levies as “immoral.”",
+      "Voting intention, 14-day moving average",
+      "Note: Discs represent individual polls. Data up to Sep. 30",
+      "Sources: We Think (Omnisis), Survation, Techne UK, Opinium, Deltapoll, More in Common, YouGov, Ipsos, Find Out Now",
+      "In the tax year through 2024, fewer than 5% of Britons paid the tax, which is levied at 40% on estates above £325,000 ($430,000). That raised £6.7 billion for the exchequer. According to the Office for Budget Responsibility, the tax will raise £8.4 billion in the year through 2025, rising to £14.7 billion through 2031.",
+      "Badenoch said she would not announce a plan to scrap inheritance tax without a way to fund it. “I’m not doing tax cuts until I can show that we’re being fiscally credible and fiscally responsible,” she said, while also signaling that was her direction of travel: “When we’re ready we’ll announce.”",
+      "In a separate interview with the BBC, Badenoch pledged to keep the so-called triple lock protecting rises in state pensions which Burnham said he would alter to fund elder care. She also vowed to end she called the “absurd cliff edge” that sees parents lose out on state-provided childcare if they earn more than £100,000 a year.",
+      "The current system means that if one parent earns above that threshold, the family becomes ineligible for government-funded or tax-free childcare. Think tanks such as the Institute for Fiscal Studies have said the system creates perverse incentives for those nearing the level to eschew longer hours and promotions.",
+      "“What we want to see is that people who work harder don’t get punished for doing so,” Badenoch told the BBC. She said this would be the “first step” in Tory proposals to reform the tax system.",
+      "Ahead of the conference, the Tories also announced a plan to build 50,000 new prison places, which they said would cost £2 billion a year and be funded by cuts including to foreign aid spending.",
+      "The previous Conservative government had instituted a statutory requirement that the UK spends 0.7% of gross national income on overseas development, which the Labour government has slashed to nearer 0.3%.",
+      "Bloomberg reported Saturday that Burnham’s speech at Labour’s own conference last week, in which he laid out a long-term vision for Britain including reducing the rise in the state pension, reforming the electoral system and potentially taking the UK back into the European Union, had the Conservatives sensing an opportunity to capitalize.",
+      "Tory officials said they saw their opponent setting up a more traditional contest along left-wing and center-right lines, adding that Badenoch would go into the next election pledging to be the party of economic growth, business and sound money.",
+      "Harking back to the party’s Thatcher-era roots, Badenoch called herself “a classic old school conservative,” and branded her opposition “the common-sense party” in relation to plan to cut welfare.",
+      "Still, many Tories doubt they’ll be able to turn around their fortunes in one electoral cycle after a wipeout in the 2024 election. It would likely take longer than that for voters to forgive and forget the brief market-roiling Liz Truss premiership and their chaotic years in office, party officials said."
+    ],
+    "paragraph_count": 17,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "UK Conservative leader Kemi Badenoch is using her party’s annual convention to call for the end of inheritance tax and an expansion of childcare support to higher earners.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In a series of media interviews to mark the beginning of the conference, the opposition leader set out a pitch to Britain’s aspirational middle-class voters to reconsider her party, against a backdrop where Nigel Farage’s Reform UK has made inroads and Labour, under new Prime Minister Andy Burnham, is enjoying a bounce in polls.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“My principle is that inheritance taxes are unfair,” Badenoch told The Times newspaper. “The richest don’t pay them. It is just the middle class,” she argued, describing the levies as “immoral.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Voting intention, 14-day moving average",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Note: Discs represent individual polls. Data up to Sep. 30",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Sources: We Think (Omnisis), Survation, Techne UK, Opinium, Deltapoll, More in Common, YouGov, Ipsos, Find Out Now",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In the tax year through 2024, fewer than 5% of Britons paid the tax, which is levied at 40% on estates above £325,000 ($430,000). That raised £6.7 billion for the exchequer. According to the Office for Budget Responsibility, the tax will raise £8.4 billion in the year through 2025, rising to £14.7 billion through 2031.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Badenoch said she would not announce a plan to scrap inheritance tax without a way to fund it. “I’m not doing tax cuts until I can show that we’re being fiscally credible and fiscally responsible,” she said, while also signaling that was her direction of travel: “When we’re ready we’ll announce.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In a separate interview with the BBC, Badenoch pledged to keep the so-called triple lock protecting rises in state pensions which Burnham said he would alter to fund elder care. She also vowed to end she called the “absurd cliff edge” that sees parents lose out on state-provided childcare if they earn more than £100,000 a year.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The current system means that if one parent earns above that threshold, the family becomes ineligible for government-funded or tax-free childcare. Think tanks such as the Institute for Fiscal Studies have said the system creates perverse incentives for those nearing the level to eschew longer hours and promotions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“What we want to see is that people who work harder don’t get punished for doing so,” Badenoch told the BBC. She said this would be the “first step” in Tory proposals to reform the tax system.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Ahead of the conference, the Tories also announced a plan to build 50,000 new prison places, which they said would cost £2 billion a year and be funded by cuts including to foreign aid spending.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The previous Conservative government had instituted a statutory requirement that the UK spends 0.7% of gross national income on overseas development, which the Labour government has slashed to nearer 0.3%.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bloomberg reported Saturday that Burnham’s speech at Labour’s own conference last week, in which he laid out a long-term vision for Britain including reducing the rise in the state pension, reforming the electoral system and potentially taking the UK back into the European Union, had the Conservatives sensing an opportunity to capitalize.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Tory officials said they saw their opponent setting up a more traditional contest along left-wing and center-right lines, adding that Badenoch would go into the next election pledging to be the party of economic growth, business and sound money.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Harking back to the party’s Thatcher-era roots, Badenoch called herself “a classic old school conservative,” and branded her opposition “the common-sense party” in relation to plan to cut welfare.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Still, many Tories doubt they’ll be able to turn around their fortunes in one electoral cycle after a wipeout in the 2024 election. It would likely take longer than that for voters to forgive and forget the brief market-roiling Liz Truss premiership and their chaotic years in office, party officials said.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 17,
+    "capture_version": 1,
+    "word_count": 629,
+    "scraped_at": "2026-10-05 07:06:58",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_8d389f80dd17bde393aa",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/uk-government-scraps-controversial-plan-to-curb-some-jury-trials",
+    "title": "UK Government to ‘Change Course’ on Plan to Curb Jury Trials",
+    "published_at": "2026-10-04T06:56:12.190Z",
+    "authors": [
+      "Marcus Wright",
+      "Lucca de Paoli"
+    ],
+    "paragraphs": [
+      "The UK government said it will scrap earlier plans for some criminal trials to be heard by a judge alone, watering down proposed legislation that had sparked strong opposition from legal professionals and some Labour backbenchers.",
+      "“I have heard the strength of feeling on the proposals for increasing the number of judge-alone trials in the Crown Court and have made the decision to change course,” Justice Secretary Alex Norris said on Sunday in a statement.",
+      "Former Prime Minister Keir Starmer’s government announced last year that juries will be scrapped in England and Wales for a range of criminal trials, including the most complex financial crime, in the biggest shake-up of the country’s justice system in decades. The plans were aimed at reducing the record backlog in the court system, with nearly 81,000 cases currently awaiting trial, of which almost a third involve delays of a year or longer.",
+      "But Starmer was replaced in July by new Labour leader Andy Burnham, who has since been crafting a new political narrative in an effort to revive his party’s fortunes.",
+      "The government will implement some of the other changes in the original bill, including increasing the sentencing powers of some lower court judges and limiting the right of appeal to higher courts.",
+      "“The backlog now is over 80,000 cases and near doubling from before the pandemic,” Norris said in an interview on Sky News on Sunday morning. “That caseload will go through 100,000 if we don’t make changes.”",
+      "The government still plans to allow technical and lengthy fraud and financial cases to be heard by a judge alone, it said in Sunday’s statement. It also plans to allow magistrates to hand out longer sentences, in an effort to get the courts to deal with cases more quickly.",
+      "The latest changes will be implemented in the Courts and Tribunals Bill, which is due to return to parliament for debate on Oct. 13, according to the statement."
+    ],
+    "paragraph_count": 8,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "The UK government said it will scrap earlier plans for some criminal trials to be heard by a judge alone, watering down proposed legislation that had sparked strong opposition from legal professionals and some Labour backbenchers.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“I have heard the strength of feeling on the proposals for increasing the number of judge-alone trials in the Crown Court and have made the decision to change course,” Justice Secretary Alex Norris said on Sunday in a statement.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Former Prime Minister Keir Starmer’s government announced last year that juries will be scrapped in England and Wales for a range of criminal trials, including the most complex financial crime, in the biggest shake-up of the country’s justice system in decades. The plans were aimed at reducing the record backlog in the court system, with nearly 81,000 cases currently awaiting trial, of which almost a third involve delays of a year or longer.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "But Starmer was replaced in July by new Labour leader Andy Burnham, who has since been crafting a new political narrative in an effort to revive his party’s fortunes.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The government will implement some of the other changes in the original bill, including increasing the sentencing powers of some lower court judges and limiting the right of appeal to higher courts.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“The backlog now is over 80,000 cases and near doubling from before the pandemic,” Norris said in an interview on Sky News on Sunday morning. “That caseload will go through 100,000 if we don’t make changes.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The government still plans to allow technical and lengthy fraud and financial cases to be heard by a judge alone, it said in Sunday’s statement. It also plans to allow magistrates to hand out longer sentences, in an effort to get the courts to deal with cases more quickly.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The latest changes will be implemented in the Courts and Tribunals Bill, which is due to return to parliament for debate on Oct. 13, according to the statement.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 8,
+    "capture_version": 1,
+    "word_count": 322,
+    "scraped_at": "2026-10-05 07:06:50",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_971dd22015ecc32037e2",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/south-africa-s-zille-leads-in-race-for-johannesburg-mayor-poll",
+    "title": "South Africa’s Zille Leads in Race for Johannesburg Mayor: Poll",
+    "published_at": "2026-10-04T10:25:15.843Z",
+    "authors": [
+      "Alister Bull"
+    ],
+    "paragraphs": [
+      "Veteran South African opposition politician Helen Zille is the front-runner to become Johannesburg’s next mayor, a new poll showed, but she’ll likely fall short of securing an outright majority in municipal elections to be held on Nov. 4.",
+      "Zille is set to receive 36% of the votes, according to a News 24/SABI Strategy Group survey published on Sunday, well ahead of the 27% who’d back an African National Congress candidate — but short of the 50% threshold that would allow her to govern without the support of other parties.",
+      "Zille’s Democratic Alliance party, which will be the actual choice on the ballot, got a more modest 29% but was still ahead of the ANC on 23%, which would represent a 10-percentage point retreat from its 2021 result.",
+      "The new poll was at odds with the findings of a survey in early September which showed the ANC in the lead at 31% in Johannesburg, compared with 28% for the DA.",
+      "Johannesburg is the nation’s commercial hub but has become a poster child for dysfunctional city governance in South Africa. It’s a key race in an election that will test whether the ANC can stall declining popularity with voters who are angry over high unemployment, poor public services, crime and corruption.",
+      "The party of Nelson Mandela lost its parliamentary majority in the 2024 general election for the first time since the end of White-minority rule 30 years earlier.",
+      "The ANC has since governed at the national level in a coalition with smaller rivals and the DA, the second-largest party. Even as the ANC has declined in the polls, the so-called government of national unity has won favor from investors for its pro-business approach. South Africa’s next national elections are due to be held in 2029.",
+      "The N24/SABI poll was conducted between Aug. 25 and Sept. 17 among a sample of 1,000 registered Johannesburg voters. It measured both the popularity of the individual parties and who voters would choose if they could select an individual candidate such as Zille."
+    ],
+    "paragraph_count": 8,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Veteran South African opposition politician Helen Zille is the front-runner to become Johannesburg’s next mayor, a new poll showed, but she’ll likely fall short of securing an outright majority in municipal elections to be held on Nov. 4.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Zille is set to receive 36% of the votes, according to a News 24/SABI Strategy Group survey published on Sunday, well ahead of the 27% who’d back an African National Congress candidate — but short of the 50% threshold that would allow her to govern without the support of other parties.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Zille’s Democratic Alliance party, which will be the actual choice on the ballot, got a more modest 29% but was still ahead of the ANC on 23%, which would represent a 10-percentage point retreat from its 2021 result.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The new poll was at odds with the findings of a survey in early September which showed the ANC in the lead at 31% in Johannesburg, compared with 28% for the DA.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Johannesburg is the nation’s commercial hub but has become a poster child for dysfunctional city governance in South Africa. It’s a key race in an election that will test whether the ANC can stall declining popularity with voters who are angry over high unemployment, poor public services, crime and corruption.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The party of Nelson Mandela lost its parliamentary majority in the 2024 general election for the first time since the end of White-minority rule 30 years earlier.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The ANC has since governed at the national level in a coalition with smaller rivals and the DA, the second-largest party. Even as the ANC has declined in the polls, the so-called government of national unity has won favor from investors for its pro-business approach. South Africa’s next national elections are due to be held in 2029.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The N24/SABI poll was conducted between Aug. 25 and Sept. 17 among a sample of 1,000 registered Johannesburg voters. It measured both the popularity of the individual parties and who voters would choose if they could select an individual candidate such as Zille.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 8,
+    "capture_version": 1,
+    "word_count": 336,
+    "scraped_at": "2026-10-05 07:06:31",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_4d623b0c210fb5936a4a",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/prime-london-homes-are-increasingly-on-frontlines-of-extreme-weather",
+    "title": "Prime London Homes Are Increasingly on Frontlines of Extreme Weather",
+    "published_at": "2026-10-04T10:45:00.000Z",
+    "authors": [
+      "Olivia Rudgard"
+    ],
+    "paragraphs": [
+      "More than a decade into a downturn caused by tax hikes, economic and political shocks, London’s high-end housing market has a new villain to contend with — intractable heat and flood risks.",
+      "The assessment comes from Prime Purchase, the branch of Savills UK that represents property buyers in the top end of the real estate market. Guy Meacock, a director at Prime Purchase, says too many premium homes in the UK capital are ill-equipped to deal with the fallout of increasingly frequent extreme-weather shocks.",
+      "“If London gets a reputation for having architecture that’s fundamentally not fit for purpose, then it’s not ludicrous to think that it will have as far reaching an impact on property values as anything else,” Meacock said in an interview.",
+      "The development follows a summer during which London’s vulnerability to extreme heat was laid bare. Air conditioning remains a rarity, existing in less than 10% of properties countrywide. Even basic cooling features such as shutters and awnings have proved hard to get for some of London’s priciest real estate. More worrying still, perhaps, is the city’s flood risk as freak downpours fueled by climate change leave a growing number of properties — including those with luxury mega-basements — more difficult to insure.",
+      "The concerns add to the list of headwinds facing the UK property market, which is already under pressure from high borrowing costs. Nationwide, house prices fell in August on an annual basis for the first time since 2023, according to the latest figures from Lloyds Banking Group. Prime central London property values are down 26% from a 2014 peak, according to Savills.",
+      "Heat in particular is growing more relevant for some of London’s priciest boroughs, according to Meacock.",
+      "He says international buyers are deterred not only by the lack of features to protect properties from weather-related risks, but also by what they perceive as fiendishly complex planning rules that would complicate any efforts to upgrade homes.",
+      "“We are dealing with a lot of American buyers at the moment and the subject of air conditioning for them comes up every single time,” he said. Buyers are “staggered” to learn how unusual AC is in high-end London homes, so “your pool of potential properties suddenly shrinks.”",
+      "Climate change is leaving a significant footprint on the UK capital. The government’s Environment Agency estimated in July that close to 320,000 London-based homes and businesses are now at “high risk” of surface-water flooding. In August, the office of the Mayor of London warned that extreme heat has become a “major and growing public health threat” in the city, with 86% of Londoners surveyed complaining of overheating in their homes.",
+      "“The impact of climate change is having a profound effect on people’s mindset,” Meacock said. “And although it’s not yet having a really material impact on values, that is going to be the likely pathway.”",
+      "He says London’s so-called golden postcodes, which are in the borough of Kensington and Chelsea, as well as parts of Westminster and its surrounding areas, are particularly vulnerable to shifts in sentiment from international buyers.",
+      "With roughly half the buyers investing in such properties coming from outside the UK, sellers “can’t rely purely on domestic wealth, especially not with the current tax climate,” Meacock said.",
+      "Bloomberg may send me offers and promotions.",
+      "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+      "A major concern is the receding availability of insurance, which is tied to how likely the UK’s insurer of last resort — Flood Re — is to provide a backstop. The state-backed program applies only to homes built before 2009. In July, Flood Re unveiled a plan to ensure the program doesn’t disproportionately favor wealthy home owners, which means commercial insurers with multimillion-pound properties on their books won’t enjoy the same public support they used to. That change is expected to come into force from 2028.",
+      "Flats in buildings with more than three properties also don’t qualify for Flood Re. Tracey Garrett, chief executive of the National Flood Forum, a nonprofit that advises homeowners, says the group’s helpline “often” hears from London residents who can’t get affordable coverage.",
+      "“They just manage without flood insurance,” she said. That means they end up covering the cost of flood damage themselves. And even though “they may well be asset rich,” they’re not necessarily “day-to-day wealthy,” Garrett said.",
+      "At insurance broker Howden Group, staff are already fielding calls from clients worried they won’t be able to sell high-end properties due to a lack of coverage. George Seatter, client director at Howden Private Clients, says he was called earlier this year by an agent representing the sellers of a £2 million property built in 2019 in Buckinghamshire, west of London. The property’s location close to the river Thames, combined with the fact that it’s not covered by Flood Re, initially left the buyers unable to find insurance.",
+      "Commercial insurers “would have mapped the property, they’d have seen that it was in a perceived high-risk area for flood,” Seatter said. “They’d have looked at the fact that it was going to be a second home and built after 2009. They’d have known that they couldn’t cede it to Flood Re, and that would’ve been the end of the conversation.”",
+      "In the event, Seatter says Howden was able to arrange a policy backed by a US insurer. Howden’s analysis of the site found that its precise location in relation to the river wasn’t a disqualifying risk. Seatter says insurers who invest in more detailed analyses are picking up business from competitors spooked by the broader trend.",
+      "“From a flood risk perspective, we’re doing this all the time,” he said. “There are more and more properties that are in flood affected areas,” and as an insurer, if “you can then remove it from your books, so to speak, and you can pass on the cost to the client, almost, why wouldn’t you?”"
+    ],
+    "paragraph_count": 21,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "More than a decade into a downturn caused by tax hikes, economic and political shocks, London’s high-end housing market has a new villain to contend with — intractable heat and flood risks.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The assessment comes from Prime Purchase, the branch of Savills UK that represents property buyers in the top end of the real estate market. Guy Meacock, a director at Prime Purchase, says too many premium homes in the UK capital are ill-equipped to deal with the fallout of increasingly frequent extreme-weather shocks.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“If London gets a reputation for having architecture that’s fundamentally not fit for purpose, then it’s not ludicrous to think that it will have as far reaching an impact on property values as anything else,” Meacock said in an interview.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The development follows a summer during which London’s vulnerability to extreme heat was laid bare. Air conditioning remains a rarity, existing in less than 10% of properties countrywide. Even basic cooling features such as shutters and awnings have proved hard to get for some of London’s priciest real estate. More worrying still, perhaps, is the city’s flood risk as freak downpours fueled by climate change leave a growing number of properties — including those with luxury mega-basements — more difficult to insure.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The concerns add to the list of headwinds facing the UK property market, which is already under pressure from high borrowing costs. Nationwide, house prices fell in August on an annual basis for the first time since 2023, according to the latest figures from Lloyds Banking Group. Prime central London property values are down 26% from a 2014 peak, according to Savills.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Heat in particular is growing more relevant for some of London’s priciest boroughs, according to Meacock.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "He says international buyers are deterred not only by the lack of features to protect properties from weather-related risks, but also by what they perceive as fiendishly complex planning rules that would complicate any efforts to upgrade homes.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“We are dealing with a lot of American buyers at the moment and the subject of air conditioning for them comes up every single time,” he said. Buyers are “staggered” to learn how unusual AC is in high-end London homes, so “your pool of potential properties suddenly shrinks.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Climate change is leaving a significant footprint on the UK capital. The government’s Environment Agency estimated in July that close to 320,000 London-based homes and businesses are now at “high risk” of surface-water flooding. In August, the office of the Mayor of London warned that extreme heat has become a “major and growing public health threat” in the city, with 86% of Londoners surveyed complaining of overheating in their homes.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“The impact of climate change is having a profound effect on people’s mindset,” Meacock said. “And although it’s not yet having a really material impact on values, that is going to be the likely pathway.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "He says London’s so-called golden postcodes, which are in the borough of Kensington and Chelsea, as well as parts of Westminster and its surrounding areas, are particularly vulnerable to shifts in sentiment from international buyers.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "With roughly half the buyers investing in such properties coming from outside the UK, sellers “can’t rely purely on domestic wealth, especially not with the current tax climate,” Meacock said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bloomberg may send me offers and promotions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A major concern is the receding availability of insurance, which is tied to how likely the UK’s insurer of last resort — Flood Re — is to provide a backstop. The state-backed program applies only to homes built before 2009. In July, Flood Re unveiled a plan to ensure the program doesn’t disproportionately favor wealthy home owners, which means commercial insurers with multimillion-pound properties on their books won’t enjoy the same public support they used to. That change is expected to come into force from 2028.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Flats in buildings with more than three properties also don’t qualify for Flood Re. Tracey Garrett, chief executive of the National Flood Forum, a nonprofit that advises homeowners, says the group’s helpline “often” hears from London residents who can’t get affordable coverage.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“They just manage without flood insurance,” she said. That means they end up covering the cost of flood damage themselves. And even though “they may well be asset rich,” they’re not necessarily “day-to-day wealthy,” Garrett said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "At insurance broker Howden Group, staff are already fielding calls from clients worried they won’t be able to sell high-end properties due to a lack of coverage. George Seatter, client director at Howden Private Clients, says he was called earlier this year by an agent representing the sellers of a £2 million property built in 2019 in Buckinghamshire, west of London. The property’s location close to the river Thames, combined with the fact that it’s not covered by Flood Re, initially left the buyers unable to find insurance.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Commercial insurers “would have mapped the property, they’d have seen that it was in a perceived high-risk area for flood,” Seatter said. “They’d have looked at the fact that it was going to be a second home and built after 2009. They’d have known that they couldn’t cede it to Flood Re, and that would’ve been the end of the conversation.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In the event, Seatter says Howden was able to arrange a policy backed by a US insurer. Howden’s analysis of the site found that its precise location in relation to the river wasn’t a disqualifying risk. Seatter says insurers who invest in more detailed analyses are picking up business from competitors spooked by the broader trend.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“From a flood risk perspective, we’re doing this all the time,” he said. “There are more and more properties that are in flood affected areas,” and as an insurer, if “you can then remove it from your books, so to speak, and you can pass on the cost to the client, almost, why wouldn’t you?”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 21,
+    "capture_version": 1,
+    "word_count": 985,
+    "scraped_at": "2026-10-05 07:06:23",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_43d922c881f696535ae3",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/whispers-of-contagion-risk-are-returning-to-europe-s-bond-market",
+    "title": "Whispers of Contagion Risk Are Returning to Europe’s Bond Market",
+    "published_at": "2026-10-04T11:15:00.000Z",
+    "authors": [
+      "Alice Gledhill",
+      "Alice Atkins"
+    ],
+    "paragraphs": [
+      "Traders are on the alert for signs of contagion in Europe’s government bond market after a selloff triggered memories of the region’s debt crisis 15 years ago.",
+      "Up until last week, the bonds of euro-area members had largely retreated in lockstep for much of the year — the result of an energy shock that’s fueled inflation fears and forced the bloc’s central bank to hike interest rates. France was the clear underperformer as budget squabbling and a contentious election added to the global headwinds.",
+      "On Thursday, something snapped: French bonds tumbled further along with the likes of Italy, Belgium and Greece, recording some of their biggest spread moves in years. Germany, however, withstood the pain among big economies as investors piled in to the traditional safe haven, a search that also boosted recently-weak US Treasuries.",
+      "France’s Bond Crisis Deepens as Investors Head for the Exit",
+      "A scenario in which financial stress in one sovereign bond market infects others, even when it looks less warranted, generates the kind of chaotic price moves that worry central bankers, forcing them to step in during severe scenarios. It was a feature of the euro area’s debt crisis of 2011-2012.",
+      "“We are starting to see first signs of contagion,” said Jeff Mueller, co-head of fixed income, Morgan Stanley Investment Management. “If the erratic price action observed on Oct. 1 continues for some time, this may draw some attention from policymakers.”",
+      "France has plenty of company in the euro area when it comes to excessive borrowing, large budget deficits and fierce political opposition to economic reforms. The heavy debt load of countries like Italy and Belgium makes them particularly vulnerable in a world of higher interest rates.",
+      "To be sure, spreads for the most part still remain relatively low across the continent and the rout largely stabilized on Friday, with longer-dated bonds in particular recovering. But the pace and extent of the swings have left investors on edge and on the lookout for further signs of disorder.",
+      "Ahead of the weekend, market chatter focused on a possible response from the ECB.",
+      "Bessent Downplays Worries on Rising Yields, AI Bubble Concerns",
+      "One option would be for officials to send a stronger signal that they’ll be more cautious about lifting rates further. Traders have already started paring wagers on further hikes, with swaps pointing to three increases by the end of next year compared with four earlier in the week.",
+      "“OAT volatility could be a limiting factor for further ECB hikes and is an argument against a back-to-back move later this month,” said Anthony O’Brien, head of market strategy at Standard Life, referring to French government bonds. “Higher rates mean higher debt-servicing costs, which in turn increase fiscal pressure on France.”",
+      "Europe’s Bond-Spread Blowout Prompts Bets on Fewer ECB Hikes",
+      "If the signs of contagion intensify, the ECB may consider pausing its quantitative tightening program, which stops the reinvestment of proceeds from maturing bonds it holds, according to Jamie Searle, rates strategist at Citigroup Inc. That would effectively reduce the supply of bonds that must be absorbed by price-sensitive investors.",
+      "Most of the market’s focus has been on the ECB’s Transmission Protection Instrument, an unlimited bond-buying program created in 2022 to “counter unwarranted, disorderly market dynamics.”",
+      "It’s never been used, though its existence is considered a key reason why a full-blown bond crisis is much less likely now compared with 15 years ago.",
+      "For France, the TPI would almost certainly be out of reach given its problems are largely self-inflicted. Bank of France Governor Emmanuel Moulin has warned his compatriots against expecting a “miracle solution” to come from the ECB.",
+      "At the same time, it could be deployed if the selloff starts to look increasingly untethered in other parts of the market.",
+      "Why Europe Has a New Weapon for Bond ‘Fragmentation’: QuickTake",
+      "“If the French election outcome results in contagion to other markets, the ECB may consider supporting them, but not OATs,” said Rohan Khanna, head of European rates strategy at Barclays. “There are no easy choices for the central bank.”",
+      "The week’s wild swings were attributed, in part, to the growing footprint of hedge funds in government bond markets.",
+      "In particular, so-called carry trades where investors harvest the higher yields available on Italian, Spanish or French bonds have grown in popularity, particularly on short-dated debt.",
+      "While those trades can prove profitable when volatility is low, market watchers said the ructions of the past week led to a broad washout of leveraged positions — exacerbating the selloff.",
+      "“Trust me: the ECB is on top of this — they’re talking to market participants all the time, including hedge funds,” said Marion Le Morhedec, global chief investment officer of fixed income at Fidelity International.",
+      "“They really want to understand what’s happening and they are ready to do whatever it takes to avoid any big blow ups.”"
+    ],
+    "paragraph_count": 25,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Traders are on the alert for signs of contagion in Europe’s government bond market after a selloff triggered memories of the region’s debt crisis 15 years ago.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Up until last week, the bonds of euro-area members had largely retreated in lockstep for much of the year — the result of an energy shock that’s fueled inflation fears and forced the bloc’s central bank to hike interest rates. France was the clear underperformer as budget squabbling and a contentious election added to the global headwinds.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "On Thursday, something snapped: French bonds tumbled further along with the likes of Italy, Belgium and Greece, recording some of their biggest spread moves in years. Germany, however, withstood the pain among big economies as investors piled in to the traditional safe haven, a search that also boosted recently-weak US Treasuries.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "France’s Bond Crisis Deepens as Investors Head for the Exit",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A scenario in which financial stress in one sovereign bond market infects others, even when it looks less warranted, generates the kind of chaotic price moves that worry central bankers, forcing them to step in during severe scenarios. It was a feature of the euro area’s debt crisis of 2011-2012.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“We are starting to see first signs of contagion,” said Jeff Mueller, co-head of fixed income, Morgan Stanley Investment Management. “If the erratic price action observed on Oct. 1 continues for some time, this may draw some attention from policymakers.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "France has plenty of company in the euro area when it comes to excessive borrowing, large budget deficits and fierce political opposition to economic reforms. The heavy debt load of countries like Italy and Belgium makes them particularly vulnerable in a world of higher interest rates.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "To be sure, spreads for the most part still remain relatively low across the continent and the rout largely stabilized on Friday, with longer-dated bonds in particular recovering. But the pace and extent of the swings have left investors on edge and on the lookout for further signs of disorder.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Ahead of the weekend, market chatter focused on a possible response from the ECB.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bessent Downplays Worries on Rising Yields, AI Bubble Concerns",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "One option would be for officials to send a stronger signal that they’ll be more cautious about lifting rates further. Traders have already started paring wagers on further hikes, with swaps pointing to three increases by the end of next year compared with four earlier in the week.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“OAT volatility could be a limiting factor for further ECB hikes and is an argument against a back-to-back move later this month,” said Anthony O’Brien, head of market strategy at Standard Life, referring to French government bonds. “Higher rates mean higher debt-servicing costs, which in turn increase fiscal pressure on France.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Europe’s Bond-Spread Blowout Prompts Bets on Fewer ECB Hikes",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "If the signs of contagion intensify, the ECB may consider pausing its quantitative tightening program, which stops the reinvestment of proceeds from maturing bonds it holds, according to Jamie Searle, rates strategist at Citigroup Inc. That would effectively reduce the supply of bonds that must be absorbed by price-sensitive investors.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Most of the market’s focus has been on the ECB’s Transmission Protection Instrument, an unlimited bond-buying program created in 2022 to “counter unwarranted, disorderly market dynamics.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "It’s never been used, though its existence is considered a key reason why a full-blown bond crisis is much less likely now compared with 15 years ago.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "For France, the TPI would almost certainly be out of reach given its problems are largely self-inflicted. Bank of France Governor Emmanuel Moulin has warned his compatriots against expecting a “miracle solution” to come from the ECB.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "At the same time, it could be deployed if the selloff starts to look increasingly untethered in other parts of the market.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Why Europe Has a New Weapon for Bond ‘Fragmentation’: QuickTake",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“If the French election outcome results in contagion to other markets, the ECB may consider supporting them, but not OATs,” said Rohan Khanna, head of European rates strategy at Barclays. “There are no easy choices for the central bank.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The week’s wild swings were attributed, in part, to the growing footprint of hedge funds in government bond markets.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In particular, so-called carry trades where investors harvest the higher yields available on Italian, Spanish or French bonds have grown in popularity, particularly on short-dated debt.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "While those trades can prove profitable when volatility is low, market watchers said the ructions of the past week led to a broad washout of leveraged positions — exacerbating the selloff.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Trust me: the ECB is on top of this — they’re talking to market participants all the time, including hedge funds,” said Marion Le Morhedec, global chief investment officer of fixed income at Fidelity International.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“They really want to understand what’s happening and they are ready to do whatever it takes to avoid any big blow ups.”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 25,
+    "capture_version": 1,
+    "word_count": 806,
+    "scraped_at": "2026-10-05 07:05:57",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_0f764364d16e0480ecd9",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/russia-again-strikes-kyiv-bridge-as-infrastructure-attacks-widen",
+    "title": "Russia Vows to Step Up Strikes After Its Warning on Kyiv",
+    "published_at": "2026-10-04T09:05:10.629Z",
+    "authors": [
+      "Greg Sullivan",
+      "Olesia Safronova"
+    ],
+    "paragraphs": [
+      "Russia said it would intensify attacks on Ukraine’s infrastructure following a vow from President Volodymyr Zelenskyy to double down on strikes against oil refineries, a day after Moscow’s foreign ministry warned that diplomats and foreign officials in Kyiv were in “mortal danger.”",
+      "“The Russian armed forces will intensify strikes against military and military-industrial facilities, as well as related infrastructure in Kyiv and other regions of Ukraine,” the Russian Defense Ministry said Sunday on Telegram.",
+      "The ministry cited comments Zelenskyy made in an interview with Reuters published on Sunday, in which the Ukrainian president said his country had to respond to attacks on energy infrastructure by targeting Russian oil refiners, which “gives money to them for this war.”",
+      "The warning came the same day its forces struck the Pivnichnyi, or Northern, bridge across the Dnipro River in Kyiv for a second time, as well as other civilian infrastructure.",
+      "Zelenskyy announced the strike Sunday on the X platform, and said Russian forces also hit a pharmaceutical warehouse in Sumy in the country’s north and a communications facility in Dnipro. One person was killed and six injured in the attacks, he said.",
+      "Russia hit the same bridge, a key artery for the city’s residents, and a logistics center near the capital a day earlier and carried out another strike on Kyiv’s southern road-and-rail bridge last week. Russia said on Saturday that the bridge was being used to transport military equipment.",
+      "Separately, Chancellor Friedrich Merz arrived in Kyiv on Sunday morning for talks with Zelenskyy, reiterating Germany’s backing for Ukraine and the dangers posed by Russian President Vladimir Putin. The German leader announced a package of weapons and aid for the country’s energy sector worth about €1.35 billion ($1.5 billion).",
+      "Hours before Merz’s arrival on an overnight train, Russia’s foreign ministry said it urged “foreign nationals, personnel of diplomatic missions, to refrain from remaining in or travelling to Ukraine.”",
+      "“Many embassies continue to operate in Kyiv, and foreign officials continue to travel to Ukraine on official visits,” the ministry said in a Telegram post. The “responsibility for any possible adverse consequences lies entirely with those who choose to disregard this warning,” it added.",
+      "Last month, the locomotive of a passenger train heading to Warsaw from Kyiv — the main means of travel in and out of Ukraine for foreign officials — was hit by a Russian drone near the Polish border. The strike marked the latest escalation by Russia as acts of sabotage, arson and drone incursions proliferate across the continent.",
+      "In recent weeks, Russia has intensified its campaign against Ukraine’s civilian infrastructure. Kremlin forces have increasingly targeted residential areas, mail services, and internet and mobile phone providers, in addition to cargo vessels.",
+      "Moscow has aggressively attacked Ukrainian energy sites ahead of and during winter throughout the more than four-year war, as it seeks to depress morale and compel Kyiv to accept its terms to end the fighting.",
+      "Zelenskyy said Sunday he expected more Russian strikes. “Putin considers and wants permanent escalation,” the Ukrainian president said in Kyiv, standing alongside Merz.",
+      "He also said Ukraine had discussed with Washington possible US-brokered talks on ending the war, and said technical-level negotiators could meet as soon as the end of October, although a venue still needed to be found.",
+      "Bloomberg may send me offers and promotions.",
+      "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+      "The Defense Ministry in Moscow said recent attacks were “specifically in response to the actions” of leadership in Kyiv, citing strikes during Russia’s parliamentary elections last month as well as during the St. Petersburg International Economic Forum in June. The ministry also said overnight attacks on the Belgorod region, which borders Ukraine, resulted in casualties as well as damage to apartment buildings and private homes.",
+      "Zelenskyy told the Financial Times last week that the increase in strikes on civilian targets had come after Putin instructed his military leaders to abandon the rules of war. Zelenskyy cited intelligence intercepted by Kyiv; Russia hasn’t commented on the claim.",
+      "“It is important that Ukraine is not left alone against this terror,” Zelenskyy said on Sunday. “Russia must be held accountable for this escalation.”"
+    ],
+    "paragraph_count": 19,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Russia said it would intensify attacks on Ukraine’s infrastructure following a vow from President Volodymyr Zelenskyy to double down on strikes against oil refineries, a day after Moscow’s foreign ministry warned that diplomats and foreign officials in Kyiv were in “mortal danger.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“The Russian armed forces will intensify strikes against military and military-industrial facilities, as well as related infrastructure in Kyiv and other regions of Ukraine,” the Russian Defense Ministry said Sunday on Telegram.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The ministry cited comments Zelenskyy made in an interview with Reuters published on Sunday, in which the Ukrainian president said his country had to respond to attacks on energy infrastructure by targeting Russian oil refiners, which “gives money to them for this war.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The warning came the same day its forces struck the Pivnichnyi, or Northern, bridge across the Dnipro River in Kyiv for a second time, as well as other civilian infrastructure.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Zelenskyy announced the strike Sunday on the X platform, and said Russian forces also hit a pharmaceutical warehouse in Sumy in the country’s north and a communications facility in Dnipro. One person was killed and six injured in the attacks, he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Russia hit the same bridge, a key artery for the city’s residents, and a logistics center near the capital a day earlier and carried out another strike on Kyiv’s southern road-and-rail bridge last week. Russia said on Saturday that the bridge was being used to transport military equipment.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Separately, Chancellor Friedrich Merz arrived in Kyiv on Sunday morning for talks with Zelenskyy, reiterating Germany’s backing for Ukraine and the dangers posed by Russian President Vladimir Putin. The German leader announced a package of weapons and aid for the country’s energy sector worth about €1.35 billion ($1.5 billion).",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Hours before Merz’s arrival on an overnight train, Russia’s foreign ministry said it urged “foreign nationals, personnel of diplomatic missions, to refrain from remaining in or travelling to Ukraine.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Many embassies continue to operate in Kyiv, and foreign officials continue to travel to Ukraine on official visits,” the ministry said in a Telegram post. The “responsibility for any possible adverse consequences lies entirely with those who choose to disregard this warning,” it added.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Last month, the locomotive of a passenger train heading to Warsaw from Kyiv — the main means of travel in and out of Ukraine for foreign officials — was hit by a Russian drone near the Polish border. The strike marked the latest escalation by Russia as acts of sabotage, arson and drone incursions proliferate across the continent.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In recent weeks, Russia has intensified its campaign against Ukraine’s civilian infrastructure. Kremlin forces have increasingly targeted residential areas, mail services, and internet and mobile phone providers, in addition to cargo vessels.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Moscow has aggressively attacked Ukrainian energy sites ahead of and during winter throughout the more than four-year war, as it seeks to depress morale and compel Kyiv to accept its terms to end the fighting.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Zelenskyy said Sunday he expected more Russian strikes. “Putin considers and wants permanent escalation,” the Ukrainian president said in Kyiv, standing alongside Merz.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "He also said Ukraine had discussed with Washington possible US-brokered talks on ending the war, and said technical-level negotiators could meet as soon as the end of October, although a venue still needed to be found.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bloomberg may send me offers and promotions.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "By submitting my information, I agree to the Privacy Policy and Terms of Service.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Defense Ministry in Moscow said recent attacks were “specifically in response to the actions” of leadership in Kyiv, citing strikes during Russia’s parliamentary elections last month as well as during the St. Petersburg International Economic Forum in June. The ministry also said overnight attacks on the Belgorod region, which borders Ukraine, resulted in casualties as well as damage to apartment buildings and private homes.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Zelenskyy told the Financial Times last week that the increase in strikes on civilian targets had come after Putin instructed his military leaders to abandon the rules of war. Zelenskyy cited intelligence intercepted by Kyiv; Russia hasn’t commented on the claim.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“It is important that Ukraine is not left alone against this terror,” Zelenskyy said on Sunday. “Russia must be held accountable for this escalation.”",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 19,
+    "capture_version": 1,
+    "word_count": 694,
+    "scraped_at": "2026-10-05 07:05:48",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_e5fbd0b63e46371e44ef",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-03/flydubai-copilot-lost-earlier-job-for-engaging-with-extremism",
+    "title": "FlyDubai Co-Pilot Lost Earlier Job for Dabbling in Extremism",
+    "published_at": "2026-10-03T21:23:41.446Z",
+    "authors": [
+      "Myles Miller",
+      "Sara Gharaibeh"
+    ],
+    "paragraphs": [
+      "The co-pilot who assaulted the commanding captain on the FlyDubai flight en route to Tel Aviv from Dubai previously flew aircraft for Oman Air before he was dismissed for engaging with what were considered radical views, according to people familiar with the situation.",
+      "Hamam al-Hammami, 29, had earlier been identified by the Israeli government as an Omani citizen, but his exact name, age and work history weren’t disclosed until this weekend. Saudi investigators have said the two pilots from Flight FZ1073 were transferred to Abu Dhabi, though little else is known about the state of the investigation.",
+      "On Saturday, investigators in the United Arab Emirates said the co-pilot attempted “to carry out a terrorist act” by attacking his colleague with an crash ax, a tool stored in the cockpit for emergencies, and attempting to seize control of the aircraft.",
+      "The plane, which had more than 170 passengers on board, managed to land safely at a regional airport in Saudi Arabia on Sept. 30 after passengers and a reserve crew on board intervened to subdue al-Hammami and stabilize the aircraft.",
+      "The revelation about the co-pilot’s dismissal from Oman Air will likely raise questions about how al-Hammami was able to get a job at FlyDubai, sister airline of Emirates Airline.",
+      "FlyDubai Chief Executive Officer Ghaith Al Ghaith previously said in a statement that there are still “many questions” about what happened aboard Flight FZ1073 and that it’s “important that we allow this process to establish the facts.”",
+      "The airline hasn’t released a manifest that would detail the identities of the passengers and crew.",
+      "Australian authorities are investigating links to al-Hammami, a police spokesperson said in a statement Monday. He previously studied in Australia and allegedly visited radical mosques and extremist websites while there, the Financial Times reported on Sunday, citing two people familiar with the investigation.",
+      "The fact that an Omani pilot had been on board a Tel Aviv-bound aircraft had already raised concerns about a security loophole because Israel and Oman don’t have formal diplomatic ties, restricting their citizens’ access to the other country.",
+      "Israel’s Transportation Minister Miriam Regev called it a “a clear breach of the agreement” and asked its security agency Shin Bet to investigate, according to the Jerusalem Post.",
+      "Israeli Foreign Minister Gideon Sa’ar told broadcaster Channel 12 on Saturday that a “great many things” are still unknown, including whether the attacker had a second citizenship. The attacker’s goals included harming relations between Israel and the UAE, he added.",
+      "The investigation into Flight FZ1073 is still seeking to determine possible motives behind the operation and any parties it might be linked to, UAE federal prosecutor Hamad Al Shamsi said in a statement Saturday on state-run WAM news agency.",
+      "Technical tests of physical and digital evidence are also being carried out, he said."
+    ],
+    "paragraph_count": 13,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "The co-pilot who assaulted the commanding captain on the FlyDubai flight en route to Tel Aviv from Dubai previously flew aircraft for Oman Air before he was dismissed for engaging with what were considered radical views, according to people familiar with the situation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Hamam al-Hammami, 29, had earlier been identified by the Israeli government as an Omani citizen, but his exact name, age and work history weren’t disclosed until this weekend. Saudi investigators have said the two pilots from Flight FZ1073 were transferred to Abu Dhabi, though little else is known about the state of the investigation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "On Saturday, investigators in the United Arab Emirates said the co-pilot attempted “to carry out a terrorist act” by attacking his colleague with an crash ax, a tool stored in the cockpit for emergencies, and attempting to seize control of the aircraft.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The plane, which had more than 170 passengers on board, managed to land safely at a regional airport in Saudi Arabia on Sept. 30 after passengers and a reserve crew on board intervened to subdue al-Hammami and stabilize the aircraft.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The revelation about the co-pilot’s dismissal from Oman Air will likely raise questions about how al-Hammami was able to get a job at FlyDubai, sister airline of Emirates Airline.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "FlyDubai Chief Executive Officer Ghaith Al Ghaith previously said in a statement that there are still “many questions” about what happened aboard Flight FZ1073 and that it’s “important that we allow this process to establish the facts.”",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The airline hasn’t released a manifest that would detail the identities of the passengers and crew.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Australian authorities are investigating links to al-Hammami, a police spokesperson said in a statement Monday. He previously studied in Australia and allegedly visited radical mosques and extremist websites while there, the Financial Times reported on Sunday, citing two people familiar with the investigation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The fact that an Omani pilot had been on board a Tel Aviv-bound aircraft had already raised concerns about a security loophole because Israel and Oman don’t have formal diplomatic ties, restricting their citizens’ access to the other country.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Israel’s Transportation Minister Miriam Regev called it a “a clear breach of the agreement” and asked its security agency Shin Bet to investigate, according to the Jerusalem Post.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Israeli Foreign Minister Gideon Sa’ar told broadcaster Channel 12 on Saturday that a “great many things” are still unknown, including whether the attacker had a second citizenship. The attacker’s goals included harming relations between Israel and the UAE, he added.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The investigation into Flight FZ1073 is still seeking to determine possible motives behind the operation and any parties it might be linked to, UAE federal prosecutor Hamad Al Shamsi said in a statement Saturday on state-run WAM news agency.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Technical tests of physical and digital evidence are also being carried out, he said.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 13,
+    "capture_version": 1,
+    "word_count": 464,
+    "scraped_at": "2026-10-05 07:05:38",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_572fc158b09a8fe8b871",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/opec-has-deal-outline-for-steady-november-quotas-delegates-say",
+    "title": "OPEC+ Agrees to Keep Oil Output Targets Steady in November",
+    "published_at": "2026-10-04T07:49:48.407Z",
+    "authors": [
+      "Salma El Wardany",
+      "Grant Smith"
+    ],
+    "paragraphs": [
+      "Major OPEC+ nations agreed to keep oil production quotas unchanged next month, as conflict in the Middle East continues to shutter swaths of the group’s output.",
+      "A sub-group of seven countries led by Saudi Arabia and Russia will keep targets steady in November, the coalition said in a statement following a monthly video conference on Sunday. It’s in line with their existing production roadmap.",
+      "The plans come as oil futures creep back up to the $100-a-barrel mark and diesel hits records at the pump amid ongoing conflict in the Middle East, spurring Group of Seven nations to release emergency stocks.",
+      "The Organization of the Petroleum Exporting Countries and its allies had already signaled that they would pause production quota hikes through the end of this year, after agreeing a series of modest increases in the six months through August.",
+      "Those increases, largely symbolic because of the impact the Iran war has had on Persian Gulf output, theoretically unwound cutbacks made in 2023 and may give the group’s Gulf members greater scope to boost output when the conflict abates.",
+      "The Iran war has blunted the impact of any decisions the group has made because production in leading OPEC members such as Saudi Arabia, Iraq and Kuwait remains significantly below levels pumped before the conflict.",
+      "The seven-nation sub-group will convene online again on Nov. 1, according to Sunday’s statement. It will likely finalize plans for December at that gathering.",
+      "Another OPEC+ body, the Joint Ministerial Monitoring Committee, also met online on Sunday and reiterated its “concern regarding attacks on energy infrastructure” and their impact on market stability.",
+      "The alliance’s next major decision will be whether to restore another layer of halted output taken offline in 2022, a complicated process likely to be shaped by the outcome of an ongoing audit of members’ production capacity.",
+      "Policy for next year will be settled at a full ministerial meeting on Nov. 29. The JMMC will hold its next session the same day."
+    ],
+    "paragraph_count": 10,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Major OPEC+ nations agreed to keep oil production quotas unchanged next month, as conflict in the Middle East continues to shutter swaths of the group’s output.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A sub-group of seven countries led by Saudi Arabia and Russia will keep targets steady in November, the coalition said in a statement following a monthly video conference on Sunday. It’s in line with their existing production roadmap.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The plans come as oil futures creep back up to the $100-a-barrel mark and diesel hits records at the pump amid ongoing conflict in the Middle East, spurring Group of Seven nations to release emergency stocks.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Organization of the Petroleum Exporting Countries and its allies had already signaled that they would pause production quota hikes through the end of this year, after agreeing a series of modest increases in the six months through August.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Those increases, largely symbolic because of the impact the Iran war has had on Persian Gulf output, theoretically unwound cutbacks made in 2023 and may give the group’s Gulf members greater scope to boost output when the conflict abates.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Iran war has blunted the impact of any decisions the group has made because production in leading OPEC members such as Saudi Arabia, Iraq and Kuwait remains significantly below levels pumped before the conflict.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The seven-nation sub-group will convene online again on Nov. 1, according to Sunday’s statement. It will likely finalize plans for December at that gathering.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Another OPEC+ body, the Joint Ministerial Monitoring Committee, also met online on Sunday and reiterated its “concern regarding attacks on energy infrastructure” and their impact on market stability.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The alliance’s next major decision will be whether to restore another layer of halted output taken offline in 2022, a complicated process likely to be shaped by the outcome of an ongoing audit of members’ production capacity.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Policy for next year will be settled at a full ministerial meeting on Nov. 29. The JMMC will hold its next session the same day.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 10,
+    "capture_version": 1,
+    "word_count": 327,
+    "scraped_at": "2026-10-05 07:05:27",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  },
+  {
+    "id": "bloomberg_47955d2afa7607382d04",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/markets-brace-for-sharp-swings-no-matter-result-of-brazil-vote",
+    "title": "Markets Brace for Sharp Swings No Matter Result of Brazil Vote",
+    "published_at": "2026-10-04T12:30:00.002Z",
+    "authors": [
+      "Giovanna Bellotti Azevedo",
+      "Leda Alvim"
+    ],
+    "paragraphs": [
+      "Investors are expecting sharp swings in Brazilian markets in the aftermath of Sunday’s elections no matter the outcome, with assets to adjust quickly as the neck-and-neck presidential race prevented traders from taking too strong a view in the lead up to the vote.",
+      "A lead of more than four percentage points for President Luiz Inácio Lula da Silva in the first-round vote would reinforce his status as a front-runner in a Oct. 25 runoff and could weigh on equities, steepen the swap rates curve, and potentially put pressure on the real, according to Mauricio Moura, co-founder of Zaftra, an investment fund focused on elections and political events.",
+      "A smaller gap — or a tie — would be seen as relatively more favorable for Flávio Bolsonaro, potentially sparking a rally on hopes the right-wing candidate would deliver a strong fiscal adjustment investors see as key.",
+      "“Orthodox fiscal policy U-turns are handsomely rewarded by the market, which is why investors remain fixated on the first round of Brazil’s presidential election,” said Natalia Gurushina, chief economist for emerging markets at Van Eck Associates Corporation. The tight polls, however, leave the door open to a selloff should the result prove “disappointing,” she added.",
+      "Eduardo Cohn, portfolio manager at Heritage Capital Partners, built “marginal” positions that would benefit from a Bolsonaro win. He likes long-dated NTN-Bs, Brazil’s inflation-linked government bonds, seeing room for real yields to compress if the right-wing candidate prevails.",
+      "JPMorgan has estimated that a fiscal-improvement scenario could send the real about 6% higher, push local government bond yields toward 13% and lift equities as much as 50% from current levels. Under incremental fiscal deterioration, it sees the real weakening about 6%, bond yields rising toward 15.5% and equities falling 21%, according to a note from Sept. 29.",
+      "Bloomberg Economics projects a Bolsonaro win could lower 10-year yields by 70 basis points and strengthen the currency by almost 3%. Conversely, a Lula victory could trigger a jump of almost 100 basis points in long yields, and weaken the real by more than 3.5%. Crowded bets on the rates curve leave it open to a sharp reversal if the incumbent outperforms, according to Bloomberg Intelligence.",
+      "Traders looking to react to election results as soon as Sunday night will turn to Japan’s Next Funds Ibovespa Linked ETF, which tracks the benchmark Ibovespa index. Currency derivatives at the CME exchange could also move on the vote.",
+      "As European markets open, attention may shift to ETFs in Frankfurt and London, before pre-market trading in the US-listed EWZ, starting at 4 a.m. ET.",
+      "Local trading begins at 9 a.m. Sao Paulo time, with the currency, swap rates and equity futures. Stocks open at 10 a.m.",
+      "Some of Brazil’s government and corporate dollar-denominated bonds are traded in European exchanges and may see price action. Credit default swap contracts trade all day, although liquidity is thinner outside of US hours.",
+      "In the event of a Bolsonaro win, Citigroup Inc. favors longer-duration and domestically exposed stocks, including homebuilder Cyrela SA and apparel retailer C&A Modas SA. A revival in capital markets activity could also boost companies like B3 SA and XP Inc., according to a report. In a Lula win, Citi strategists favor “all-weather” stocks, including companies with pricing power such as Embraer SA, WEG SA and Axia Energia SA.",
+      "Stocks that could move in the early hours:",
+      "Shares of companies with significant exposure to Brazil could also be active:"
+    ],
+    "paragraph_count": 14,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "Investors are expecting sharp swings in Brazilian markets in the aftermath of Sunday’s elections no matter the outcome, with assets to adjust quickly as the neck-and-neck presidential race prevented traders from taking too strong a view in the lead up to the vote.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A lead of more than four percentage points for President Luiz Inácio Lula da Silva in the first-round vote would reinforce his status as a front-runner in a Oct. 25 runoff and could weigh on equities, steepen the swap rates curve, and potentially put pressure on the real, according to Mauricio Moura, co-founder of Zaftra, an investment fund focused on elections and political events.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "A smaller gap — or a tie — would be seen as relatively more favorable for Flávio Bolsonaro, potentially sparking a rally on hopes the right-wing candidate would deliver a strong fiscal adjustment investors see as key.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Orthodox fiscal policy U-turns are handsomely rewarded by the market, which is why investors remain fixated on the first round of Brazil’s presidential election,” said Natalia Gurushina, chief economist for emerging markets at Van Eck Associates Corporation. The tight polls, however, leave the door open to a selloff should the result prove “disappointing,” she added.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Eduardo Cohn, portfolio manager at Heritage Capital Partners, built “marginal” positions that would benefit from a Bolsonaro win. He likes long-dated NTN-Bs, Brazil’s inflation-linked government bonds, seeing room for real yields to compress if the right-wing candidate prevails.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "JPMorgan has estimated that a fiscal-improvement scenario could send the real about 6% higher, push local government bond yields toward 13% and lift equities as much as 50% from current levels. Under incremental fiscal deterioration, it sees the real weakening about 6%, bond yields rising toward 15.5% and equities falling 21%, according to a note from Sept. 29.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Bloomberg Economics projects a Bolsonaro win could lower 10-year yields by 70 basis points and strengthen the currency by almost 3%. Conversely, a Lula victory could trigger a jump of almost 100 basis points in long yields, and weaken the real by more than 3.5%. Crowded bets on the rates curve leave it open to a sharp reversal if the incumbent outperforms, according to Bloomberg Intelligence.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Traders looking to react to election results as soon as Sunday night will turn to Japan’s Next Funds Ibovespa Linked ETF, which tracks the benchmark Ibovespa index. Currency derivatives at the CME exchange could also move on the vote.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "As European markets open, attention may shift to ETFs in Frankfurt and London, before pre-market trading in the US-listed EWZ, starting at 4 a.m. ET.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Local trading begins at 9 a.m. Sao Paulo time, with the currency, swap rates and equity futures. Stocks open at 10 a.m.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Some of Brazil’s government and corporate dollar-denominated bonds are traded in European exchanges and may see price action. Credit default swap contracts trade all day, although liquidity is thinner outside of US hours.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "In the event of a Bolsonaro win, Citigroup Inc. favors longer-duration and domestically exposed stocks, including homebuilder Cyrela SA and apparel retailer C&A Modas SA. A revival in capital markets activity could also boost companies like B3 SA and XP Inc., according to a report. In a Lula win, Citi strategists favor “all-weather” stocks, including companies with pricing power such as Embraer SA, WEG SA and Axia Energia SA.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Stocks that could move in the early hours:",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Shares of companies with significant exposure to Brazil could also be active:",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 14,
+    "capture_version": 1,
+    "word_count": 569,
+    "scraped_at": "2026-10-05 07:05:16",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false
+  }
+]

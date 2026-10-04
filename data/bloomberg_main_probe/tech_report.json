@@ -1,0 +1,128 @@
+{
+  "source_url": "https://www.bloomberg.com/technology",
+  "discovered_at": "2026-10-04T23:26:38.511790+00:00",
+  "candidate_count": 36,
+  "tech_labelled_count": 8,
+  "tech_capture_count": 8,
+  "total_store_count": 17,
+  "captured_word_count": 4007,
+  "unique_captured_urls": 8,
+  "missing_authors": 0,
+  "missing_dates": 0,
+  "outside_column_queue": 0,
+  "capture_versions": {
+    "2": 8
+  },
+  "block_types": {
+    "p": 104,
+    "h3": 3
+  },
+  "full_text_verified": false,
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
+      "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
+      "published_at": "2026-10-03T17:12:02.801Z",
+      "authors": [
+        "María Paula Mijares Torres"
+      ],
+      "paragraph_count": 14,
+      "body_block_count": 15,
+      "word_count": 550,
+      "scraped_at": "2026-10-05 07:27:45"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/us-ai-task-force-to-report-on-technology-s-risks-wsj-reports",
+      "title": "Trump Taps Clayton for AI Task Force in Response to Safety Fears",
+      "published_at": "2026-10-03T23:38:35.024Z",
+      "authors": [
+        "María Paula Mijares Torres"
+      ],
+      "paragraph_count": 13,
+      "body_block_count": 13,
+      "word_count": 442,
+      "scraped_at": "2026-10-05 07:27:35"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/britain-s-reliance-on-us-cloud-giants-alarms-its-politicians",
+      "title": "Britain’s Reliance on US Cloud Giants Alarms Its Politicians",
+      "published_at": "2026-10-04T07:00:00.000Z",
+      "authors": [
+        "Philip Aldrick",
+        "Jacob Reid"
+      ],
+      "paragraph_count": 21,
+      "body_block_count": 23,
+      "word_count": 861,
+      "scraped_at": "2026-10-05 07:27:26"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/softbank-s-masayoshi-son-has-rare-cautionary-note-on-ai-safety",
+      "title": "SoftBank’s Masayoshi Son Has Rare Cautionary Note on AI Safety",
+      "published_at": "2026-10-04T09:32:29.371Z",
+      "authors": [
+        "Mayumi Negishi"
+      ],
+      "paragraph_count": 11,
+      "body_block_count": 11,
+      "word_count": 415,
+      "scraped_at": "2026-10-05 07:27:18"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/trump-names-clayton-ferguson-to-lead-ai-task-force",
+      "title": "Trump Names Clayton, Ferguson to Lead AI Task Force",
+      "published_at": "2026-10-04T12:38:37.626Z",
+      "authors": [
+        "Sam Kim (News)"
+      ],
+      "paragraph_count": 11,
+      "body_block_count": 11,
+      "word_count": 415,
+      "scraped_at": "2026-10-05 07:27:10"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/ai-whistleblowers-google-openai-meta-to-face-new-york-city-council",
+      "title": "Ex-Anthropic Researcher Coxon to Testify at NYC Hearing on AI",
+      "published_at": "2026-10-04T20:00:00.000Z",
+      "authors": [
+        "Nacha Cattan",
+        "Laura Nahmias"
+      ],
+      "paragraph_count": 9,
+      "body_block_count": 9,
+      "word_count": 356,
+      "scraped_at": "2026-10-05 07:27:02"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/schumer-demands-flock-delete-personal-data-disclose-its-use",
+      "title": "Schumer Demands Flock Delete Personal Data, Disclose Its Use",
+      "published_at": "2026-10-04T20:23:33.963Z",
+      "authors": [
+        "María Paula Mijares Torres"
+      ],
+      "paragraph_count": 14,
+      "body_block_count": 14,
+      "word_count": 518,
+      "scraped_at": "2026-10-05 07:26:52"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
+      "title": "US Lead in AI Over China Narrows After DeepSeek Gains, BI Says",
+      "published_at": "2026-10-04T21:03:00.000Z",
+      "authors": [
+        "Saritha Rai"
+      ],
+      "paragraph_count": 11,
+      "body_block_count": 11,
+      "word_count": 450,
+      "scraped_at": "2026-10-05 07:26:44"
+    }
+  ],
+  "quarantined_urls": [
+    "https://www.bloomberg.com/news/articles/2026-10-04/trump-names-clayton-ferguson-to-lead-ai-task-force"
+  ],
+  "remaining_tech_count": 7,
+  "recapture_required": true,
+  "repair_version": "1.2.2",
+  "quality_notes": "One mismatched duplicate body isolated. Existing Tech captures will be refreshed using the first current-story body, not the longest adjacent body."
+}

@@ -74,7 +74,7 @@ def load_bloomberg_articles() -> List[Dict[str, Any]]:
     cutoff = datetime.now() - timedelta(days=3)
     kept = []
     for a in articles:
-        dt = parse_article_datetime(a.get("scraped_at")) or parse_article_datetime(a.get("published_at"))
+        dt = parse_article_datetime(a.get("published_at")) or parse_article_datetime(a.get("scraped_at"))
         if dt and dt < cutoff:
             continue
         kept.append(a)
@@ -156,7 +156,7 @@ def parse_bloomberg_html(html: str, url: str, section: str = "Business") -> Opti
         "standfirst": standfirst or (paragraphs[0][:150] + "..."),
         "authors": authors, "paragraph_count": len(paragraphs),
         "paragraphs": paragraphs, "word_count": word_count,
-        "is_paywalled": False, "scraped_at": datetime.now(timezone.utc).isoformat()
+        "is_paywalled": False, "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
 

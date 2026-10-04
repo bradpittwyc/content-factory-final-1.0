@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><style>
+body{width:340px;padding:16px;font:14px system-ui;color:#202124}button{display:block;width:100%;padding:10px;margin:10px 0;cursor:pointer}#status{white-space:pre-wrap;line-height:1.6}
+</style></head><body>
+<h3>Bloomberg 主站采集</h3>
+<p id="version">正在检查后台版本...</p>
+<p>使用当前浏览器的订阅登录。请先打开一篇可阅读全文的 Bloomberg.com 文章。</p>
+<button id="capture">采集当前文章</button>
+<button id="batch">试抓队列前 10 篇</button>
+<button id="tech">试抓 Tech 前 10 篇</button>
+<button id="stop">停止批量采集</button>
+<p id="status">连接本地服务 127.0.0.1:8011</p>
+<script src="popup.js"></script></body></html>

@@ -1,0 +1,223 @@
+{
+  "column": "tech",
+  "source_url": "https://www.bloomberg.com/technology",
+  "discovered_at": "2026-10-04T23:26:38.511790+00:00",
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
+      "title": "Raul Ariano/Bloomberg",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/schumer-demands-flock-delete-personal-data-disclose-its-use",
+      "title": "Hannah Beier/Bloomberg",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/ai-whistleblowers-google-openai-meta-to-face-new-york-city-council",
+      "title": "Andrey Rudakov/Bloomberg",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/trump-names-clayton-ferguson-to-lead-ai-task-force",
+      "title": "Trump Names Clayton, Ferguson to Lead AI Task Force",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/softbank-s-masayoshi-son-has-rare-cautionary-note-on-ai-safety",
+      "title": "SoftBank’s Masayoshi Son Has Rare Cautionary Note on AI Safety",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-04/britain-s-reliance-on-us-cloud-giants-alarms-its-politicians",
+      "title": "Britain’s Reliance on US Cloud Giants Alarms Its Politicians",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/us-ai-task-force-to-report-on-technology-s-risks-wsj-reports",
+      "title": "US AI Task Force to Report on Technology’s Risks, WSJ Reports",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
+      "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-03/wall-street-s-biohackers-see-alpha-in-whoop-bands-oura-rings",
+      "title": "Wall Street’s Alpha-Chasing Biohackers Trade Wine for Wearables",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-03/openai-safety-employee-quits-calls-for-nuclear-level-safeguards",
+      "title": "Minh Connors/Bloomberg",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-01/are-we-losing-control-of-ai-what-s-driving-new-fears",
+      "title": "Are We Losing Control of AI? What’s Driving New Fears",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-29/us-china-ai-race-five-key-flashpoints-explained",
+      "title": "Five Ways the US and China Clash Over AI",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-26/what-is-an-ai-kill-switch-why-shutting-down-ai-isn-t-so-simple",
+      "title": "Here’s Why an AI ‘Kill Switch’ May Not Be So Simple",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-21/trump-xi-meeting-china-us-ai-rivalry-poses-questions-for-summit",
+      "title": "The Tough AI Questions Looming Over the Trump-Xi Summit",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/apple-to-tighten-mac-data-controls-in-guard-against-ai-agents",
+      "title": "Apple to Tighten Mac Data Controls in Guard Against AI Agents",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/nscale-hires-meta-s-justin-osofsky-to-be-coo-ahead-of-ipo",
+      "title": "Nscale Hires Meta’s Justin Osofsky to Be COO Ahead of IPO",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/nvidia-hits-first-record-since-may-as-value-nears-6-trillion",
+      "title": "Nvidia Falls Short of May Record as Value Nears $6 Trillion",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/billionaire-chey-sells-700-million-in-sk-stock-amid-divorce",
+      "title": "Chey to Sell $700 Million in SK Stock Amid Divorce",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-25/openai-says-its-models-may-have-interfered-with-government-sites",
+      "title": "OpenAI Says Its Models May Have Interfered With Government Sites",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-25/bitget-hack-pushes-north-korean-crypto-haul-past-1-billion",
+      "title": "Bitget Hack Pushes North Korean Crypto Haul Past $1 Billion",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-18/lng-tanker-with-us-cargo-reported-to-be-victim-of-cyberattack",
+      "title": "Another Tanker Suffers Failure as Crew Suspect Cyber Attack",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-10/brazilian-id-verification-firm-unico-acquires-argentina-s-valida",
+      "title": "Brazilian ID-Verification Firm Unico Acquires Argentina’s Valida",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/kathleen-kennedy-trades-star-wars-for-role-as-hollywood-s-ai-czar",
+      "title": "Kathleen Kennedy Is Breaking Out of Her Star Wars ‘Bubble’",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/key-takeaways-from-bloomberg-s-screentime-conference-toplive",
+      "title": "Key Takeaways From Bloomberg’s Screentime Conference",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-01/nbcuniversal-s-langley-says-volume-matters-amid-studio-mergers",
+      "title": "NBCUniversal’s Langley Says ‘Volume Matters’ Amid Studio Mergers",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-01/paramount-dealmaker-says-warner-merger-is-about-growth-not-cuts",
+      "title": "Paramount Dealmaker Says Warner Merger Is About Growth, Not Cuts",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/apple-iphone-18-pro-max-at-t-glitch-requires-device-replacements",
+      "title": "Apple iPhone 18 Pro Max AT&T Glitch Requires Device Replacements",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/hackers-breached-propulsion-system-of-us-bound-oil-tanker",
+      "title": "Hackers Breached Propulsion System of US-Bound Oil Tanker",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/us-hackers-face-1-000-a-month-pay-cuts-in-controversial-plan",
+      "title": "US Hackers Face $1,000-a-Month Pay Cuts in Controversial Plan",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/google-hikes-price-of-budget-pixel-10a-phone-to-599-on-memory-costs",
+      "title": "Google Hikes Price of Budget Pixel 10a Phone to $599 on Memory Costs",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/german-army-to-start-training-with-new-attack-drones-next-month",
+      "title": "German Army to Start Training With New Attack Drones Next Month",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/roblox-s-rblx-newest-bear-says-wall-street-is-too-optimistic-on-recovery",
+      "title": "Roblox’s Newest Bear Says Wall Street Is Too Optimistic On Bookings Recovery",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/alibaba-solaria-in-talks-for-spanish-data-center-power-supply",
+      "title": "Alibaba, Solaria in Talks for Spanish Data Center Power Supply",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/amazon-s-latest-response-to-ai-data-center-backlash-1-billion",
+      "title": "Amazon’s Latest Response to AI Data Center Backlash: $1 Billion",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/china-robotaxis-face-losses-as-utilization-trails-waymo-bi-says",
+      "title": "China Robotaxis Face Losses as Utilization Trails Waymo, BI Says",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/cma-says-nexfibre-s-2-billion-alt-net-deal-may-hurt-competition",
+      "title": "CMA Says Nexfibre’s £2 Billion Alt-Net Deal May Hurt Competition",
+      "column": "tech",
+      "column_url": "https://www.bloomberg.com/technology"
+    }
+  ]
+}

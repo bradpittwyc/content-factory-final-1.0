@@ -7,6 +7,8 @@ downloads/
 .vscode/
 *.png
 *.html
+*.xml
+!bloomberg_main_extension/popup.html
 ft_session.json
 ft_articles/
 *cookie*.txt
@@ -15,3 +17,6 @@ data/lessons_cos_temp.json
 data/videos/
 data/tonguetwister_audio/
 data/ft_scheduler_state.json
+data/bloomberg_runs/
+data/bloomberg_main_inbox/
+data/bloomberg_main_quarantine/
