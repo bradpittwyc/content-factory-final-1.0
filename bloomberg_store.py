@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Bloomberg syndication and open-channel scraper store.
-Fetches real-time Bloomberg wire articles from BNN Bloomberg (Bloomberg LP Joint Venture).
-Requires ZERO logins, ZERO cookies, and has ZERO paywalls.
+Public BNN Bloomberg article scraper and local store.
+The site carries multiple news providers; preserve the article's actual byline.
 """
-import os
+import hashlib
 import re
 import json
-import time
 from datetime import datetime, timedelta, timezone
 
 
@@ -50,27 +48,37 @@ def parse_article_datetime(s: Optional[str]) -> Optional[datetime]:
             pass
     return None
 
+BLOOMBERG_MAIN_FILE = DATA_DIR / "bloomberg_main_articles.json"
+
 def load_bloomberg_articles() -> List[Dict[str, Any]]:
-    if not BLOOMBERG_ARTICLES_FILE.exists():
-        return []
-    try:
-        data = json.loads(BLOOMBERG_ARTICLES_FILE.read_text(encoding="utf-8"))
-        articles = data if isinstance(data, list) else []
-        cutoff = datetime.now() - timedelta(days=3)
-        kept = []
-        changed = False
-        for a in articles:
-            dt = parse_article_datetime(a.get("scraped_at")) or parse_article_datetime(a.get("published_at"))
-            if dt and dt < cutoff:
-                changed = True
-            else:
-                kept.append(a)
-        if changed:
-            save_bloomberg_articles(kept)
-        return kept
-    except Exception as e:
-        print(f"Error loading bloomberg articles: {e}")
-        return []
+    articles = []
+    if BLOOMBERG_ARTICLES_FILE.exists():
+        try:
+            data = json.loads(BLOOMBERG_ARTICLES_FILE.read_text(encoding="utf-8"))
+            if isinstance(data, list):
+                articles.extend(data)
+        except Exception as e:
+            print(f"Error loading bloomberg articles: {e}")
+
+    if BLOOMBERG_MAIN_FILE.exists():
+        try:
+            main_data = json.loads(BLOOMBERG_MAIN_FILE.read_text(encoding="utf-8"))
+            if isinstance(main_data, list):
+                existing_urls = {a.get("url") for a in articles}
+                for ma in main_data:
+                    if ma.get("url") not in existing_urls:
+                        articles.append(ma)
+        except Exception as e:
+            print(f"Error loading bloomberg main articles: {e}")
+
+    cutoff = datetime.now() - timedelta(days=3)
+    kept = []
+    for a in articles:
+        dt = parse_article_datetime(a.get("scraped_at")) or parse_article_datetime(a.get("published_at"))
+        if dt and dt < cutoff:
+            continue
+        kept.append(a)
+    return kept
 
 def save_bloomberg_articles(articles: List[Dict[str, Any]]) -> None:
     BLOOMBERG_ARTICLES_FILE.write_text(json.dumps(articles, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -85,76 +93,84 @@ def upsert_bloomberg_article(art: Dict[str, Any]) -> None:
         articles.insert(0, art)
     save_bloomberg_articles(articles)
 
+def parse_bloomberg_html(html: str, url: str, section: str = "Business") -> Optional[Dict[str, Any]]:
+    """Parse only the story body; never treat recommendations as article text."""
+    soup = BeautifulSoup(html, "html.parser")
+    h1 = soup.find("h1")
+    title = h1.get_text(" ", strip=True) if h1 else ""
+    body = soup.select_one("article.b-article-body, .article-body, .article-content, .story-content, .body-copy")
+    if not title or body is None:
+        return None
+
+    metadata = {}
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            value = json.loads(script.get_text())
+        except (ValueError, TypeError):
+            continue
+        nodes = value if isinstance(value, list) else [value]
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+            candidates = node.get("@graph", [node])
+            for candidate in candidates:
+                if isinstance(candidate, dict) and "Article" in str(candidate.get("@type", "")):
+                    metadata = candidate
+                    break
+
+    if str(metadata.get("isAccessibleForFree", "true")).lower() == "false":
+        return None
+    paragraphs = []
+    for paragraph in body.find_all("p"):
+        text = paragraph.get_text(" ", strip=True)
+        if len(text) > 30 and not any(marker in text.lower() for marker in (
+            "copyright", "all rights reserved", "terms of service", "click here to read", "listen to this article"
+        )):
+            paragraphs.append(text)
+    word_count = sum(len(text.split()) for text in paragraphs)
+    if len(paragraphs) < 4 or word_count < 150:
+        return None
+
+    author_data = metadata.get("author", [])
+    if isinstance(author_data, (str, dict)):
+        author_data = [author_data]
+    elif not isinstance(author_data, list):
+        author_data = []
+    authors = [a.get("name", "") if isinstance(a, dict) else str(a) for a in author_data]
+    authors = [a for a in authors if a]
+    if not authors:
+        byline = soup.find(["div", "span"], class_=re.compile(r"byline|author", re.I))
+        if byline:
+            text = re.sub(r"^By\s+", "", byline.get_text(" ", strip=True))
+            text = re.sub(r"Opens in new window.*", "", text).strip()
+            if text:
+                authors = [text]
+    published_meta = soup.find("meta", property="article:published_time")
+    published_at = metadata.get("datePublished") or (published_meta.get("content") if published_meta else None)
+    summary = soup.find("meta", attrs={"name": "description"})
+    standfirst = metadata.get("description") or (summary.get("content") if summary else None)
+    return {
+        "id": "bb_" + hashlib.sha256(url.encode()).hexdigest()[:20],
+        "title": title, "url": url, "section": section,
+        "published_at": published_at,
+        "standfirst": standfirst or (paragraphs[0][:150] + "..."),
+        "authors": authors, "paragraph_count": len(paragraphs),
+        "paragraphs": paragraphs, "word_count": word_count,
+        "is_paywalled": False, "scraped_at": datetime.now(timezone.utc).isoformat()
+    }
+
+
 def scrape_single_bloomberg_url(url: str, section: str = "Business") -> Optional[Dict[str, Any]]:
-    """Fetch full article content from BNN Bloomberg syndication."""
+    """Fetch and parse a public BNN Bloomberg story."""
     try:
         req = urllib.request.Request(url, headers=HEADERS)
         with urllib.request.urlopen(req, timeout=12) as resp:
-            html = resp.read().decode("utf-8", errors="ignore")
-            soup = BeautifulSoup(html, "html.parser")
-            
-            # Title
-            h1 = soup.find("h1")
-            title = h1.get_text().strip() if h1 else ""
-            if not title:
-                return None
-            
-            # Subtitle / Standfirst
-            standfirst_el = soup.find("div", class_=re.compile(r"deck|subheading|summary|standfirst", re.I))
-            standfirst = standfirst_el.get_text().strip() if standfirst_el else ""
-            
-            # Authors / Byline
-            byline_el = soup.find("div", class_=re.compile(r"byline|author", re.I))
-            authors = []
-            if byline_el:
-                btxt = byline_el.get_text().strip()
-                btxt = re.sub(r"^By\s+", "", btxt)
-                btxt = re.sub(r"Opens in new window.*", "", btxt).strip()
-                if btxt:
-                    authors = [btxt]
-            if not authors:
-                authors = ["Bloomberg News"]
-
-            # Body Paragraphs
-            article_body = soup.find("div", class_=re.compile(r"article-content|article-body|story-content|body-copy", re.I))
-            if not article_body:
-                article_body = soup
-            
-            paragraphs = []
-            for p in article_body.find_all("p"):
-                txt = p.get_text().strip()
-                # Exclude ads, copyright, boilerplates, and timestamp lines
-                if len(txt) > 30 and not any(k in txt.lower() for k in [
-                    "copyright", "all rights reserved", "terms of service", "sign in", "subscribe", 
-                    "updated:", "published:", "click here to read", "listen to this article"
-                ]):
-                    paragraphs.append(txt)
-            
-            if not paragraphs:
-                return None
-            
-            word_count = sum(len(p.split()) for p in paragraphs)
-            if word_count < 150 or len(paragraphs) < 4:
-                return None
-            
-            return {
-                "id": "bb_" + str(int(time.time() * 1000)),
-                "title": title,
-                "url": url,
-                "section": section,
-                "published_at": datetime.now(timezone.utc).isoformat(),
-                "standfirst": standfirst or (paragraphs[0][:150] + "..."),
-                "authors": authors,
-                "paragraph_count": len(paragraphs),
-                "paragraphs": paragraphs,
-                "word_count": word_count,
-                "is_paywalled": False,
-                "scraped_at": datetime.now(timezone.utc).isoformat()
-
-            }
+            html = resp.read().decode("utf-8", errors="replace")
+        return parse_bloomberg_html(html, url, section)
     except Exception as e:
         print(f"Error scraping {url}: {e}")
         return None
+
 
 def scan_bloomberg_syndication(limit_per_section: int = 4) -> List[Dict[str, Any]]:
     """Scan all syndication sections and pull new articles into data/bloomberg_articles.json."""
