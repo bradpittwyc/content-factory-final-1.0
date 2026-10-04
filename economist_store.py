@@ -45,18 +45,49 @@ def get_saved_cookie() -> str:
 def save_cookie(cookie_str: str) -> None:
     COOKIE_FILE.write_text(cookie_str.strip(), encoding="utf-8")
 
+def parse_article_datetime(s: Optional[str]) -> Optional[datetime]:
+    if not s:
+        return None
+    s_str = str(s).strip()
+    m = re.search(r'(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}:\d{2})', s_str)
+    if m:
+        try:
+            return datetime.strptime(f"{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            pass
+    m2 = re.search(r'(\d{4}-\d{2}-\d{2})', s_str)
+    if m2:
+        try:
+            return datetime.strptime(m2.group(1), "%Y-%m-%d")
+        except Exception:
+            pass
+    return None
+
 def load_all_articles() -> List[Dict[str, Any]]:
     if not ARTICLES_FILE.exists():
         return []
     try:
         data = json.loads(ARTICLES_FILE.read_text(encoding="utf-8"))
-        return data if isinstance(data, list) else []
+        articles = data if isinstance(data, list) else []
+        cutoff = datetime.now() - timedelta(days=3)
+        kept = []
+        changed = False
+        for a in articles:
+            dt = parse_article_datetime(a.get("scraped_at")) or parse_article_datetime(a.get("published_at"))
+            if dt and dt < cutoff:
+                changed = True
+            else:
+                kept.append(a)
+        if changed:
+            save_all_articles(kept)
+        return kept
     except Exception:
         return []
 
 def save_all_articles(articles: List[Dict[str, Any]]) -> None:
     with open(ARTICLES_FILE, "w", encoding="utf-8") as f:
         json.dump(articles, f, ensure_ascii=False, indent=2)
+
 
 def upsert_article(article_data: Dict[str, Any]) -> None:
     if article_data.get("security_blocked"):

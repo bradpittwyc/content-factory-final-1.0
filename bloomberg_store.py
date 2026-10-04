@@ -8,7 +8,9 @@ import os
 import re
 import json
 import time
-import datetime
+from datetime import datetime, timedelta, timezone
+
+
 import urllib.request
 from pathlib import Path
 from typing import List, Dict, Any, Optional
@@ -30,18 +32,49 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9"
 }
 
+def parse_article_datetime(s: Optional[str]) -> Optional[datetime]:
+    if not s:
+        return None
+    s_str = str(s).strip()
+    m = re.search(r'(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}:\d{2})', s_str)
+    if m:
+        try:
+            return datetime.strptime(f"{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            pass
+    m2 = re.search(r'(\d{4}-\d{2}-\d{2})', s_str)
+    if m2:
+        try:
+            return datetime.strptime(m2.group(1), "%Y-%m-%d")
+        except Exception:
+            pass
+    return None
+
 def load_bloomberg_articles() -> List[Dict[str, Any]]:
     if not BLOOMBERG_ARTICLES_FILE.exists():
         return []
     try:
         data = json.loads(BLOOMBERG_ARTICLES_FILE.read_text(encoding="utf-8"))
-        return data if isinstance(data, list) else []
+        articles = data if isinstance(data, list) else []
+        cutoff = datetime.now() - timedelta(days=3)
+        kept = []
+        changed = False
+        for a in articles:
+            dt = parse_article_datetime(a.get("scraped_at")) or parse_article_datetime(a.get("published_at"))
+            if dt and dt < cutoff:
+                changed = True
+            else:
+                kept.append(a)
+        if changed:
+            save_bloomberg_articles(kept)
+        return kept
     except Exception as e:
         print(f"Error loading bloomberg articles: {e}")
         return []
 
 def save_bloomberg_articles(articles: List[Dict[str, Any]]) -> None:
     BLOOMBERG_ARTICLES_FILE.write_text(json.dumps(articles, indent=2, ensure_ascii=False), encoding="utf-8")
+
 
 def upsert_bloomberg_article(art: Dict[str, Any]) -> None:
     articles = load_bloomberg_articles()
@@ -109,14 +142,15 @@ def scrape_single_bloomberg_url(url: str, section: str = "Business") -> Optional
                 "title": title,
                 "url": url,
                 "section": section,
-                "published_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "published_at": datetime.now(timezone.utc).isoformat(),
                 "standfirst": standfirst or (paragraphs[0][:150] + "..."),
                 "authors": authors,
                 "paragraph_count": len(paragraphs),
                 "paragraphs": paragraphs,
                 "word_count": word_count,
                 "is_paywalled": False,
-                "scraped_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+                "scraped_at": datetime.now(timezone.utc).isoformat()
+
             }
     except Exception as e:
         print(f"Error scraping {url}: {e}")
