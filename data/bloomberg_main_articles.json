@@ -1,5 +1,99 @@
 [
   {
+    "id": "bloomberg_2b39efe915cd05877266",
+    "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
+    "title": "US Lead in AI Over China Narrows After DeepSeek Gains, BI Says",
+    "published_at": "2026-10-04T21:03:00.000Z",
+    "authors": [
+      "Saritha Rai"
+    ],
+    "paragraphs": [
+      "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
+      "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
+      "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
+      "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
+      "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
+      "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
+      "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
+      "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
+      "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
+      "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
+      "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said."
+    ],
+    "paragraph_count": 11,
+    "body_blocks": [
+      {
+        "kind": "p",
+        "text": "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
+        "is_related": false
+      },
+      {
+        "kind": "p",
+        "text": "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said.",
+        "is_related": false
+      }
+    ],
+    "body_block_count": 11,
+    "capture_version": 2,
+    "word_count": 450,
+    "scraped_at": "2026-10-05 07:36:55",
+    "source": "Bloomberg",
+    "access_method": "logged-in browser DOM",
+    "body_selector": ".body-content",
+    "full_text_reviewed": false,
+    "columns": [
+      "tech"
+    ],
+    "column_sources": {
+      "tech": "https://www.bloomberg.com/technology"
+    }
+  },
+  {
     "id": "bloomberg_16d0940dc888fd22e3b8",
     "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
     "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
@@ -673,101 +767,6 @@
     "capture_version": 2,
     "word_count": 518,
     "scraped_at": "2026-10-05 07:26:52",
-    "source": "Bloomberg",
-    "access_method": "logged-in browser DOM",
-    "body_selector": ".body-content",
-    "full_text_reviewed": false,
-    "columns": [
-      "tech"
-    ],
-    "column_sources": {
-      "tech": "https://www.bloomberg.com/technology"
-    },
-    "needs_recapture": true
-  },
-  {
-    "id": "bloomberg_2b39efe915cd05877266",
-    "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
-    "title": "US Lead in AI Over China Narrows After DeepSeek Gains, BI Says",
-    "published_at": "2026-10-04T21:03:00.000Z",
-    "authors": [
-      "Saritha Rai"
-    ],
-    "paragraphs": [
-      "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
-      "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
-      "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
-      "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
-      "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
-      "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
-      "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
-      "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
-      "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
-      "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
-      "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said."
-    ],
-    "paragraph_count": 11,
-    "body_blocks": [
-      {
-        "kind": "p",
-        "text": "American AI companies’ performance lead over China narrowed sharply in past months to a record low after labs such as DeepSeek gained ground, threatening US tech supremacy, according to Bloomberg Intelligence.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "Top Chinese models lag their US rivals by just 3% on benchmark scores after the September release of DeepSeek’s V4.1 Flash, BI senior analyst Robert Lea wrote in a report Monday. That’s down from about 9% in May and 15% earlier in the year. That improving performance spells further market share gains for Chinese contenders, he said.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "China’s ascent is a result of deepening AI expertise and its researchers’ ability to optimize their models for domestic hardware. The gains raise questions about the usefulness of US export restrictions on technology such as Nvidia Corp. chips, intended to curtail Chinese AI advances and prevent the likes of Huawei Technologies Co. from making progress with their own alternatives.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "The Asian country’s progress “casts further doubt on the long-term sustainability of US technological supremacy in AI,” Lea said.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "The two superpowers are vying to dominate a technology that drives economic productivity, military leadership and global influence. China’s lower-cost AI models are bridging the gap with US rivals in user numbers just as Anthropic and OpenAI chase trillion-dollar valuations in stock market debuts, touting their superior capabilities.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "DeepSeek’s V4.1 Flash ranked sixth globally last month on LiveBench, making it the highest-ranked Chinese model since the startup broke ground with its reasoning model R1 in 2025. LiveBench scores AI models based on their responses to and analysis of questions, puzzles or tasks, a process akin to gauging human IQ.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "DeepSeek last recorded a LiveBench score of 81.1, below Anthropic’s best score of 83.4. That means the DeepSeek model delivers “comparable performance” to leading AI systems from Anthropic and OpenAI, Lea said. Still, while the score gap has narrowed to just 3%, just three of the top 15 models as assessed by LiveBench were Chinese.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "Such rankings shift, Lea cautioned, and it could be difficult to monetize regardless of leaderboard scores. Chinese models face increasing US regulatory scrutiny and even potential bans following allegations of model distillation.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "The Chinese AI industry could remain unprofitable until 2030, Lea said. A focus on low-margin token supply and a brutal price war may make it impossible for any firm to gain a competitive edge in a domestic market flooded with more than 1,100 large language models.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "ByteDance Ltd.’s Doubao is the frontrunner in AI app monetization, while the chatbots of rivals DeepSeek and Tencent Holdings Ltd. remain free, Lea said.",
-        "is_related": false
-      },
-      {
-        "kind": "p",
-        "text": "“Putting China’s AI sector on a sustainable profit footing will require a cooling of competitive pressures, an industry shakeout, and a more rational approach to pricing,” he said.",
-        "is_related": false
-      }
-    ],
-    "body_block_count": 11,
-    "capture_version": 2,
-    "word_count": 450,
-    "scraped_at": "2026-10-05 07:26:44",
     "source": "Bloomberg",
     "access_method": "logged-in browser DOM",
     "body_selector": ".body-content",
