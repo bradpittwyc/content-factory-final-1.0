@@ -82,6 +82,24 @@ class MainBridgeTests(unittest.TestCase):
             browser.close()
         self.assertEqual(result['paragraphs'], ['Current article body.'])
 
+    def test_takeaways_outside_body_are_captured_without_body_pollution(self):
+        from playwright.sync_api import sync_playwright
+        source = (Path(__file__).parent / 'bloomberg_main_extension' / 'worker.js').read_text(encoding='utf-8')
+        function = source[source.index('function extractArticle()'):source.index('function extractTechLinks()')].strip()
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(channel='chrome', headless=True)
+            page = browser.new_page()
+            page.set_content('<h1>Current story</h1><section><div><strong>Takeaways</strong> by Bloomberg AI</div><ul><li>First AI point.</li><li>Second AI point.</li></ul></section><div class="body-content"><p>Reporter body.</p><ul><li>Reporter list item.</li></ul></div><h1>Next story</h1><section><strong>Takeaways</strong><ul><li>Wrong adjacent summary.</li></ul></section>')
+            result = page.evaluate('(' + function + ')()')
+            self.assertEqual(result['takeaways'], ['First AI point.', 'Second AI point.'])
+            self.assertEqual(result['takeaways_source'], 'Bloomberg AI')
+            self.assertEqual(result['paragraphs'], ['Reporter body.', 'Reporter list item.'])
+            page.set_content('<h1>Story</h1><strong>Takeaways</strong><div class="body-content"><p>No summary list.</p></div>')
+            result = page.evaluate('(' + function + ')()')
+            self.assertEqual(result['takeaways_status'], 'collapsed_or_empty')
+            self.assertEqual(result['takeaways'], [])
+            browser.close()
+
 
 class TechQueueTests(unittest.TestCase):
     def setUp(self):

@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Bloomberg Main Site Capture",
-  "version": "1.2.2",
+  "version": "1.4.1",
+  "minimum_chrome_version": "120",
   "description": "Capture Bloomberg.com article bodies from your logged-in browser into local Content Factory.",
-  "permissions": ["activeTab", "scripting", "tabs", "storage"],
+  "permissions": ["activeTab", "scripting", "tabs", "storage", "alarms", "contextMenus"],
   "host_permissions": ["https://www.bloomberg.com/*", "http://127.0.0.1:8011/*"],
   "background": {"service_worker": "worker.js"},
   "action": {"default_popup": "popup.html"}

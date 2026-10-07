@@ -9,6 +9,9 @@ downloads/
 *.html
 *.xml
 !bloomberg_main_extension/popup.html
+!wsj_extension/popup.html
+data/wsj_inbox/
+data/wsj_columns.json
 ft_session.json
 ft_articles/
 *cookie*.txt
@@ -20,3 +23,5 @@ data/ft_scheduler_state.json
 data/bloomberg_runs/
 data/bloomberg_main_inbox/
 data/bloomberg_main_quarantine/
+data/bloomberg_tech_scheduler.sqlite3*
+data/bloomberg_main_column_settings.json

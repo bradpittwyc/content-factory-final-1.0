@@ -9,5 +9,13 @@ body{width:340px;padding:16px;font:14px system-ui;color:#202124}button{display:b
 <button id="batch">试抓队列前 10 篇</button>
 <button id="tech">试抓 Tech 前 10 篇</button>
 <button id="stop">停止批量采集</button>
+<hr>
+<p>多专栏轮流自动采集：每轮合计最多 1 篇，间隔见下方计划</p>
+<label>手动采集专栏 <select id="column_select"><option value="tech">Tech 科技</option></select></label>
+<button id="column_batch">试抓所选专栏前 10 篇</button>
+<button id="auto_enable">开启 / 恢复自动采集</button>
+<button id="auto_run">立即采集所选专栏 1 篇</button>
+<button id="auto_stop">暂停自动采集</button>
+<p id="auto_state">正在读取自动计划...</p>
 <p id="status">连接本地服务 127.0.0.1:8011</p>
 <script src="popup.js"></script></body></html>

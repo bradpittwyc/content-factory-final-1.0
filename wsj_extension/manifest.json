@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "WSJ Content Factory Capture",
+  "version": "1.0.0",
+  "permissions": ["activeTab", "scripting", "tabs", "contextMenus"],
+  "host_permissions": ["https://www.wsj.com/*", "http://127.0.0.1:8011/*"],
+  "background": {"service_worker": "worker.js"},
+  "action": {"default_popup": "popup.html"}
+}

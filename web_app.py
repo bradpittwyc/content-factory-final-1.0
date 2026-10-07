@@ -27,7 +27,7 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from fastapi import FastAPI, BackgroundTasks, Query
+from fastapi import FastAPI, BackgroundTasks, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -40,6 +40,11 @@ except Exception:
     scrape_with_native_chrome = None
 
 app = FastAPI(title="TikTok 视频批量抓取控制台")
+import wsj_store
+
+@app.get('/api/wsj/articles')
+def get_wsj_articles():
+    return wsj_store.articles()
 
 # 启用 CORS 跨域支持 (允许浏览器扩展与外部页面同步抓取数据)
 app.add_middleware(
@@ -104,6 +109,7 @@ from youtube_study_helper import (
 import channels_store
 import ft_store
 import bloomberg_store
+from bloomberg_columns import load_columns
 import ft_scheduler
 import economist_store
 
@@ -319,13 +325,43 @@ def add_channel_endpoint(req: AddChannelRequest):
     return {"success": True, "item": item, "tiktok": data.get("tiktok", []), "youtube": data.get("youtube", [])}
 
 # ==================== Foreign Publications (外刊内容工厂) APIs ====================
+@app.get('/api/bloomberg/tech/automation')
+def get_bloomberg_tech_automation():
+    import urllib.request
+    try:
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open('http://127.0.0.1:8011/automation/bloomberg/status', timeout=3) as response:
+            return {'success': True, **json.load(response)}
+    except Exception:
+        return {'success': False, 'error': 'Bloomberg 接收服务未连接，请启动 8011 服务并更新扩展至 v1.4.0。'}
+
+
+@app.post('/api/bloomberg/columns')
+def update_bloomberg_column(column: Dict[str, Any], request: Request):
+    import urllib.request
+    origin = request.headers.get('origin')
+    expected = f'{request.url.scheme}://{request.url.netloc}'
+    if (origin and origin != expected) or request.headers.get('sec-fetch-site') == 'cross-site':
+        return JSONResponse({'success': False, 'error': '仅允许本地控制台修改专栏'}, status_code=403)
+    try:
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        outgoing = urllib.request.Request('http://127.0.0.1:8011/columns/configure',
+                                         data=json.dumps(column).encode(), headers={'Content-Type': 'application/json'})
+        with opener.open(outgoing, timeout=5) as response:
+            return {'success': True, **json.load(response)}
+    except urllib.error.HTTPError as error:
+        return JSONResponse({'success': False, 'error': json.load(error).get('detail', '专栏配置失败')}, status_code=error.code)
+    except Exception:
+        return JSONResponse({'success': False, 'error': 'Bloomberg 接收服务未连接'}, status_code=503)
+
 @app.get("/api/bloomberg/articles")
 def get_bloomberg_articles_endpoint():
     articles = bloomberg_store.load_bloomberg_articles()
     return {
         "success": True,
         "articles": articles,
-        "total": len(articles)
+        "total": len(articles),
+        "columns": list(load_columns(bloomberg_store.DATA_DIR / 'bloomberg_main_column_settings.json').values())
     }
 
 @app.post("/api/bloomberg/scan")
@@ -3267,6 +3303,18 @@ HTML_CONTENT = """<!DOCTYPE html>
             </button>
           </div>
         </div>
+      <div class="text-xs text-cyan-300 px-1" id="bbTechAutomationStatus">多专栏自动采集：每轮合计最多 1 篇，正在读取间隔。</div>
+      <div id="bbColumnTabs" class="flex flex-wrap gap-2"></div>
+      <details class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-300">
+        <summary class="cursor-pointer">管理 Bloomberg 专栏与自动采集范围</summary>
+        <p class="mt-2 text-slate-400">勾选专栏参与轮流采集，所有专栏合计每轮最多抓一篇，间隔见自动计划。AI Today 需先手动验证文章入口。</p>
+        <div id="bbColumnSettings" class="flex flex-wrap gap-3 my-3"></div>
+        <form onsubmit="addBloombergColumn(event)" class="flex flex-wrap gap-2">
+          <input id="bbNewColumnName" required maxlength="80" placeholder="专栏名称" class="bg-slate-950 border border-slate-700 rounded px-2 py-1">
+          <input id="bbNewColumnUrl" type="url" required placeholder="https://www.bloomberg.com/栏目" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 flex-1">
+          <button type="submit" class="bg-cyan-700 rounded px-3 py-1">添加专栏</button>
+        </form>
+      </details>
       <!-- 彭博社文章列表搜索与排序工具条 -->
       <div class="flex flex-wrap items-center justify-between gap-3 px-1">
         <div class="flex items-center space-x-3">
@@ -3292,6 +3340,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       </div>
     </div>
 
+    </div>
     <!-- 视图 4: 经济学人内容工厂 (The Economist Studio) -->
     <div id="economistFactoryWorkstation" class="space-y-6 hidden">
       <!-- 顶栏导航与面包屑 -->
@@ -5244,6 +5293,35 @@ HTML_CONTENT = """<!DOCTYPE html>
     // =========================================================================
     let currentPlatform = 'tiktok';
 
+    // Keep navigation per browser tab so refreshing one factory cannot reset another.
+    const FACTORY_NAVIGATION_KEY = 'content_factory_navigation';
+    function readFactoryNavigation() {
+      try {
+        const value = JSON.parse(sessionStorage.getItem(FACTORY_NAVIGATION_KEY) || '{}');
+        return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+      } catch (_) { return {}; }
+    }
+    function rememberFactoryNavigation(patch) {
+      try {
+        sessionStorage.setItem(FACTORY_NAVIGATION_KEY, JSON.stringify({ ...readFactoryNavigation(), ...patch }));
+      } catch (_) { /* Navigation still works when browser storage is unavailable. */ }
+    }
+    function restoreFactoryNavigation() {
+      const saved = readFactoryNavigation();
+      const platforms = ['tiktok', 'youtube', 'channels', 'ft', 'tonguetwister'];
+      const platform = platforms.includes(saved.platform) ? saved.platform : 'tiktok';
+      if (typeof saved.ftSection === 'string') currentFtSectionTab = saved.ftSection;
+      if (typeof saved.ecoSection === 'string') currentEcoSectionTab = saved.ecoSection;
+      if (typeof saved.bbColumn === 'string') currentBbColumn = saved.bbColumn;
+      switchPlatform(platform);
+      if (platform === 'ft' && ['ft', 'bloomberg', 'economist'].includes(saved.publication)) {
+        openPubWorkstation(saved.publication);
+      }
+      if (platform === 'tiktok') {
+        setTimeout(() => { if (currentPlatform === 'tiktok') loadDemo(); }, 400);
+      }
+    }
+
     function toggleSidebar() {
       const sidebar = document.getElementById('leftSidebar');
       if (!sidebar) return;
@@ -5255,6 +5333,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function switchPlatform(platform) {
       currentPlatform = platform;
+      rememberFactoryNavigation({ platform });
       const pageTikTok = document.getElementById('pageTikTok');
       const pageYouTube = document.getElementById('pageYouTube');
       const pageChannels = document.getElementById('pageChannels');
@@ -6539,12 +6618,15 @@ HTML_CONTENT = """<!DOCTYPE html>
     let ftSortMode = 'time'; // 'time' (按时间) or 'initial' (按头字幕/首字母)
     let ecoSortMode = 'time';
     let bbSortMode = 'time';
+    let bloombergColumns = [];
+    let currentBbColumn = 'all';
     let currentViewingFtArticle = null;
 
 
 
     function returnToPubMatrix() {
       currentPubWorkstation = 'matrix';
+      rememberFactoryNavigation({ platform: 'ft', publication: 'matrix' });
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
@@ -6565,6 +6647,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     async function openPubWorkstation(pub) {
       currentPubWorkstation = pub;
+      rememberFactoryNavigation({ platform: 'ft', publication: pub });
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
@@ -6648,12 +6731,28 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }
 
+    async function loadBloombergTechAutomation() {
+      const element = document.getElementById('bbTechAutomationStatus');
+      if (!element) return;
+      try {
+        const data = await (await fetch('/api/bloomberg/tech/automation')).json();
+        if (!data.success) throw new Error(data.error);
+        const date = value => value ? new Date(value * 1000).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '未安排';
+        const online = data.browser_last_seen && Date.now() / 1000 - data.browser_last_seen < 180;
+        const names = (data.columns || []).filter(column => column.enabled).map(column => column.name).join('、');
+        element.textContent = `Bloomberg：${data.enabled ? '每 ' + data.interval_minutes + ' 分钟合计最多采集 1 篇' : '自动计划关闭'}${data.pause_reason ? ' · ' + data.pause_reason : ''} · 轮流采集 ${names || '无'} · 浏览器${online ? '在线' : '等待扩展连接'} · 下次计划 ${date(data.next_due_at)}（北京时间）。在扩展中开启、暂停或立即运行。`;
+      } catch (error) { element.textContent = error.message; }
+    }
+
     async function loadBloombergUI() {
+      loadBloombergTechAutomation();
       try {
         const res = await fetch('/api/bloomberg/articles');
         const data = await res.json();
         if (data.success) {
           bloombergArticles = data.articles || [];
+          bloombergColumns = data.columns || [];
+          renderBloombergColumnControls();
           renderBloombergArticlesGrid();
         }
       } catch (e) {
@@ -6727,8 +6826,69 @@ HTML_CONTENT = """<!DOCTYPE html>
       renderBloombergArticlesGrid();
     }
 
+    function selectBloombergColumn(id) {
+      currentBbColumn = id;
+      rememberFactoryNavigation({ bbColumn: id });
+      renderBloombergColumnControls();
+      renderBloombergArticlesGrid();
+    }
+    function bloombergColumnLabel(article) {
+      const names = (article.columns || []).map(id => bloombergColumns.find(column => column.id === id)?.name || id);
+      const element = document.createElement('span');
+      element.textContent = names.join(' / ') || article.section || '未分类';
+      return element.innerHTML;
+    }
+    function renderBloombergColumnControls() {
+      const tabs = document.getElementById('bbColumnTabs');
+      const settings = document.getElementById('bbColumnSettings');
+      if (!tabs || !settings) return;
+      const columns = [{ id: 'all', name: '全部' }, ...bloombergColumns, { id: 'unclassified', name: '未分类 / 手动入库' }];
+      if (!columns.some(column => column.id === currentBbColumn)) currentBbColumn = 'all';
+      tabs.replaceChildren(...columns.map(column => {
+        const button = document.createElement('button');
+        const count = column.id === 'all' ? bloombergArticles.length : bloombergArticles.filter(article => column.id === 'unclassified' ? !(article.columns || []).length : (article.columns || []).includes(column.id)).length;
+        button.textContent = `${column.name} (${count})`;
+        button.className = `px-3 py-1 rounded-lg text-xs border ${column.id === currentBbColumn ? 'bg-cyan-700 border-cyan-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-300'}`;
+        button.onclick = () => selectBloombergColumn(column.id);
+        return button;
+      }));
+      settings.replaceChildren(...bloombergColumns.map(column => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'checkbox'; input.checked = column.enabled;
+        input.onchange = async () => {
+          input.disabled = true;
+          try {
+            await saveBloombergColumn({ ...column, enabled: input.checked });
+          } catch (error) { input.checked = column.enabled; showToast(error.message, 'error'); }
+          finally { input.disabled = false; }
+        };
+        label.append(input, document.createTextNode(' ' + column.name + (column.note ? '（' + column.note + '）' : '')));
+        return label;
+      }));
+    }
+    async function saveBloombergColumn(column) {
+      const response = await fetch('/api/bloomberg/columns', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(column) });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || '专栏配置失败');
+      bloombergColumns = data.columns;
+      renderBloombergColumnControls();
+      renderBloombergArticlesGrid();
+      loadBloombergTechAutomation();
+    }
+    async function addBloombergColumn(event) {
+      event.preventDefault();
+      try {
+        await saveBloombergColumn({ name: document.getElementById('bbNewColumnName').value, url: document.getElementById('bbNewColumnUrl').value, enabled: false });
+        event.target.reset();
+        showToast('专栏已添加；确认入口后勾选以参与自动采集。', 'success');
+      } catch (error) { showToast(error.message, 'error'); }
+    }
+
     function getFilteredBloombergArticles() {
       let list = [...bloombergArticles];
+      if (currentBbColumn === 'unclassified') list = list.filter(a => !(a.columns || []).length);
+      else if (currentBbColumn !== 'all') list = list.filter(a => (a.columns || []).includes(currentBbColumn));
       if (bbSearchKeyword) {
         list = list.filter(a => {
           const t = (a.title || '').toLowerCase();
@@ -6775,8 +6935,8 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div class="space-y-2.5">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-medium">${a.section || 'Bloomberg'}</span>
-                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">精选全文</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-medium">${bloombergColumnLabel(a)}</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">${a.full_text_reviewed ? '已核验全文' : '正文候选'}</span>
                 </div>
                 <span class="text-[11px] text-slate-500 font-mono">${parasCount} 段 • ${a.word_count || 0} 词</span>
               </div>
@@ -7040,6 +7200,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function switchFtSectionTab(tabId) {
       currentFtSectionTab = tabId;
+      rememberFactoryNavigation({ ftSection: tabId });
       renderFtTabs();
       renderFtArticlesGrid();
     }
@@ -7310,6 +7471,28 @@ HTML_CONTENT = """<!DOCTYPE html>
         standfirstEl.style.display = 'none';
       }
 
+      let takeawaysEl = document.getElementById('ftModalTakeaways');
+      if (!takeawaysEl) {
+        takeawaysEl = document.createElement('section');
+        takeawaysEl.id = 'ftModalTakeaways';
+        takeawaysEl.className = 'rounded-xl border border-cyan-800 bg-slate-900 p-4 space-y-2 text-sm text-slate-200';
+        standfirstEl.insertAdjacentElement('afterend', takeawaysEl);
+      }
+      takeawaysEl.replaceChildren();
+      const takeaways = article.takeaways || [];
+      takeawaysEl.style.display = takeaways.length ? 'block' : 'none';
+      if (takeaways.length) {
+        const heading = document.createElement('h3');
+        heading.textContent = 'Takeaways · ' + (article.takeaways_source || 'Bloomberg');
+        heading.className = 'font-semibold text-cyan-300';
+        const list = document.createElement('ul');
+        list.className = 'list-disc pl-5 space-y-2';
+        for (const text of takeaways) {
+          const item = document.createElement('li'); item.textContent = text; list.append(item);
+        }
+        takeawaysEl.append(heading, list);
+      }
+
       const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'Financial Times');
       document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : defaultAuthor;
       document.getElementById('ftModalPublishedAt').innerText = formatAppDateTime(article.published_at) || '近期发布';
@@ -7379,13 +7562,19 @@ HTML_CONTENT = """<!DOCTYPE html>
       const doubleNl = String.fromCharCode(10, 10);
       const paras = currentViewingFtArticle.paragraphs || [];
       const body = currentViewingFtArticle.full_text || paras.join(doubleNl);
-      const text = [currentViewingFtArticle.title, currentViewingFtArticle.standfirst || '', body].filter(Boolean).join(doubleNl);
+      const text = [currentViewingFtArticle.title, currentViewingFtArticle.standfirst || '', articleTakeawaysMarkdown(currentViewingFtArticle), body].filter(Boolean).join(doubleNl);
       copyTextToClipboard(text).then(() => {
         showToast("已成功复制纯文本全文到剪贴板！", "success");
       }).catch(err => {
         console.error("复制失败:", err);
         showToast("复制失败，请检查浏览器剪贴板权限", "error");
       });
+    }
+
+    function articleTakeawaysMarkdown(article) {
+      if (!(article.takeaways || []).length) return '';
+      const nl = String.fromCharCode(10);
+      return '## Takeaways · ' + (article.takeaways_source || 'Bloomberg') + nl + nl + article.takeaways.map(text => '- ' + text).join(nl) + nl;
     }
 
     function copyFtArticleMarkdown(encodedUrl, btnEl) {
@@ -7430,6 +7619,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         '* **原文链接**: ' + a.url,
         '',
         a.standfirst ? ('> **核心导读**: ' + a.standfirst + singleNl) : '',
+        articleTakeawaysMarkdown(a),
         '---',
         '',
         body
@@ -7495,6 +7685,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         '* **原文链接**: ' + a.url,
         '',
         a.standfirst ? ('> **核心导读**: ' + a.standfirst + singleNl) : '',
+        articleTakeawaysMarkdown(a),
         '---',
         '',
         body
@@ -7812,6 +8003,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function switchEcoSectionTab(tabId) {
       currentEcoSectionTab = tabId;
+      rememberFactoryNavigation({ ecoSection: tabId });
       renderEcoTabs();
       renderEconomistGrid();
     }
@@ -8428,9 +8620,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       }
     }, 20000);
 
-    setTimeout(() => {
-      loadDemo();
-    }, 400);
+    restoreFactoryNavigation();
   </script>
 </body>
 </html>

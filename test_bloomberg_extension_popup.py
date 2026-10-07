@@ -38,13 +38,29 @@ class PopupVersionTests(unittest.TestCase):
         self.assertNotIn('批量结束', self.page.locator('#status').inner_text())
 
     def test_action_error_survives_status_refresh(self):
-        self.load({'api_version': 3, 'capture_version': 2, 'extension_version': '1.2.1'})
+        self.load({'api_version': 5, 'capture_version': 2, 'extension_version': '1.4.0'})
         self.page.wait_for_function("document.getElementById('version').textContent.includes('后台已连接')")
         self.page.click('#tech')
         self.page.wait_for_function("document.getElementById('status').textContent === 'Tech 队列读取失败'")
         self.page.wait_for_timeout(1100)
         self.assertEqual(self.page.locator('#status').inner_text(), 'Tech 队列读取失败')
         self.assertEqual(self.page.evaluate('window.mockActions'), ['info', 'tech'])
+
+    def test_popup_closes_only_after_saved_capture(self):
+        self.load({'api_version': 5, 'capture_version': 2, 'extension_version': '1.4.0'})
+        self.page.wait_for_function("document.getElementById('version').textContent.includes('后台已连接')")
+        self.page.evaluate('''() => {
+            window.closeCount = 0;
+            window.close = () => window.closeCount++;
+            window.chrome.runtime.sendMessage = async () => ({ ok: true, saved: false });
+        }''')
+        self.page.click('#capture')
+        self.assertEqual(self.page.evaluate('window.closeCount'), 0)
+        self.page.evaluate('window.chrome.runtime.sendMessage = async () => ({ ok: true, saved: true })')
+        self.page.click('#capture')
+        self.page.wait_for_function('window.closeCount === 1')
+        self.page.click('#tech')
+        self.assertEqual(self.page.evaluate('window.closeCount'), 1)
 
 
 if __name__ == '__main__':

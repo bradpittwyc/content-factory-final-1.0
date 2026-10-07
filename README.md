@@ -28,7 +28,7 @@ Bloomberg 模块目前采集 **BNN Bloomberg 网站的公开文章**，内容可
 3. 打开一篇可以阅读全文的 Bloomberg.com 文章，点击扩展的“采集当前文章”。
 4. 检查 `data/bloomberg_main_articles.json` 与浏览器中的正文是否一致；单篇完整性确认后，使用扩展的“试抓队列前 10 篇”。
 
-正文候选与诊断记录分别保存到 `data/bloomberg_main_articles.json` 和 `data/bloomberg_main_inbox/`。这些数据独立于 BNN 的文章库，尚未接入现有网页控制台。正文保留有序内容块（段落、列表项、小标题和独立引用）；至少四段、150 词的 DOM 正文仅标记为 `body_candidate`，不能单凭长度宣称全文完整；需要检查首篇。遇到机器人验证、订阅提示或正文容器无法识别时，小批量任务暂停并保存诊断记录。
+正文候选与诊断记录分别保存到 `data/bloomberg_main_articles.json` 和 `data/bloomberg_main_inbox/`。这些数据独立于 BNN 的文章库，并合并显示在 Bloomberg Studio。正文保留有序内容块（段落、列表项、小标题和独立引用）；至少四段、150 词的 DOM 正文仅标记为 `body_candidate`，不能单凭长度宣称全文完整；需要检查首篇。机器人验证或订阅提示会暂停采集，无法识别的正文会跳过并保存诊断记录。
 
 主站接收与来源校验的离线测试：`python -m unittest test_bloomberg_main_bridge -v`。
 
@@ -47,6 +47,38 @@ Bloomberg 模块目前采集 **BNN Bloomberg 网站的公开文章**，内容可
 随后 Tech 栏目发现成功，保存 36 个候选链接和 8 篇正文候选；一篇长文因正文容器无法识别而暂停。质量检查发现一篇文章的正文与不同标题的 SoftBank 文章完全重复，已隔离到 `data/bloomberg_main_quarantine/` 并安排复抓。扩展 v1.2.2 优先选取当前文章的第一个正文容器，逐篇新建标签页，过滤链接型推荐标题；服务端拒绝不同 URL 下完全相同的正文。无法识别或重复正文会记录并跳过，登录或机器人验证仍会暂停。剩余 Tech 记录标记为待复抓，[首轮 Tech 报告](data/bloomberg_main_probe/tech_report.json)保留原始统计与隔离说明。
 
 v1.2.2 复抓实测：尝试 10 篇，保存 8 篇，跳过 2 篇；Tech 库存合计 3,957 词，作者和发布日期齐全，无重复正文，待复抓标记已清除。此前错配的文章本次未通过正文检查，没有再次入库。该结果验证了 Tech 队列和错误内容过滤流程；长文页面适配与逐篇全文对照仍待完成。[复抓报告](data/bloomberg_main_probe/tech_recheck_report.json)。
+
+### 多专栏与 Takeaways（v1.4.0）
+
+Bloomberg Studio 增加专栏标签、文章数量、专栏筛选及“管理 Bloomberg 专栏与自动采集范围”。刷新会保留当前专栏。内置 Tech、[Finance](https://www.bloomberg.com/industries/finance)、[Economics](https://www.bloomberg.com/economics)、[Big Take](https://www.bloomberg.com/bigtake) 和 [AI Today](https://www.bloomberg.com/account/newsletters/ai-today)，也可添加自定义主站栏目入口。添加栏目默认不启用自动采集，勾选后才参与轮换。
+
+自动计划是**所有启用专栏合计每轮最多尝试一篇**，依次轮换，不按专栏数增加抓取频率。间隔持久化在调度数据库，默认 120 分钟；2026-10-07 本机排查期间调整为 **10 分钟**，界面以服务返回的实际间隔为准。每个专栏独立保存发现队列，文章按 URL 全局去重；同一篇文章可以归属多个专栏，发现已有文章时只补充归属。旧 Tech 调度数据库自动迁移并保留任务与去重状态。新专栏的真实浏览器正文适配需逐一验证，尤其 Big Take 的长文可能仍进入人工检查。
+
+AI Today 为 newsletter，用户提供的账户入口可能跳转到 `/standalone/ai-today/`。其自动采集默认关闭；扩展只接受该入口中明确标注 AI Today 或最新一期的 newsletter 链接，没有有效文章链接则报失败，不能把订阅页面或其他推荐文章入库。需先选择 AI Today 手动试抓，确认文章发现成功后才能勾选自动采集。
+
+扩展弹窗增加专栏选择、“立即采集所选专栏 1 篇”和“试抓所选专栏前 10 篇”。更新后需重新加载扩展，确认版本 v1.4.1。旧 `/automation/tech/*` 路径兼容保留，新扩展使用 `/automation/bloomberg/*`。
+
+标题下的 Takeaways 位于独立组件，旧版本只读取正文容器，因此没有保存。v1.4.0 将页面原有要点分别保存为 `takeaways`、`takeaways_source` 和 `takeaways_status`，阅读器、纯文本复制和单篇 Markdown 复制/下载均包含要点及其来源标识；AI 要点不混入记者正文或正文词数，也不作为正文通过校验的依据。无要点或组件为空时记录状态，不生成替代摘要。历史文章需重新入库才能补齐，旧版客户端复抓不会抹除已经保存的要点。
+
+### Tech 自动采集（v1.3.0）
+
+WSJ 初版开发中：`wsj_store.py` 提供独立文章库、来源校验、栏目队列与正文诊断；8011 服务新增 `/wsj/capture`、`/wsj/columns/{section}/discover` 和 `/wsj/queue/{section}`，8000 提供 `/api/wsj/articles`。`wsj_extension/` 支持当前文章、右键与栏目最多十篇试抓，成功后关闭扩展弹窗或自建单篇标签页。需加载这一独立扩展，并使用可阅读全文的订阅会话。工厂 WSJ 工作台界面及真实浏览器全文验证尚未完成，不代表已验证批量抓取。未配置 WSJ 自动计划。离线校验：`python -m unittest test_wsj_store`。
+
+扩展 v1.3.1 支持右键入库：在 Bloomberg 主站文章页面空白处或选中文本后右键，选择“将当前 Bloomberg 文章入库”；在文章链接上右键，选择“将这篇 Bloomberg 文章入库”。链接模式在后台打开目标文章，成功后关闭采集标签页，失败则保留页面供检查。页面提示与扩展弹窗显示结果。右键操作沿用订阅登录和正文校验，不修改每两小时的自动计划；如自动任务正在运行，先等待完成或暂停。
+
+v1.3.2 在单篇入库成功后自动关闭扩展弹窗；右键链接打开的采集页在确认保存后立即关闭。失败时保留弹窗或采集页以便检查，用户原有文章标签页保留。
+
+自动计划 **每轮最多尝试 1 篇**，使用已配置的间隔。需要 8011 接收服务和已登录 Bloomberg 的 Chrome 持续运行；扩展弹窗关闭不影响调度。电脑休眠或 Chrome 关闭时不能抓取，恢复后最多补一轮。扩展 v1.4.1 会等待栏目页面加载文章链接，对空列表在同一轮再重试两次，并保存失败阶段、HTTP 状态和页面信息；重试栏目发现不会增加文章尝试次数。
+
+1. 启动或重启 `python bloomberg_main_bridge.py`，然后在 `chrome://extensions` 点击该扩展的“重新加载”。当前弹窗应显示 v1.4.1。
+2. 点击“开启 / 恢复自动采集”。首次开启后等待当前配置的间隔；想立即验证可选择专栏并点击立即采集，同时将下轮顺延一个间隔。
+3. 查看弹窗的计划与结果，或刷新 Bloomberg Studio 查看计划和浏览器在线状态。点击“暂停自动采集”会关闭计划并停止当前自动任务。
+
+每轮先重新发现 Tech 栏目链接，再领取一篇尚未采集的文章；队列为空保存 0 篇。失败不补抓第二篇：网络失败最多在后续周期重试三次，无法识别或重复正文进入人工检查；登录失效或机器人验证暂停，处理后点“开启 / 恢复”。自动采集只保存具有明确时区发布时间、发布于最近 72 小时内且通过正文检查的文章，正文完整性仍需人工核验。
+
+任务与去重状态持久化到 `data/bloomberg_tech_scheduler.sqlite3`（不提交 Git）；已确认结果幂等登记，扩展 worker 重启后通过 alarm 恢复未完成步骤。当前版操作入口在扩展，网页控制台提供只读状态。自动轮次清理已知 UTC 发布时间过期的主站正文，以及超过 72 小时的 inbox/隔离文件；无时区的历史数据留待迁移，不静默改写日期。
+
+离线验证：`python -m unittest test_bloomberg_tech_scheduler test_bloomberg_automation_api test_bloomberg_main_bridge test_bloomberg_extension_popup -v`；扩展恢复验证：`node test_bloomberg_automation_worker.js`。这些测试不代表真实登录浏览器已经完成定时运行实测。[设计与后续范围](docs/bloomberg-tech-automation.md)。
 
 ## 环境与安装
 
