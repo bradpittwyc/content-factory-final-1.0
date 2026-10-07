@@ -1,0 +1,145 @@
+{
+  "column": "economics",
+  "source_url": "https://www.bloomberg.com/economics",
+  "discovered_at": "2026-10-07T04:20:43.652336+00:00",
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/poland-to-hold-rates-as-fuel-price-cap-seen-cooling-inflation",
+      "title": "Damian Lemanski/Bloomberg",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/australians-are-less-vulnerable-to-rba-rate-hikes-deustche-says",
+      "title": "Brendon Thorne/Bloomberg",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-open-source-ai-models-fuel-csam",
+      "title": "Lina Selg/Bloomberg",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/reclusive-houthi-leader-wreaks-havoc-from-his-yemen-stronghold",
+      "title": "The Reclusive Houthi Leader Wreaking Havoc in the Middle East",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/sanlam-s-1-2-billion-santam-bet-puts-capital-choices-in-focus",
+      "title": "Sanlam’s $1.2 Billion Santam Bet Puts Capital Choices in Focus",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/indonesia-vp-stays-in-office-as-court-quashes-diploma-challenge",
+      "title": "Indonesia VP Stays in Office as Court Quashes Diploma Challenge",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/newsletters/2026-10-07/rbi-meeting-is-about-more-than-just-interest-rates-for-markets",
+      "title": "RBI Meeting Is About More Than Just Interest Rates for Markets",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-07/diesel-price-surge-hits-farmers-raising-food-inflation-risk",
+      "title": "Diesel Prices Surge Just as Farmers Need Fuel the Most",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/qatarenergy-secures-3-billion-loan-from-four-chinese-banks",
+      "title": "QatarEnergy Secures $3 Billion Loan From Four Chinese Banks",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/presunta-peste-neumonica-en-rusia-activa-revision-sanitaria",
+      "title": "Lo que debe saber sobre el presunto caso de peste en Siberia",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/why-saudi-arabia-s-aim-of-defeating-the-houthis-is-a-tall-order",
+      "title": "Why the Houthis Are So Hard to Defeat",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/why-americans-are-unhappy-with-an-economy-that-looks-strong",
+      "title": "Why Americans Are Unhappy With an Economy That Looks Strong",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/how-total-return-swaps-pile-on-risk-for-bondholders",
+      "title": "How Total Return Swaps Pile on Risk For Bondholders",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/opinion/articles/2026-10-07/the-threat-of-france-bond-market-contagion-is-haunting-europe",
+      "title": "OpinionMihir Sharma\nThe Specter of Market Contagion Is Haunting Europe",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/opinion/articles/2026-10-07/britain-can-t-bow-to-the-uae-s-man-city-threats",
+      "title": "OpinionMatthew Brooker\nBritain Can't Bow to the UAE's Man City Threats",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/opinion/articles/2026-10-07/burnham-s-homelessness-strategy-for-uk-must-deliver-real-reform",
+      "title": "OpinionThe Editors\nCan Andy Burnham Finally Fix Britain’s Homelessness Crisis?",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/opinion/newsletters/2026-10-07/sesame-street-has-two-letters-for-the-record-us-stock-rally",
+      "title": "OpinionJohn Authers\nSesame Street Meets Wall Street’s Record Rally\nTwo letters define this rally, as does the fact that the advance grows narrower.",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/australia-climate-ruling-to-test-49-billion-coal-export-sector",
+      "title": "Australia Climate Ruling to Test $49 Billion Coal Export Sector",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/asset-management-one-to-boost-talent-spending-30-over-3-years",
+      "title": "Asset Management One to Boost Talent Spending 30% Over 3 Years",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/japan-real-wages-rise-for-eighth-month-aided-by-takaichi-relief",
+      "title": "Japan’s Real Wages Rise Again, Aided by Takaichi’s Relief",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/anwar-set-to-boost-spending-in-2027-budget-as-election-speculation-grows",
+      "title": "Anwar Set to Boost Budget Spending as Election Speculation Grows",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/stock-market-today-dow-s-p-live-updates",
+      "title": "Record Run for US Stocks to Set Tone for Asia",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/newsletters/2026-10-06/rba-ai-warning-australiansuper-expansion-firmus-ipo",
+      "title": "RBA Warns AI Slump Could Hit Australian Households\nGet caught up.",
+      "column": "economics",
+      "column_url": "https://www.bloomberg.com/economics"
+    }
+  ]
+}

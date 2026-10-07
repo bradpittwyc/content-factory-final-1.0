@@ -1,8 +1,9 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime, timedelta
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -52,6 +53,43 @@ class WsjStoreTests(unittest.TestCase):
         self.assertEqual(store.load_articles()[0]['sections'], ['tech'])
         self.assertEqual(self.client.get('/wsj/queue/tech').json()['articles'], [])
         self.assertEqual(self.client.post('/wsj/columns/tech/discover', json={**payload, 'url': 'https://www.wsj.com/world'}).status_code, 400)
+
+    def test_to_amp_url_conversion(self):
+        raw = 'https://www.livemint.com/global/inside-bessent-s-treasury-tension-turnover-and-unmet-economic-goals-11791336031458.html'
+        expected = 'https://www.livemint.com/global/inside-bessent-s-treasury-tension-turnover-and-unmet-economic-goals/amp-11791336031458.html'
+        self.assertEqual(store.to_amp_url(raw), expected)
+        self.assertEqual(store.to_amp_url(expected), expected)
+
+    def test_paste_import_endpoint(self):
+        body = "\n\n".join([f"This is paragraph {i} of an important Wall Street Journal analysis. " * 8 for i in range(5)])
+        res = self.client.post('/wsj/paste-import', json={
+            'title': 'Pasted WSJ Article',
+            'full_text': body,
+            'url': 'https://www.wsj.com/finance/investing/pasted-article-1234abcd',
+            'section': 'finance'
+        }).json()
+        self.assertTrue(res['success'])
+        self.assertEqual(res['article']['section'], 'finance')
+        self.assertEqual(len(store.load_articles()), 1)
+
+    def test_retention_auto_purge(self):
+        now = datetime.now()
+        fresh_art = {
+            'url': 'https://www.wsj.com/tech/fresh-1234abcd',
+            'title': 'Fresh Article',
+            'published_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+            'scraped_at': now.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        old_art = {
+            'url': 'https://www.wsj.com/tech/old-1234abcd',
+            'title': 'Old Article',
+            'published_at': (now - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S'),
+            'scraped_at': (now - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')
+        }
+        store.write_json(store.STORE, [fresh_art, old_art])
+        articles = store.load_articles()
+        self.assertEqual(len(articles), 1)
+        self.assertEqual(articles[0]['title'], 'Fresh Article')
 
 
 if __name__ == '__main__':

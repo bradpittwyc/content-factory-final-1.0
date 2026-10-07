@@ -1,0 +1,133 @@
+{
+  "column": "bigtake",
+  "source_url": "https://www.bloomberg.com/bigtake",
+  "discovered_at": "2026-10-07T04:12:03.197186+00:00",
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/features/2026-open-source-ai-models-fuel-csam",
+      "title": "Lina Selg/Bloomberg",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-05/exxonmobil-bp-among-companies-pledging-to-end-gas-flaring-but-problem-persists",
+      "title": "Desiree Rios for Bloomberg",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-04/billionaire-exodus-from-uk-leaves-160-billion-hole",
+      "title": "The Big Take\nLondon Takes a Hit as Super Rich Worth $160 Billion Exit UK",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-fidelity-charles-schwab-inversion-tax-aware",
+      "title": "The Big Take\nLa estrategia tributaria de los ultrarricos que Schwab y Fidelity prefieren evitar",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-aqr-reducir-impuestos-multimillonarios",
+      "title": "The Big Take\nUna estrategia para eludir impuestos creó el mayor hedge fund del mundo",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-08-07/brasil-reduce-tala-pero-presion-sobre-amazonia-va-a-bolivia",
+      "title": "The Big Take\nBrasil reduce la tala, pero la presión sobre la Amazonía se traslada a Bolivia",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-07-07/terremotos-y-todo-los-wildcatters-van-tras-el-petroleo-venezolano",
+      "title": "The Big Take\nTerremotos y todo, los “wildcatters” van tras el petróleo venezolano",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-myanmar-resource-rich-civil-war",
+      "title": "The Big Take\nGold, Gems and Rare Earths Fuel a Civil War of Epic Proportions",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-08-12/thousands-of-india-workers-are-helping-ai-firms-train-robots-to-replace-them",
+      "title": "The Big Take\nWorkers Are Teaching AI-Powered Robots to Take Over Their Jobs",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-08-09/china-bets-on-ai-stocks-as-it-races-against-us-for-chip-tech-dominance",
+      "title": "The Big Take\nChina Unleashes $28 Trillion Capital Markets to Challenge US in AI",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-08-23/trump-s-world-liberty-joins-boom-in-new-us-bank-charters",
+      "title": "The Big Take\nTrump’s Family Joins a Rush to Start New Banks",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-08-07/why-deforestation-is-surging-in-bolivia-as-brazil-protects-the-amazon",
+      "title": "The Big Take\nHow Saving Brazil’s Rainforest Pushed the Crisis Into Bolivia",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-07-29/manipulation-threat-taints-kalshi-and-polymarket-claims-as-political-forecasters",
+      "title": "The Big Take\nHow a Few Hundred Dollars Could Manipulate Election Prediction Markets",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-01/nvidia-faces-questions-over-china-ai-chip-smuggling-cases",
+      "title": "Nvidia’s Blind Spots Exposed by China Chip Smuggling\nThe company’s AI chips keep making their way to China despite US curbs. Officials are asking why the company missed red flags.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-jane-street-guide-power-players",
+      "title": "The Elusive Leaders Behind Jane Street’s Wall Street Rise\nA guide to the management committee, decision makers, founders and notable alumni at the secretive trading house.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-29/uae-s-sheikh-khaled-spending-billions-to-bypass-iran-s-grip-on-strait-of-hormuz",
+      "title": "Abu Dhabi’s Crown Prince Is Spending Billions to Bypass Iran’s Grip on Hormuz\nSheikh Khaled’s $300 billion wealth fund is a key player in the UAE’s “Zero Hormuz” strategy.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-27/china-s-tax-crackdown-squeezes-billionaires-harder-than-ever",
+      "title": "China’s Tax Grab Squeezes Rich Elite Harder Than Ever\nHefty bills, vague calculations and squads targeting individual billionaires are rattling the country’s wealthy.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-25/japan-steps-up-ip-protection-of-luxury-shine-muscat-perfect-strawberries",
+      "title": "Rival Nations Are Copying Japan’s Perfect $64 Grapes\nFarmers go to extraordinary lengths to shield their perfect strawberries and grapes from the elements. But the industry hasn’t been able to protect itself as well from intellectual property theft abroad.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-24/us-treasury-yields-hit-5-as-wall-street-faces-new-rate-regime",
+      "title": "Bond Yields at 5% Mark New Era ‘Until Something Breaks’",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-23/houthi-s-war-efforts-iran-support-sustained-with-chinese-imports",
+      "title": "The Houthis Sustain Their War Machine With Chinese Goods\nAn examination of Chinese cargo seized en-route to a Houthi-controlled city reveals an array of commercial goods that can also be used to assemble ballistic missiles and drones.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-21/us-office-real-estate-crisis-shifts-to-cmbs-investor-losses",
+      "title": "The Office Bust Is Shifting From Empty Towers to Investor Losses\nWith interest rates staying high and billions in loans coming due, US cities and building owners are finally having to contend with the crisis.",
+      "column": "bigtake",
+      "column_url": "https://www.bloomberg.com/bigtake"
+    }
+  ]
+}

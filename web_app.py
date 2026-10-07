@@ -46,6 +46,81 @@ import wsj_store
 def get_wsj_articles():
     return wsj_store.articles()
 
+class WsjScanApiRequest(BaseModel):
+    limit: Optional[int] = 15
+
+class WsjSingleScrapeApiRequest(BaseModel):
+    url: str
+
+class WsjPasteImportApiRequest(BaseModel):
+    title: str
+    full_text: str
+    url: Optional[str] = None
+    standfirst: Optional[str] = None
+    authors: Optional[List[str]] = None
+    section: Optional[str] = "business"
+
+@app.post("/api/wsj/scan")
+def scan_wsj_api_endpoint(req: WsjScanApiRequest = WsjScanApiRequest()):
+    try:
+        new_arts = wsj_store.scan_wsj_syndication(limit=req.limit or 15)
+        all_articles = wsj_store.load_articles()
+        return {
+            "success": True,
+            "new_count": len(new_arts),
+            "articles": all_articles,
+            "total": len(all_articles)
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+@app.post("/api/wsj/scrape_url")
+def scrape_wsj_url_api_endpoint(req: WsjSingleScrapeApiRequest):
+    try:
+        art = wsj_store.scrape_single_wsj_url(req.url)
+        if not art:
+            return {"success": False, "error": "未能解析该文章或该链接不在全球联合分发源中"}
+        wsj_store.upsert_article(art)
+        return {"success": True, "article": art}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+@app.post("/api/wsj/paste_import")
+def paste_import_wsj_api_endpoint(req: WsjPasteImportApiRequest):
+    try:
+        paragraphs = [p.strip() for p in req.full_text.split("\n") if len(p.strip()) > 20]
+        word_count = sum(len(p.split()) for p in paragraphs)
+        if len(paragraphs) < 3 or word_count < 100:
+            return {"success": False, "error": "正文段落过少或词数不足，无法作为长文入库"}
+        url = req.url.strip() if req.url else f"https://www.wsj.com/{req.section or 'business'}/imported-{hashlib.sha256(req.title.encode()).hexdigest()[:8]}"
+        digest = hashlib.sha256(req.full_text.encode("utf-8")).hexdigest()
+        art = {
+            "id": "wsj_" + hashlib.sha256(url.encode()).hexdigest()[:20],
+            "url": url,
+            "title": req.title.strip(),
+            "standfirst": req.standfirst or (paragraphs[0][:150] + "..." if paragraphs else ""),
+            "authors": req.authors or ["The Wall Street Journal"],
+            "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "paragraphs": paragraphs,
+            "paragraph_count": len(paragraphs),
+            "word_count": word_count,
+            "full_text": "\n\n".join(paragraphs),
+            "body_blocks": [{"kind": "p", "text": p} for p in paragraphs],
+            "body_sha256": digest,
+            "section": req.section or "business",
+            "sections": [req.section or "business"],
+            "source": "The Wall Street Journal",
+            "is_paywalled": False,
+            "status": "body_candidate",
+            "full_text_reviewed": True
+        }
+        wsj_store.upsert_article(art)
+        return {"success": True, "article": art}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 # 启用 CORS 跨域支持 (允许浏览器扩展与外部页面同步抓取数据)
 app.add_middleware(
     CORSMiddleware,
@@ -2922,30 +2997,35 @@ HTML_CONTENT = """<!DOCTYPE html>
           </div>
         </div>
 
-        <!-- 卡片 3: 华尔街日报 (The Wall Street Journal) - 接入中 -->
-        <div onclick="showIncomingPubToast('华尔街日报 (The Wall Street Journal)')" class="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all cursor-pointer flex flex-col justify-between space-y-4 group select-none">
+        <!-- 卡片 3: 华尔街日报 (The Wall Street Journal) - 已上线 -->
+        <div onclick="openPubWorkstation('wsj')" class="bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-2xl p-5 shadow-xl transition-all cursor-pointer flex flex-col justify-between space-y-4 group relative overflow-hidden select-none hover:shadow-amber-950/20 hover:shadow-2xl">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <div class="w-11 h-11 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-slate-950 font-serif font-black text-sm tracking-tight shadow-sm">
                 WSJ
               </div>
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
-                接入中
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-950 text-amber-300 border border-amber-800/60 font-mono flex items-center space-x-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="pubStatWsjCount">0 篇收录</span>
               </span>
             </div>
 
             <div class="space-y-0.5">
-              <h3 class="text-base font-bold text-slate-200">华尔街日报</h3>
+              <h3 class="text-base font-bold text-slate-100 group-hover:text-amber-300 transition-colors">华尔街日报</h3>
               <p class="text-xs text-slate-400 font-serif">The Wall Street Journal</p>
             </div>
 
             <p class="text-xs text-slate-400 leading-relaxed font-sans line-clamp-3">
-              华尔街重磅财经报道与商业领袖专栏，标准商务英语精读材料。
+              华尔街重磅财经报道与商业领袖专栏，标准商务英语精读材料。免登录全球联合分发长文抓取。
             </p>
           </div>
 
-          <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-500">
-            <span>抓取管线排期中</span>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-400 group-hover:text-slate-300 transition-colors">点击进入刊物精读</span>
+            <span class="font-bold text-amber-400 group-hover:translate-x-1 transition-transform flex items-center space-x-1">
+              <span>浏览</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
           </div>
         </div>
 
@@ -3031,6 +3111,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
           <span class="px-3 py-1 font-bold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">FT 金融时报</span>
           <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+          <button onclick="openPubWorkstation('wsj')" class="px-3 py-1 text-slate-400 hover:text-amber-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">WSJ 华尔街日报</button>
           <button onclick="openPubWorkstation('economist')" class="px-3 py-1 text-slate-400 hover:text-red-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">经济学人</button>
         </div>
       </div>
@@ -3273,6 +3354,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
           <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
           <span class="px-3 py-1 font-bold rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">彭博社周刊</span>
+          <button onclick="openPubWorkstation('wsj')" class="px-3 py-1 text-slate-400 hover:text-amber-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">WSJ 华尔街日报</button>
           <button onclick="openPubWorkstation('economist')" class="px-3 py-1 text-slate-400 hover:text-red-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">经济学人</button>
         </div>
       </div>
@@ -3341,6 +3423,123 @@ HTML_CONTENT = """<!DOCTYPE html>
     </div>
 
     </div>
+    <!-- 视图 3: 华尔街日报内容工厂 (The Wall Street Journal Studio) -->
+    <div id="wsjFactoryWorkstation" class="space-y-6 hidden">
+      <!-- 顶栏导航与面包屑 -->
+      <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-3.5 shadow-lg">
+        <div class="flex items-center space-x-3">
+          <button onclick="returnToPubMatrix()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
+            <span>返回全球精选刊源 (5)</span>
+          </button>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="text-slate-400">全球刊源</span>
+            <span class="text-slate-600">/</span>
+            <span class="font-bold text-amber-400">华尔街日报 (The Wall Street Journal)</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
+          <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+          <span class="px-3 py-1 font-bold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">WSJ 华尔街日报</span>
+          <button onclick="openPubWorkstation('economist')" class="px-3 py-1 text-slate-400 hover:text-red-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">经济学人</button>
+        </div>
+      </div>
+
+      <!-- 华尔街日报监控看板与控制中心 -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-slate-950 font-serif font-black text-sm tracking-tight shadow-lg">
+              WSJ
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-base font-bold text-slate-100">《华尔街日报》The Wall Street Journal Studio</h2>
+                <span id="wsjArticlesCountBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-mono">0 篇已收录</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-mono flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>全球联合分发 · 免登录</span>
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5 font-serif">华尔街权威财经调查与商业领袖专栏 · 100% 段落级深度长文免登录全文抓取与知识库分发</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="openWsjPasteImportModal()" class="px-3.5 py-2 text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-xl shadow-lg transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer" title="直接粘贴网页复制的文章正文或分享链接">
+              <i data-lucide="clipboard-paste" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>📋 智能粘贴 / 剪贴板入库</span>
+            </button>
+            <button id="btnScanWsjLive" onclick="scanWsjLive()" class="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white rounded-xl shadow-lg shadow-amber-600/20 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-200"></i>
+              <span id="btnScanWsjText">⚡ 实时从联合分发源抓取最新长文</span>
+            </button>
+            <button onclick="loadWsjUI()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>刷新华尔街日报库</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 产能数据看板 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">收录文章总数</span>
+            <span id="wsjStatTotalArticles" class="text-lg font-bold text-slate-200 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">累计正文段落</span>
+            <span id="wsjStatTotalParas" class="text-lg font-bold text-emerald-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">预估总英文词数</span>
+            <span id="wsjStatTotalWords" class="text-lg font-bold text-amber-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <span class="text-[11px] text-slate-500 block">同步模式</span>
+            <span class="text-xs font-semibold text-emerald-400 font-mono">免登录联合分发 · 100%段落全文</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 单篇链接加急提取 -->
+      <div class="bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 shadow-inner flex items-center space-x-2">
+        <input type="text" id="inputWsjSingleUrl" placeholder="输入 WSJ 或联合分发文章链接: https://www.wsj.com/... 或 https://www.livemint.com/..." class="flex-1 bg-transparent px-2.5 py-1 text-xs text-slate-200 placeholder-slate-600 focus:outline-none font-mono">
+        <button id="btnWsjScrapeSingle" onclick="scrapeSingleWsjUrl()" class="px-4 py-2 text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 rounded-lg transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer active:scale-95">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+          <span>一键抓取 (单篇)</span>
+        </button>
+      </div>
+
+      <!-- 板块 Tabs 筛选 -->
+      <div id="wsjSectionTabs" class="flex flex-wrap gap-2"></div>
+
+      <!-- 搜索与排序工具条 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="inputWsjSearch" oninput="filterWsjArticles()" placeholder="搜索 WSJ 文章标题、导读或正文..." class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 w-64 md:w-80">
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs text-slate-400">
+          <span>当前展示: <strong id="wsjFilteredCountText" class="text-amber-400 font-bold">0</strong> 篇</span>
+          <button id="btnWsjSortToggle" onclick="toggleWsjSortMode()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all flex items-center space-x-1.5 cursor-pointer font-medium active:scale-95 shadow-sm" title="切换文章排列方式 (按时间 / 按头字幕首字母)">
+            <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="wsjSortModeText">🕒 按时间排序</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 华尔街日报文章列表 -->
+      <div id="wsjArticlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-24">
+        <!-- 动态渲染 WSJ 文章卡片 -->
+      </div>
+    </div>
+
     <!-- 视图 4: 经济学人内容工厂 (The Economist Studio) -->
     <div id="economistFactoryWorkstation" class="space-y-6 hidden">
       <!-- 顶栏导航与面包屑 -->
@@ -3361,6 +3560,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
           <button onclick="openPubWorkstation('ft')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">FT 金融时报</button>
           <button onclick="openPubWorkstation('bloomberg')" class="px-3 py-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">彭博社周刊</button>
+          <button onclick="openPubWorkstation('wsj')" class="px-3 py-1 text-slate-400 hover:text-amber-300 rounded-lg hover:bg-slate-900 transition-colors cursor-pointer">WSJ 华尔街日报</button>
           <span class="px-3 py-1 font-bold rounded-lg bg-red-500/20 text-red-300 border border-red-500/30">经济学人</span>
         </div>
       </div>
@@ -3806,6 +4006,73 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="flex items-center space-x-2.5">
           <button onclick="closeEcoPasteImportModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">取消</button>
           <button id="btnSubmitEcoPaste" onclick="submitEcoPasteImport()" class="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>立即智能解析并入库</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模态框: WSJ 智能粘贴 / 剪贴板快速入库 -->
+  <div id="wsjPasteImportModal" class="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 transform transition-all">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i data-lucide="clipboard-paste" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">华尔街日报 · 智能粘贴入库</h3>
+            <p class="text-[11px] text-slate-400">支持直接粘贴 WSJ 分享长文文本或订阅者赠送文章正文</p>
+          </div>
+        </div>
+        <button onclick="closeWsjPasteImportModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">文章标题 (必填):</label>
+            <input type="text" id="inputPasteWsjTitle" placeholder="文章标题..." class="w-full bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">归属板块:</label>
+            <select id="selectPasteWsjSection" class="w-full bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+              <option value="business" selected>商业 (Business)</option>
+              <option value="tech">科技 (Tech)</option>
+              <option value="finance">金融 (Finance)</option>
+              <option value="economy">宏观经济 (Economy)</option>
+              <option value="world">国际政治 (World)</option>
+              <option value="opinion">观点专栏 (Opinion)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">文章原始链接 (可选):</label>
+          <input type="text" id="inputPasteWsjUrl" placeholder="https://www.wsj.com/..." class="w-full bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold text-slate-400">正文段落内容:</label>
+            <button type="button" onclick="readFromClipboardToWsjPaste()" class="text-[11px] text-amber-400 hover:text-amber-300 flex items-center space-x-1 cursor-pointer">
+              <i data-lucide="clipboard" class="w-3 h-3"></i>
+              <span>从剪贴板读取并自动填充</span>
+            </button>
+          </div>
+          <textarea id="textareaWsjPasteContent" rows="8" placeholder="在此粘贴华尔街日报正文内容（支持多段落，每段之间空行或换行）..." class="w-full bg-slate-950 px-3 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 font-mono custom-scroll"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <button onclick="clearWsjPasteForm()" class="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">清空输入</button>
+        <div class="flex items-center space-x-2.5">
+          <button onclick="closeWsjPasteImportModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white transition-colors">取消</button>
+          <button id="btnSubmitWsjPaste" onclick="submitWsjPasteImport()" class="px-4 py-2 text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white rounded-xl shadow-lg shadow-amber-600/20 transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>立即智能解析并入库</span>
           </button>
@@ -6630,10 +6897,12 @@ HTML_CONTENT = """<!DOCTYPE html>
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
+      const wsjView = document.getElementById('wsjFactoryWorkstation');
       const ecoView = document.getElementById('economistFactoryWorkstation');
       if (matrixView) matrixView.classList.remove('hidden');
       if (ftView) ftView.classList.add('hidden');
       if (bbView) bbView.classList.add('hidden');
+      if (wsjView) wsjView.classList.add('hidden');
       if (ecoView) ecoView.classList.add('hidden');
 
       const headerTitle = document.getElementById('headerAppTitle');
@@ -6651,12 +6920,14 @@ HTML_CONTENT = """<!DOCTYPE html>
       const matrixView = document.getElementById('pubMatrixView');
       const ftView = document.getElementById('ftFactoryWorkstation');
       const bbView = document.getElementById('bbFactoryWorkstation');
+      const wsjView = document.getElementById('wsjFactoryWorkstation');
       const ecoView = document.getElementById('economistFactoryWorkstation');
 
       if (pub === 'ft') {
         if (matrixView) matrixView.classList.add('hidden');
         if (ftView) ftView.classList.remove('hidden');
         if (bbView) bbView.classList.add('hidden');
+        if (wsjView) wsjView.classList.add('hidden');
         if (ecoView) ecoView.classList.add('hidden');
 
         const headerTitle = document.getElementById('headerAppTitle');
@@ -6669,6 +6940,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (matrixView) matrixView.classList.add('hidden');
         if (ftView) ftView.classList.add('hidden');
         if (bbView) bbView.classList.remove('hidden');
+        if (wsjView) wsjView.classList.add('hidden');
         if (ecoView) ecoView.classList.add('hidden');
 
         const headerTitle = document.getElementById('headerAppTitle');
@@ -6677,10 +6949,24 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (headerSubtitle) headerSubtitle.innerText = "全球商业金融脉动、宏观经济分析与前沿科技趋势跟踪 · 深度长文精读";
 
         loadBloombergUI();
+      } else if (pub === 'wsj') {
+        if (matrixView) matrixView.classList.add('hidden');
+        if (ftView) ftView.classList.add('hidden');
+        if (bbView) bbView.classList.add('hidden');
+        if (wsjView) wsjView.classList.remove('hidden');
+        if (ecoView) ecoView.classList.add('hidden');
+
+        const headerTitle = document.getElementById('headerAppTitle');
+        const headerSubtitle = document.getElementById('headerAppSubtitle');
+        if (headerTitle) headerTitle.innerText = "华尔街日报 · The Wall Street Journal Studio";
+        if (headerSubtitle) headerSubtitle.innerText = "华尔街重磅财经报道与商业领袖专栏 · 免登录全球联合分发长文抓取";
+
+        loadWsjUI();
       } else if (pub === 'economist') {
         if (matrixView) matrixView.classList.add('hidden');
         if (ftView) ftView.classList.add('hidden');
         if (bbView) bbView.classList.add('hidden');
+        if (wsjView) wsjView.classList.add('hidden');
         if (ecoView) ecoView.classList.remove('hidden');
 
         const headerTitle = document.getElementById('headerAppTitle');
@@ -6716,6 +7002,15 @@ HTML_CONTENT = """<!DOCTYPE html>
           const bbCount = bloombergArticles.length;
           const pubStatBb = document.getElementById('pubStatBbCount');
           if (pubStatBb) pubStatBb.innerText = bbCount;
+        }
+
+        const wsjRes = await fetch('/api/wsj/articles');
+        const wsjData = await wsjRes.json();
+        if (wsjData.success) {
+          wsjArticles = wsjData.articles || [];
+          const wsjCount = wsjArticles.length;
+          const pubStatWsj = document.getElementById('pubStatWsjCount');
+          if (pubStatWsj) pubStatWsj.innerText = `${wsjCount} 篇收录`;
         }
 
         const ecoRes = await fetch('/api/economist/articles');
@@ -6974,6 +7269,360 @@ HTML_CONTENT = """<!DOCTYPE html>
       }).join('');
 
       lucide.createIcons();
+    }
+
+
+    // =========================================================================
+    // 华尔街日报 (WSJ) 专属状态与逻辑
+    // =========================================================================
+    let wsjArticles = [];
+    let wsjSections = [
+      { id: 'all', name: '全部' },
+      { id: 'business', name: '商业 Business' },
+      { id: 'tech', name: '科技 Tech' },
+      { id: 'finance', name: '金融 Finance' },
+      { id: 'economy', name: '宏观经济 Economy' },
+      { id: 'world', name: '国际观察 World' },
+      { id: 'opinion', name: '重磅观点 Opinion' }
+    ];
+    let currentWsjSectionTab = 'all';
+    let wsjSortMode = 'time';
+    let wsjSearchKeyword = '';
+
+    async function loadWsjUI() {
+      try {
+        const res = await fetch('/api/wsj/articles');
+        const data = await res.json();
+        if (data.success) {
+          wsjArticles = data.articles || [];
+
+          // 更新顶部徽章与看板指标
+          const totalBadge = document.getElementById('wsjArticlesCountBadge');
+          if (totalBadge) totalBadge.innerText = `${wsjArticles.length} 篇已收录`;
+
+          const totalParas = wsjArticles.reduce((acc, a) => acc + (a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0)), 0);
+          const totalWords = wsjArticles.reduce((acc, a) => acc + (a.word_count || 0), 0);
+
+          const statArticles = document.getElementById('wsjStatTotalArticles');
+          if (statArticles) statArticles.innerText = wsjArticles.length;
+
+          const statParas = document.getElementById('wsjStatTotalParas');
+          if (statParas) statParas.innerText = totalParas.toLocaleString();
+
+          const statWords = document.getElementById('wsjStatTotalWords');
+          if (statWords) {
+            statWords.innerText = totalWords >= 10000 ? (totalWords / 10000).toFixed(1) + '万' : totalWords.toLocaleString();
+          }
+        }
+
+        renderWsjTabs();
+        renderWsjArticlesGrid();
+        updatePubMatrixStats();
+      } catch (e) {
+        console.error("加载华尔街日报数据失败:", e);
+      }
+    }
+
+    function renderWsjTabs() {
+      const container = document.getElementById('wsjSectionTabs');
+      if (!container) return;
+
+      container.innerHTML = wsjSections.map(t => {
+        const isActive = (currentWsjSectionTab === t.id);
+        const count = t.id === 'all'
+          ? wsjArticles.length
+          : wsjArticles.filter(a => {
+              const sec = (a.section || '').toLowerCase();
+              return sec.includes(t.id);
+            }).length;
+
+        const activeCls = isActive
+          ? "bg-amber-950/60 text-amber-300 border border-amber-700/60 font-bold shadow-sm"
+          : "bg-slate-900/60 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-slate-800 font-medium";
+
+        return `
+          <button onclick="switchWsjSectionTab('${t.id}')" class="px-3 py-1.5 rounded-lg text-xs transition-all whitespace-nowrap flex items-center space-x-1.5 cursor-pointer ${activeCls}">
+            <span>${t.name}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-amber-900 text-amber-200' : 'bg-slate-800 text-slate-500'} font-mono">${count}</span>
+          </button>
+        `;
+      }).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function switchWsjSectionTab(tabId) {
+      currentWsjSectionTab = tabId;
+      renderWsjTabs();
+      renderWsjArticlesGrid();
+    }
+
+    function toggleWsjSortMode() {
+      wsjSortMode = (wsjSortMode === 'time') ? 'initial' : 'time';
+      const btnText = document.getElementById('wsjSortModeText');
+      if (btnText) {
+        btnText.innerText = (wsjSortMode === 'time') ? '🕒 按时间排序' : '🔤 按头字幕排序';
+      }
+      renderWsjArticlesGrid();
+    }
+
+    function filterWsjArticles() {
+      const input = document.getElementById('inputWsjSearch');
+      wsjSearchKeyword = input ? input.value.trim().toLowerCase() : '';
+      renderWsjArticlesGrid();
+    }
+
+    function getFilteredWsjArticles() {
+      let list = [...wsjArticles];
+      if (currentWsjSectionTab !== 'all') {
+        list = list.filter(a => (a.section || '').toLowerCase().includes(currentWsjSectionTab));
+      }
+      if (wsjSearchKeyword) {
+        list = list.filter(a => {
+          const t = (a.title || '').toLowerCase();
+          const s = (a.standfirst || '').toLowerCase();
+          const f = (a.full_text || (a.paragraphs ? a.paragraphs.join(' ') : '')).toLowerCase();
+          const auth = (a.authors || []).join(' ').toLowerCase();
+          return t.includes(wsjSearchKeyword) || s.includes(wsjSearchKeyword) || f.includes(wsjSearchKeyword) || auth.includes(wsjSearchKeyword);
+        });
+      }
+      if (wsjSortMode === 'initial') {
+        list.sort((a, b) => {
+          const titleA = (a.title || '').trim();
+          const titleB = (b.title || '').trim();
+          return titleA.localeCompare(titleB, 'en', { sensitivity: 'base' });
+        });
+      } else {
+        list.sort((a, b) => {
+          const timeA = new Date(a.scraped_at || a.published_at || 0).getTime() || 0;
+          const timeB = new Date(b.scraped_at || b.published_at || 0).getTime() || 0;
+          return timeB - timeA;
+        });
+      }
+      return list;
+    }
+
+    function renderWsjArticlesGrid() {
+      const container = document.getElementById('wsjArticlesGrid');
+      const filteredCountText = document.getElementById('wsjFilteredCountText');
+      if (!container) return;
+
+      const list = getFilteredWsjArticles();
+      if (filteredCountText) filteredCountText.innerText = list.length;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-slate-900/40 border border-slate-800/80 rounded-2xl">
+            <div class="w-12 h-12 rounded-xl bg-amber-950/40 border border-amber-800/40 text-amber-400 mx-auto flex items-center justify-center font-serif font-black text-xl">
+              WSJ
+            </div>
+            <p class="text-sm text-slate-300 font-medium">暂无匹配的华尔街日报文章</p>
+            <p class="text-xs text-slate-500">点击右上角“⚡ 实时从联合分发源抓取最新长文”，或在上方输入文章 URL 极速提取</p>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(a => {
+        const scrapedTimeStr = formatAppDateTime(a.scraped_at || a.published_at);
+        const parasCount = a.paragraph_count || (a.paragraphs ? a.paragraphs.length : 0);
+
+        return `
+          <div class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 shadow-lg transition-all flex flex-col justify-between space-y-3 group select-none">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800/60 font-medium font-serif">${a.section || 'WSJ'}</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">联合分发无损</span>
+                </div>
+                <span class="text-[11px] text-slate-500 font-mono">${parasCount} 段 • ${a.word_count || 0} 词</span>
+              </div>
+
+              <h3 onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="text-sm font-bold text-slate-100 group-hover:text-amber-300 transition-colors line-clamp-2 cursor-pointer font-serif leading-snug">
+                ${a.title || '无标题文章'}
+              </h3>
+
+              ${a.standfirst ? `<p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-sans">${a.standfirst}</p>` : ''}
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/70 flex items-center justify-between text-xs text-slate-500">
+              <span class="truncate max-w-[155px] text-[11px] text-slate-400 font-mono" title="入库时间: ${scrapedTimeStr}">入库: ${scrapedTimeStr}</span>
+              
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <button onclick="copyFtArticleMarkdown('${encodeURIComponent(a.url)}', this)" class="px-2 py-1 text-[11px] font-medium bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="复制全文 Markdown">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>复制</span>
+                </button>
+                <button onclick="downloadFtSingleMarkdown('${encodeURIComponent(a.url)}')" class="px-2 py-1 text-[11px] font-medium bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="导出单篇 .md">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>MD</span>
+                </button>
+                <button onclick="openFtArticleModal('${encodeURIComponent(a.url)}')" class="px-2.5 py-1 text-[11px] font-medium bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg transition-all flex items-center space-x-1 cursor-pointer" title="深度阅读全文">
+                  <i data-lucide="book-open" class="w-3 h-3"></i>
+                  <span>阅读</span>
+                </button>
+                <a href="${a.url}" target="_blank" class="p-1 hover:text-amber-400 rounded hover:bg-slate-800 transition-colors" title="在 WSJ 原网查看">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function scanWsjLive() {
+      const btn = document.getElementById('btnScanWsjLive');
+      const textSpan = document.getElementById('btnScanWsjText');
+      if (btn) btn.disabled = true;
+      if (textSpan) textSpan.innerText = '正在从联合分发源极速抓取...';
+      showToast('正在从全球联合分发源免登录抓取《华尔街日报》最新深度长文...', 'info');
+
+      try {
+        const res = await fetch('/api/wsj/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ limit: 10 })
+        });
+        const data = await res.json();
+        if (data.success) {
+          wsjArticles = data.articles || [];
+          loadWsjUI();
+          showToast(`抓取完成！新入库 ${data.new_count || 0} 篇华尔街日报深度长文 (全文无损入库)`, 'success');
+        } else {
+          showToast('抓取失败: ' + (data.error || '未知错误'), 'error');
+        }
+      } catch (e) {
+        showToast('请求异常: ' + e.message, 'error');
+      } finally {
+        if (btn) btn.disabled = false;
+        if (textSpan) textSpan.innerText = '⚡ 实时从联合分发源抓取最新长文';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    async function scrapeSingleWsjUrl() {
+      const input = document.getElementById('inputWsjSingleUrl');
+      const btn = document.getElementById('btnWsjScrapeSingle');
+      const url = input ? input.value.trim() : '';
+
+      if (!url) {
+        showToast("请输入有效的 WSJ 或联合分发文章链接", "error");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>抓取中...</span>`;
+      }
+      showToast("正在请求分发源解析全文...", "info");
+
+      try {
+        const res = await fetch('/api/wsj/scrape_url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        if (data.success && data.article) {
+          showToast(`成功提取: 《${data.article.title.slice(0, 24)}...》`, "success");
+          if (input) input.value = '';
+          await loadWsjUI();
+        } else {
+          showToast(data.error || "抓取失败，该链接不在全球免登录分发源中", "error");
+        }
+      } catch (e) {
+        showToast("抓取请求异常: " + e.message, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="zap" class="w-3.5 h-3.5"></i><span>一键抓取 (单篇)</span>`;
+          if (window.lucide) lucide.createIcons();
+        }
+      }
+    }
+
+    function openWsjPasteImportModal() {
+      const modal = document.getElementById('wsjPasteImportModal');
+      if (modal) modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeWsjPasteImportModal() {
+      const modal = document.getElementById('wsjPasteImportModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function clearWsjPasteForm() {
+      const title = document.getElementById('inputPasteWsjTitle');
+      const url = document.getElementById('inputPasteWsjUrl');
+      const text = document.getElementById('textareaWsjPasteContent');
+      if (title) title.value = '';
+      if (url) url.value = '';
+      if (text) text.value = '';
+    }
+
+    async function readFromClipboardToWsjPaste() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            const textarea = document.getElementById('textareaWsjPasteContent');
+            if (textarea) textarea.value = text;
+            showToast("已成功从系统剪贴板读取正文内容！", "success");
+            return;
+          }
+        }
+        showToast("请直接在文本框按 Ctrl+V 粘贴内容", "info");
+      } catch (e) {
+        showToast("无法直接访问剪贴板，请直接按 Ctrl+V 粘贴", "info");
+      }
+    }
+
+    async function submitWsjPasteImport() {
+      const titleInput = document.getElementById('inputPasteWsjTitle');
+      const urlInput = document.getElementById('inputPasteWsjUrl');
+      const secSelect = document.getElementById('selectPasteWsjSection');
+      const textInput = document.getElementById('textareaWsjPasteContent');
+      const btn = document.getElementById('btnSubmitWsjPaste');
+
+      const title = titleInput ? titleInput.value.trim() : '';
+      const full_text = textInput ? textInput.value.trim() : '';
+      const url = urlInput ? urlInput.value.trim() : '';
+      const section = secSelect ? secSelect.value : 'business';
+
+      if (!title) {
+        showToast("请输入文章标题", "error");
+        return;
+      }
+      if (!full_text) {
+        showToast("请在文本框中粘贴文章正文", "error");
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      try {
+        const res = await fetch('/api/wsj/paste_import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, full_text, url: url || null, section })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`文章《${title.slice(0, 20)}...》已成功入库！`, "success");
+          clearWsjPasteForm();
+          closeWsjPasteImportModal();
+          await loadWsjUI();
+        } else {
+          showToast(data.error || "入库失败", "error");
+        }
+      } catch (e) {
+        showToast("入库异常: " + e.message, "error");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     }
 
     async function loadFtUI() {
@@ -7439,7 +8088,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
     function openFtArticleModal(encodedUrl) {
       const url = decodeURIComponent(encodedUrl);
-      const article = ftArticles.find(a => a.url === url) || (bloombergArticles || []).find(a => a.url === url) || (economistArticles || []).find(a => a.url === url);
+      const article = ftArticles.find(a => a.url === url) || (bloombergArticles || []).find(a => a.url === url) || (economistArticles || []).find(a => a.url === url) || (wsjArticles || []).find(a => a.url === url);
       if (!article) return;
 
       currentViewingFtArticle = article;
@@ -7447,11 +8096,14 @@ HTML_CONTENT = """<!DOCTYPE html>
       
       const isBb = (article.source && article.source.toLowerCase().includes('bloomberg')) || (article.url && article.url.includes('bloomberg'));
       const isEco = (article.source && article.source.toLowerCase().includes('economist')) || (article.url && article.url.includes('economist'));
+      const isWsj = (article.source && article.source.toLowerCase().includes('wsj')) || (article.url && article.url.includes('wsj'));
 
       const secBadge = document.getElementById('ftModalSectionBadge');
       if (secBadge) {
-        secBadge.innerText = article.section || (isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'FT 深度报道'));
-        if (isEco) {
+        secBadge.innerText = article.section || (isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'FT 深度报道')));
+        if (isWsj) {
+          secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 font-medium";
+        } else if (isEco) {
           secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800/60 font-medium";
         } else if (isBb) {
           secBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-medium";
@@ -7493,7 +8145,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         takeawaysEl.append(heading, list);
       }
 
-      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'Financial Times');
+      const defaultAuthor = isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'Financial Times'));
       document.getElementById('ftModalAuthors').innerText = (article.authors && article.authors.length > 0) ? article.authors.join(', ') : defaultAuthor;
       document.getElementById('ftModalPublishedAt').innerText = formatAppDateTime(article.published_at) || '近期发布';
       document.getElementById('ftModalScrapedAt').innerText = `入库: ${formatAppDateTime(article.scraped_at) || ''}`;
@@ -7501,7 +8153,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
       // 渲染段落
       const parasContainer = document.getElementById('ftModalParagraphs');
-      const numColor = isEco ? 'text-red-400/70' : (isBb ? 'text-cyan-400/70' : 'text-amber-500/60');
+      const numColor = isWsj ? 'text-amber-400/80' : (isEco ? 'text-red-400/70' : (isBb ? 'text-cyan-400/70' : 'text-amber-500/60'));
       if (article.paragraphs && article.paragraphs.length > 0) {
         parasContainer.innerHTML = article.paragraphs.map((p, idx) => `
           <p class="indent-0 leading-relaxed"><span class="text-xs ${numColor} font-mono select-none pr-1.5">[${idx+1}]</span>${p}</p>
@@ -7590,6 +8242,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (!a && typeof economistArticles !== 'undefined' && Array.isArray(economistArticles)) {
           a = economistArticles.find(x => x.url === url);
         }
+        if (!a && typeof wsjArticles !== 'undefined' && Array.isArray(wsjArticles)) {
+          a = wsjArticles.find(x => x.url === url);
+        }
       }
       if (!a) a = currentViewingFtArticle;
 
@@ -7604,8 +8259,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       const body = a.full_text || paras.join(doubleNl);
       const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
       const isEco = (a.source && a.source.toLowerCase().includes('economist')) || (a.url && a.url.includes('economist'));
-      const sourceName = isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times');
-      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者');
+      const isWsj = (a.source && a.source.toLowerCase().includes('wsj')) || (a.url && a.url.includes('wsj'));
+      const sourceName = isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times'));
+      const defaultAuthor = isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者'));
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
 
       const md = [
@@ -7656,6 +8312,9 @@ HTML_CONTENT = """<!DOCTYPE html>
         if (!a && typeof economistArticles !== 'undefined' && Array.isArray(economistArticles)) {
           a = economistArticles.find(x => x.url === url);
         }
+        if (!a && typeof wsjArticles !== 'undefined' && Array.isArray(wsjArticles)) {
+          a = wsjArticles.find(x => x.url === url);
+        }
       }
       if (!a) a = currentViewingFtArticle;
 
@@ -7670,8 +8329,9 @@ HTML_CONTENT = """<!DOCTYPE html>
       const body = a.full_text || paras.join(doubleNl);
       const isBb = (a.source && a.source.toLowerCase().includes('bloomberg')) || (a.url && a.url.includes('bloomberg'));
       const isEco = (a.source && a.source.toLowerCase().includes('economist')) || (a.url && a.url.includes('economist'));
-      const sourceName = isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times');
-      const defaultAuthor = isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者');
+      const isWsj = (a.source && a.source.toLowerCase().includes('wsj')) || (a.url && a.url.includes('wsj'));
+      const sourceName = isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg' : 'Financial Times'));
+      const defaultAuthor = isWsj ? 'The Wall Street Journal' : (isEco ? 'The Economist' : (isBb ? 'Bloomberg Staff' : 'FT 记者'));
       const authors = (a.authors && a.authors.length > 0) ? a.authors.join(', ') : defaultAuthor;
 
       const md = [

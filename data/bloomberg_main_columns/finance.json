@@ -1,0 +1,271 @@
+{
+  "column": "finance",
+  "source_url": "https://www.bloomberg.com/industries/finance",
+  "discovered_at": "2026-10-07T04:17:44.070377+00:00",
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/india-s-110-billion-hdfc-bank-faces-upheaval-with-outsider-ceo-anup-bagchi",
+      "title": "Dhiraj Singh/Bloomberg",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/waymo-boosts-private-debt-deal-to-5-billion-in-push-for-growth",
+      "title": "David Paul Morris/Bloomberg",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/brazil-s-richest-banker-gains-2-7-billion-on-bolsonaro-rally",
+      "title": "Brazil’s Richest Banker Adds $2.7 Billion on Bolsonaro Rally",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/hsbc-executive-strikes-back-in-court-fight-over-poaching-claims",
+      "title": "HSBC Executive Strikes Back in Court Fight Over Poaching Claims",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/seb-ceo-torgeby-resigns-from-swedish-bank-for-personal-reasons",
+      "title": "SEB CEO Torgeby Abruptly Resigns From Sweden’s Biggest Bank",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/dimon-says-anthropic-s-mythos-pushed-cyber-risk-up-10-fold",
+      "title": "Dimon Says Anthropic’s Mythos Pushed Cyber Risk Up 10-Fold",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/cardinale-s-redbird-invests-4-billion-in-paramount-warner-deal",
+      "title": "Cardinale’s RedBird Invests $4 Billion in Paramount-Warner Deal",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/uk-chancellor-tells-bank-ceos-no-decision-yet-on-tax-in-budget",
+      "title": "UK Chancellor Says Bank Tax Decision Still Open Ahead of Budget",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/opinion/articles/2026-10-05/ubs-is-headed-for-radical-change-after-its-big-fight-with-switzerland",
+      "title": "UBS Is Headed for Radical Change After Its Big Swiss Fight\nBy Paul J. Davies, Columnist",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/sanlam-s-1-2-billion-santam-bet-puts-capital-choices-in-focus",
+      "title": "Sanlam’s $1.2 Billion Santam Bet Puts Capital Choices in Focus",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/poland-to-hold-rates-as-fuel-price-cap-seen-cooling-inflation",
+      "title": "Poland to Hold Rates as Fuel-Price Cap Seen Cooling Inflation",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/us-court-allows-fund-to-obtain-documents-in-radiant-world-case",
+      "title": "US Court Allows Fund to Obtain Documents in Radiant World Case",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/qatarenergy-secures-3-billion-loan-from-four-chinese-banks",
+      "title": "QatarEnergy Secures $3 Billion Loan From Four Chinese Banks",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-04/billionaire-exodus-from-uk-leaves-160-billion-hole",
+      "title": "The Big Take\nLondon Takes a Hit as Super Rich Worth $160 Billion Exit UK",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-02/former-goldman-sachs-partner-stacy-polley-takes-the-stage-for-alzheimer-s",
+      "title": "Stacy Polley's Latest Cabaret Tests Bigger Venue, $500 Tickets",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-investor-guide-to-africa",
+      "title": "George Wylesol",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-10-03/wall-street-s-biohackers-see-alpha-in-whoop-bands-oura-rings",
+      "title": "Walaa Alshaer/Bloomberg",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/features/2026-jane-street-guide-power-players",
+      "title": "Photo illustration by 731. Bloomberg",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-29/uae-s-sheikh-khaled-spending-billions-to-bypass-iran-s-grip-on-strait-of-hormuz",
+      "title": "Haruna Furuhashi/Pool/Getty Images",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/apollo-weighs-larger-role-in-government-lending-as-debt-soars",
+      "title": "Apollo Weighs Larger Role in Government Lending as Debt Soars",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/codelco-probes-new-signs-of-overstated-chile-copper-production",
+      "title": "Codelco Probes New Signs of Overstated Chile Copper Output",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/ray-dalio-warns-china-japan-may-pull-back-from-us-treasuries",
+      "title": "Ray Dalio Warns China, Japan May Pull Back From Treasuries",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-05/warren-hawley-press-insurers-over-claims-closed-without-payment",
+      "title": "Warren, Hawley Press Insurers Over Claims Closed Without Payment",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-05/bofa-sees-the-end-of-easy-money-made-from-the-ai-spending-trade",
+      "title": "BofA Sees the End of ‘Easy Money’ Made From the AI-Spending Trade",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-05/arini-raises-1-5-billion-even-as-its-main-fund-sees-13-5-loss",
+      "title": "Arini Raises $1.5 Billion Even as Its Main Fund Sees 13.5% Loss",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/surging-yields-hit-asian-bond-sales-as-ai-fundraising-trails-us",
+      "title": "Surging Yields Hit Asian Bond Sales as AI Fundraising Trails US",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/gen-z-s-love-of-malls-boosts-nz-stock-defying-cost-of-living-blues",
+      "title": "Gen Z’s Love of Malls Boosts NZ Stock, Defying Consumer Blues",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/nyc-can-proceed-with-pied-a-terre-tax-as-court-weighs-appeal",
+      "title": "NYC Can Proceed With Pied-a-Terre Tax as Court Weighs Appeal",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/ireland-reduces-energy-taxes-in-budget-aimed-at-appeasing-voters",
+      "title": "Ireland Cuts Energy Taxes in Budget Bid to Appease Voters",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/spacex-seeking-to-raise-40-billion-to-buy-nvidia-chips-ft-says",
+      "title": "Stefani Reynolds/Bloomberg",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/virginia-lieutenant-governor-opposes-nextera-dominion-deal",
+      "title": "Virginia Lieutenant Governor Opposes NextEra-Dominion Deal",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/ellison-cements-status-as-hollywood-mogul-with-studio-mega-deals",
+      "title": "David Ellison Cements Status as Hollywood Mogul With Studio Mega-Deals",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/newsletters/2026-10-06/europe-s-battery-revolution-needs-more-time-and-patient-lenders",
+      "title": "Newsletter: The Brink\nEurope’s Battery Revolution Needs More Time, and Patient Lenders",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/newsletters/2026-10-04/ai-riches-come-with-concentration-risks-arm-akam-snps-p",
+      "title": "Newsletter: CFO Briefing\nAI Riches Come With Concentration Risks for CFOs",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-02/nike-s-jordan-air-ball-brand-s-fading-cool-raises-the-stakes-for-revival",
+      "title": "Nike’s Plan to Bring Back the Jordan Hype Starts With Cutting Down Drops",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-01/singapore-money-laundering-case-luxury-condos-find-few-buyers-at-auction",
+      "title": "Luxury Condos Seized in Singapore’s Biggest Money-Laundering Case Find Few Buyers",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-09-30/what-it-takes-to-get-a-job-at-elon-musk-s-spacex",
+      "title": "What It Takes to Get a Job at SpaceX",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/features/2026-09-29/a-75-million-point-piper-home-shows-housing-slump-hitting-sydney-s-elite",
+      "title": "A $52 Million Point Piper Home Shows Housing Slump Hitting Sydney's Elite",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/ray-dalio-warns-ai-bubble-is-approaching-burst-point",
+      "title": "Dalio Says We’re Nearing Point Where AI Bubble May Burst",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/taiwan-dethrones-korea-atop-global-markets-as-ai-trade-widens",
+      "title": "Taiwan Dethrones Korea Atop World Markets as AI Trade Widens",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/ken-leech-agrees-to-3-million-sec-fine-over-cherry-picking-case",
+      "title": "Ken Leech Agrees to $3 Million SEC Fine Over Cherry-Picking Case",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/billionaire-c-a-family-taps-cfo-to-lead-185-year-old-empire",
+      "title": "Billionaire C&A Family Taps CFO to Lead 185-Year-Old Empire",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/rba-frets-potential-ai-stock-slump-could-hit-australian-spending",
+      "title": "RBA Frets Potential AI Stock Slump Could Hit Australian Spending",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/walter-s-insurance-ceo-told-doj-he-was-unaware-of-boss-s-loans",
+      "title": "Walter’s Insurance CEO Told DOJ He Was Unaware of Boss’s Loans",
+      "column": "finance",
+      "column_url": "https://www.bloomberg.com/industries/finance"
+    }
+  ]
+}

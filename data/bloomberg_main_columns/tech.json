@@ -1,65 +1,65 @@
 {
   "column": "tech",
   "source_url": "https://www.bloomberg.com/technology",
-  "discovered_at": "2026-10-04T23:36:49.140267+00:00",
+  "discovered_at": "2026-10-07T04:14:43.499627+00:00",
   "articles": [
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/us-lead-in-ai-over-china-narrows-after-deepseek-gains-bi-says",
-      "title": "Raul Ariano/Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/amd-s-su-to-meet-samsung-s-chip-head-as-memory-crunch-persists",
+      "title": "Bridget Bennett/Bloomberg",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/schumer-demands-flock-delete-personal-data-disclose-its-use",
-      "title": "Hannah Beier/Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/spacex-seeking-to-raise-40-billion-to-buy-nvidia-chips-ft-says",
+      "title": "Stefani Reynolds/Bloomberg",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/ai-whistleblowers-google-openai-meta-to-face-new-york-city-council",
-      "title": "Andrey Rudakov/Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/boston-dynamics-taps-amazon-alexa-executive-as-new-ceo",
+      "title": "Joe Buglewicz/Bloomberg",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/trump-names-clayton-ferguson-to-lead-ai-task-force",
-      "title": "Trump Names Clayton, Ferguson to Lead AI Task Force",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/apple-s-smart-home-push-includes-doorbell-lock-thermostat-codeveloped-with-lg",
+      "title": "Apple to Launch Doorbell, Lock, Thermostat Developed With LG",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/softbank-s-masayoshi-son-has-rare-cautionary-note-on-ai-safety",
-      "title": "SoftBank’s Masayoshi Son Has Rare Cautionary Note on AI Safety",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/goldman-sachs-ensnared-in-ey-data-breach-earlier-this-year",
+      "title": "Goldman Sachs Ensnared in EY Data Breach Earlier This Year",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-04/britain-s-reliance-on-us-cloud-giants-alarms-its-politicians",
-      "title": "Britain’s Reliance on US Cloud Giants Alarms Its Politicians",
+      "url": "https://www.bloomberg.com/features/2026-open-source-ai-models-fuel-csam",
+      "title": "The Big Take\nChild Predators Turn to Open-Source AI to Make Unlimited Illegal Images",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-03/us-ai-task-force-to-report-on-technology-s-risks-wsj-reports",
-      "title": "US AI Task Force to Report on Technology’s Risks, WSJ Reports",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/waymo-boosts-private-debt-deal-to-5-billion-in-push-for-growth",
+      "title": "Waymo Boosts Private Debt Deal to $5 Billion in Push for Growth",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-03/bessent-says-ai-industry-must-own-its-risks-and-find-solutions",
-      "title": "Bessent Says AI Industry Must Own Its Risks and Find Solutions",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/anthropic-expands-access-to-latest-ai-models-for-cyber-firms",
+      "title": "Anthropic Expands Access to Latest AI Models for Cyber Firms",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/features/2026-10-03/wall-street-s-biohackers-see-alpha-in-whoop-bands-oura-rings",
-      "title": "Wall Street’s Alpha-Chasing Biohackers Trade Wine for Wearables",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/ai-startup-hark-debuts-proactive-hark-pro-app-ahead-of-2027-hardware-launch",
+      "title": "Startup Hark Debuts AI Agent Ahead of 2027 Hardware Launch",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-03/openai-safety-employee-quits-calls-for-nuclear-level-safeguards",
-      "title": "Minh Connors/Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/asml-s-chip-technology-move-threatens-besi-shares-bofa-says",
+      "title": "Qilai Shen/Bloomberg",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
@@ -88,26 +88,26 @@
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/apple-to-tighten-mac-data-controls-in-guard-against-ai-agents",
-      "title": "Apple to Tighten Mac Data Controls in Guard Against AI Agents",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/rba-frets-potential-ai-stock-slump-could-hit-australian-spending",
+      "title": "RBA Frets Potential AI Stock Slump Could Hit Australian Spending",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/nscale-hires-meta-s-justin-osofsky-to-be-coo-ahead-of-ipo",
-      "title": "Nscale Hires Meta’s Justin Osofsky to Be COO Ahead of IPO",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/nordic-data-center-group-asp-is-said-to-weigh-oslo-stock-listing",
+      "title": "Nordic Data Center Group ASP Is Said to Weigh Oslo IPO",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/nvidia-hits-first-record-since-may-as-value-nears-6-trillion",
-      "title": "Nvidia Falls Short of May Record as Value Nears $6 Trillion",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/jpmorgan-tops-global-ai-banking-index-for-fifth-straight-year",
+      "title": "JPMorgan Tops Global AI Banking Index With Jobs Seen to Grow",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/billionaire-chey-sells-700-million-in-sk-stock-amid-divorce",
-      "title": "Chey to Sell $700 Million in SK Stock Amid Divorce",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/amd-ceo-sees-very-high-chip-demand-urges-ai-firms-to-cooperate",
+      "title": "AMD CEO Sees Very High Chip Demand, Urges AI Firms to Cooperate",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
@@ -160,62 +160,62 @@
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/apple-iphone-18-pro-max-at-t-glitch-requires-device-replacements",
-      "title": "Apple iPhone 18 Pro Max AT&T Glitch Requires Device Replacements",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/investor-pushes-snap-to-raise-capital-for-eyeware-business-specs",
+      "title": "Investor Pushes Snap to Raise Capital for New Specs Business",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/hackers-breached-propulsion-system-of-us-bound-oil-tanker",
-      "title": "Hackers Breached Propulsion System of US-Bound Oil Tanker",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/uber-to-buy-catering-platform-ezcater-for-2-3-billion-in-cash",
+      "title": "Uber to Buy EzCater for $2.3 Billion in Enterprise Push",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/us-hackers-face-1-000-a-month-pay-cuts-in-controversial-plan",
-      "title": "US Hackers Face $1,000-a-Month Pay Cuts in Controversial Plan",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/google-accused-of-overcharging-20-million-consumers-in-uk-class-action",
+      "title": "Google Accused of Overcharging 20 Million Consumers in UK Class Action",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/google-hikes-price-of-budget-pixel-10a-phone-to-599-on-memory-costs",
-      "title": "Google Hikes Price of Budget Pixel 10a Phone to $599 on Memory Costs",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/revolut-s-head-of-commercial-real-estate-lending-exits-fintech",
+      "title": "Revolut’s Head of Commercial Real Estate Lending Exits Fintech",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/german-army-to-start-training-with-new-attack-drones-next-month",
-      "title": "German Army to Start Training With New Attack Drones Next Month",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/nvidia-heads-for-6-trillion-value-with-chipmaker-back-at-record",
+      "title": "Nvidia Soars Near $6 Trillion Market Cap With Stock Back at High",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/roblox-s-rblx-newest-bear-says-wall-street-is-too-optimistic-on-recovery",
-      "title": "Roblox’s Newest Bear Says Wall Street Is Too Optimistic On Bookings Recovery",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/informa-to-buy-events-firm-from-blackstone-for-2-2-billion",
+      "title": "Informa to Buy Events Firm from Blackstone for £2.2 Billion",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/alibaba-solaria-in-talks-for-spanish-data-center-power-supply",
-      "title": "Alibaba, Solaria in Talks for Spanish Data Center Power Supply",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/seagate-is-said-to-battle-toshiba-for-tdk-s-hard-drive-head-unit",
+      "title": "Seagate Said to Vie With Toshiba for TDK’s Hard-Drive Magnetic Heads Unit",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/amazon-s-latest-response-to-ai-data-center-backlash-1-billion",
-      "title": "Amazon’s Latest Response to AI Data Center Backlash: $1 Billion",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/china-ai-video-startup-kling-picks-banks-for-1-billion-plus-ipo",
+      "title": "AI Video Startup Kling Picks Banks for $1 Billion-Plus IPO",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/china-robotaxis-face-losses-as-utilization-trails-waymo-bi-says",
-      "title": "China Robotaxis Face Losses as Utilization Trails Waymo, BI Says",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/google-constellation-near-billion-dollar-deal-for-nuclear-power",
+      "title": "Google, Constellation Energy Strike Deal for Nuclear Power",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-02/cma-says-nexfibre-s-2-billion-alt-net-deal-may-hurt-competition",
-      "title": "CMA Says Nexfibre’s £2 Billion Alt-Net Deal May Hurt Competition",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-06/banks-chase-risky-chip-loans-in-asia-s-8-2-trillion-ai-buildout",
+      "title": "Banks Chase Risky Chip Loans in Asia’s $8.2 Trillion AI Buildout",
       "column": "tech",
       "column_url": "https://www.bloomberg.com/technology"
     }
