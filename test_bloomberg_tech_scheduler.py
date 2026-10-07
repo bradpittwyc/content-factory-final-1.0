@@ -27,6 +27,16 @@ class SchedulerTests(unittest.TestCase):
         restarted.configure(True, now=900)
         self.assertEqual(restarted.status()['next_due_at'], 1400)
 
+    def test_two_minute_schedule_does_not_overlap_an_active_run(self):
+        self.scheduler.configure(True, now=100, interval_minutes=2)
+        self.assertEqual(self.scheduler.status()['next_due_at'], 220)
+        run = self.scheduler.tick('browser', now=220)
+        self.assertEqual(self.scheduler.status()['next_due_at'], 340)
+        self.assertEqual(self.scheduler.tick('browser', now=340)['run_id'], run['run_id'])
+        self.assertEqual(self.scheduler.status()['next_due_at'], 340)
+        self.scheduler.discover(run['run_id'], 'browser', [], [], now=341)
+        self.assertNotEqual(self.scheduler.tick('browser', now=342)['run_id'], run['run_id'])
+
     def article(self):
         run = self.start()
         step = self.scheduler.discover(run['run_id'], 'browser', ['first', 'second'], [], now=7310)
@@ -114,6 +124,23 @@ class SchedulerTests(unittest.TestCase):
         run = self.scheduler.tick('browser', immediate=True, now=7312, columns=columns, column='finance')
         result = self.scheduler.discover(run['run_id'], 'browser', ['finance-only'], [], now=7313)
         self.assertEqual(result['url'], 'finance-only')
+
+    def test_interactive_feature_does_not_consume_article_attempt(self):
+        run = self.start()
+        feature = 'https://www.bloomberg.com/features/2026-special-story'
+        news = 'https://www.bloomberg.com/news/articles/2026-10-07/example'
+        step = self.scheduler.discover(run['run_id'], 'browser', [feature, news], [], now=7310)
+        self.assertEqual(step['url'], news)
+        with self.scheduler.transaction() as db:
+            row = db.execute('SELECT state,attempts FROM candidates WHERE url=?', (feature,)).fetchone()
+            self.assertEqual((row['state'], row['attempts']), ('manual_only', 0))
+
+    def test_current_column_order_beats_inherited_queue_age(self):
+        self.article()
+        self.scheduler.configure(False, now=7311)
+        run = self.scheduler.tick('browser', immediate=True, now=7312)
+        step = self.scheduler.discover(run['run_id'], 'browser', ['new-headline', 'second'], [], now=7313)
+        self.assertEqual(step['url'], 'new-headline')
 
     def test_shared_url_is_saved_once_across_columns(self):
         step = self.article()

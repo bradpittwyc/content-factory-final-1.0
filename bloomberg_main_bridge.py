@@ -164,7 +164,10 @@ def configure_column(payload: ColumnSettings, request: Request):
 def discover_column(column: str, discovery: ColumnDiscovery):
     expected = get_column(column)['url']
     parsed = urlsplit(discovery.url)
-    paths = {urlsplit(expected).path}
+    paths = {urlsplit(expected).path.rstrip('/')}
+    # The logged-in browser redirects the legacy Finance entry to /finance.
+    if column == 'finance' and paths.intersection({'/finance', '/industries/finance'}):
+        paths.update({'/finance', '/industries/finance'})
     if column == 'ai-today':
         paths.add('/standalone/ai-today')
     if parsed.scheme != "https" or parsed.netloc != "www.bloomberg.com" or parsed.path.rstrip("/") not in paths:
@@ -292,7 +295,7 @@ class AutomationRequest(BaseModel):
     owner: str = Field(min_length=1, max_length=100)
     run_id: str | None = None
     enabled: bool | None = None
-    interval_minutes: int | None = Field(default=None, ge=5, le=1440)
+    interval_minutes: int | None = Field(default=None, ge=2, le=1440)
     immediate: bool = False
     column: str | None = None
     discovery: ColumnDiscovery | None = None
@@ -391,6 +394,11 @@ def automation_action(action: Literal['settings', 'tick', 'discovery', 'result']
                 return {'status': 'body_candidate', 'saved': True, 'title': existing['title'],
                         'takeaways_count': len(existing.get('takeaways', []))}
             result = capture_article(capture.model_copy(update={'column': run['column_id'], 'automation_attempt_id': run['id']}))
+            if not result.get('saved'):
+                result.update(stage='article', url=capture.url, title=capture.title,
+                              paragraph_count=len(capture.paragraphs),
+                              body_selector=capture.body_selector,
+                              detail='正文容器未识别或正文不足，需核验页面模板' if result.get('status') == 'needs_body_inspection' else result.get('status'))
             purge_automation_expired()
             return result
 

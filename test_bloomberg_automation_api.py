@@ -71,6 +71,24 @@ class AutomationApiTests(unittest.TestCase):
         self.assertIn('HTTP 422', result['detail'])
         self.assertEqual(json.loads(bridge.SCHEDULER.status()['last_run']['result']), result)
 
+    def test_finance_redirect_is_accepted_but_other_columns_are_rejected(self):
+        step = self.post('tick', immediate=True, column='finance').json()
+        for url in ['https://www.bloomberg.com/technology', 'https://www.bloomberg.com.evil.test/finance']:
+            response = self.post('discovery', run_id=step['run_id'], discovery={
+                'url': url, 'links': [{'url': self.url}]})
+            self.assertEqual(response.status_code, 400)
+        response = self.post('discovery', run_id=step['run_id'], discovery={
+            'url': 'https://www.bloomberg.com/finance', 'links': [{'url': self.url}]})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['action'], 'article')
+        self.assertEqual(response.json()['column'], 'finance')
+
+    def test_two_minute_interval_is_persisted(self):
+        response = self.post('settings', enabled=True, interval_minutes=2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['interval_minutes'], 2)
+        self.assertEqual(self.post('settings', enabled=True, interval_minutes=1).status_code, 422)
+
     def test_webpage_cannot_change_schedule(self):
         response = self.client.post('/automation/tech/settings', headers={'Origin': 'https://example.com'},
                                     json={'owner': 'browser', 'enabled': True})

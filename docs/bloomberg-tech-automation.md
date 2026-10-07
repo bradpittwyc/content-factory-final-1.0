@@ -10,6 +10,12 @@ v1.4.0 扩展至多个专栏：Tech、Finance、Economics、Big Take 参与全�
 
 ## 目标与边界
 
+2 分钟连续轮换实测：Finance 在 11:44:38 领取并保存上述 HDFC Bank 文章；Economics 在 11:46:38 自动领取，保存 `Australians Are Less Vulnerable to Rate Hikes, Deutsche Says`（9 段、347 词、3 条 Takeaways，run `97bd1516-39d8-489f-a6cc-319787f58378`）。两轮之间未手动点击立即运行。每轮一篇预算和栏目轮换均已得到真实浏览器验证，正文仍为待人工核验的候选。
+
+11:37 Finance 发现失败的详细记录确认：浏览器已跳转 `/finance`，页面有 40 个链接，但接收端只认旧 `/industries/finance`，返回 HTTP 400。修复为仅对 Finance 兼容这两个明确地址，保持 HTTPS/主站和其他栏目来源校验；按用户要求将本机间隔设为 2 分钟。11:44:38 到期后扩展自动领取 Finance 轮次，11:44:54 保存 `India’s $110 Billion HDFC Bank Faces Upheaval With Outsider CEO`（28 段、1,193 词、3 条 Takeaways，run `fe4bd769-07ef-45e6-9eef-4dec8e06072e`）。
+
+11:22 的 Economics 轮次成功发现链接，但领取了独立 `/features/` 专题，正文容器匹配为零，未入库。队列修复后，11:27 将 Tech 验证轮次设为到期，由现有扩展 alarm 自动领取并保存 `Boston Dynamics Taps Amazon Alexa Executive as New CEO`（5 段、248 词、3 条 Takeaways，run `d4f25de7-749a-4530-9b53-28f444775545`）；验证了真实浏览器自动执行至落库，尚需后续十分钟轮换验证各专栏稳定性。
+
 在用户已登录且有订阅的 Chrome 中，周期性读取 `https://www.bloomberg.com/technology` 的链接，对新增文章逐篇提取正文，写入现有 Bloomberg 主站库并显示在 Bloomberg Studio。Tech 归属以栏目页面实际出现的链接为准，不从全站 sitemap 猜测专栏归属。
 
 首版支持浏览器运行、本地接收服务在线时的自动增量采集。电脑休眠或 Chrome 关闭时无法采集；恢复后补一次到期任务，不重放每个错过的周期。登录失效、机器人验证需用户处理后点击恢复。正文仍标为 `full_text_reviewed=false`，采集成功不等于逐篇全文已经核验。

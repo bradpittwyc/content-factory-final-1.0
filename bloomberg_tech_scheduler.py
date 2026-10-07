@@ -66,8 +66,8 @@ class Scheduler:
                     'last_run': dict(run) if run else None, 'queue_counts': counts}
 
     def configure(self, enabled, now=None, interval_minutes=None):
-        if interval_minutes is not None and (type(interval_minutes) is not int or not 5 <= interval_minutes <= 1440):
-            raise ValueError('interval_minutes must be an integer between 5 and 1440')
+        if interval_minutes is not None and (type(interval_minutes) is not int or not 2 <= interval_minutes <= 1440):
+            raise ValueError('interval_minutes must be an integer between 2 and 1440')
         now = time.time() if now is None else now
         with self.transaction() as db:
             config = db.execute('SELECT * FROM config').fetchone()
@@ -142,10 +142,16 @@ class Scheduler:
                 db.execute('INSERT OR IGNORE INTO candidate_columns VALUES (?,?)', (url, run['column_id']))
             for url in seen:
                 db.execute("UPDATE candidates SET state='saved' WHERE url=?", (url,))
+            # Standalone interactive features use a separate, unverified body layout.
+            # Keep them in the manual snapshot without spending the automatic article budget.
+            db.execute("UPDATE candidates SET state='manual_only' WHERE state='pending' AND url LIKE 'https://www.bloomberg.com/features/%'")
             # Old undiscovered items do not accumulate forever. Current snapshot tombstones remain.
             db.execute('DELETE FROM candidates WHERE last_seen<?', (now - 30 * 86400,))
             db.execute('DELETE FROM candidate_columns WHERE url NOT IN (SELECT url FROM candidates)')
-            candidate = db.execute("SELECT url FROM candidates WHERE state='pending' AND attempts<3 AND url IN (SELECT url FROM candidate_columns WHERE column_id=?) ORDER BY attempts,first_seen,rowid LIMIT 1", (run['column_id'],)).fetchone()
+            candidates = db.execute("SELECT url,attempts,first_seen FROM candidates WHERE state='pending' AND attempts<3 AND url IN (SELECT url FROM candidate_columns WHERE column_id=?)", (run['column_id'],)).fetchall()
+            order = {url: index for index, url in enumerate(urls)}
+            # Current section order beats age inherited from a different section's queue.
+            candidate = min(candidates, key=lambda item: (item['attempts'], order.get(item['url'], len(order)), item['first_seen']), default=None)
             if not candidate:
                 db.execute("UPDATE runs SET phase='completed',result=? WHERE id=?",
                            (json.dumps({'status': 'empty_queue', 'saved': False}), run_id))
